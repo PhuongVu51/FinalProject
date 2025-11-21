@@ -1,0 +1,126 @@
+/* Import font (tùy chọn) */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Sử dụng ảnh background-bee.jpg */
+    background-image: url('background-bee.png');
+    background-color: rgba(255, 255, 255, 0.5); /* Độ trong suốt 50% */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Căn lề trên cùng */
+    min-height: 100vh;
+    background-color: #FFF8E1; /* Màu nền dự phòng */
+}
+
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-form-box {
+    max-width: 450px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin-top: 100px; /* Khoảng cách từ trên cùng */
+    margin-bottom: 100px;
+    position: relative;
+    border: 1px solid #F9E79F;
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.login-logo h3 {
+    color: #E65100;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 15px; /* <-- ĐÃ TĂNG KÍCH THƯỚC */
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 18px; /* <-- ĐÃ TĂNG PADDING */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box; 
+    background-color: #f9f9f9;
+    font-size: 16px; /* <-- ĐÃ TĂNG KÍCH THƯỚC */
+}
+
+/* Căn chỉnh chiều cao cho dropdown 'Gender' */
+select.form-control {
+    height: 50px; /* <-- ĐẶT CHIỀU CAO CỐ ĐỊNH */
+}
+
+/* Nút chính (Tiếp tục / Đăng ký) */
+.btn-submit {
+    width: 100%;
+    padding: 16px; /* <-- ĐÃ TĂNG PADDING */
+    background-color: #FFC107; /* Màu vàng ong */
+    border: none;
+    border-radius: 8px;
+    color: #333;
+    font-size: 18px; /* <-- ĐÃ TĂNG KÍCH THƯỚC */
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btn-submit:hover {
+    background-color: #FFA000; /* Vàng đậm hơn khi hover */
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: 15px;
+}
+.forgot-password a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 15px;
+    color: #555;
+}
+.register-link a {
+    color: #E65100; /* Màu cam đậm */
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* CSS cho trang quản trị (sẽ ghi đè nếu cần) */
+/* Chúng ta sẽ chuyển cái này sang tệp riêng */
