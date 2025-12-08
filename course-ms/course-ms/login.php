@@ -17,14 +17,27 @@
             
             <h2>Login</h2>
             
+            <?php if(isset($_GET['error'])): ?>
+                <p style="color:red; text-align:center; background:#ffe6e6; padding:10px; border-radius:5px;">
+                    Email hoặc mật khẩu không đúng!
+                </p>
+            <?php endif; ?>
+            
             <form action="validation.php" method="post">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="text" name="email" class="form-control" placeholder="Enter your email" required>
+                    <input type="text" name="email" class="form-control" 
+                           placeholder="Enter your email" required
+                           value="<?php echo isset($_COOKIE['user_email']) ? $_COOKIE['user_email'] : ''; ?>">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="form-group" style="display:flex; align-items:center; gap: 10px;">
+                    <input type="checkbox" name="remember" id="remember" style="width:20px; height:20px;">
+                    <label for="remember" style="margin:0; cursor:pointer;">Remember Me</label>
                 </div>
                 
                 <button type="submit" class="btn-submit">Continue</button>
