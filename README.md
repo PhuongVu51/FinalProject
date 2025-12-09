@@ -4,7 +4,7 @@
 **Teacher Bee** là một hệ thống quản lý học tập (LMS/Course Management System) nhẹ, hiện đại và dễ sử dụng. Hệ thống giúp kết nối Admin, Giáo viên và Học sinh, hỗ trợ quy trình quản lý lớp học, thi cử và chấm điểm một cách hiệu quả.
 
 ![Dashboard Preview](screenshot.png)
-*(Bạn có thể thay thế dòng này bằng ảnh chụp màn hình thực tế của dự án)*
+
 
 ---
 
