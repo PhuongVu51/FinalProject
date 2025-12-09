@@ -1,54 +1,33 @@
 <?php
-// THÊM 3 DÒNG NÀY ĐỂ BÁO LỖI (Cần thiết trong quá trình phát triển)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
+include "connection.php";
+include "auth.php";
 
-// --- CẬP NHẬT THÔNG TIN KẾT NỐI CHO INFINITYFREE ---
-$host = "sql100.infinityfree.com";
-$user = "if0_40573259";
-$pass = "Mavuong515"; // KIỂM TRA LẠI MẬT KHẨU NẾU LỖI KẾT NỐI
-$dbname = "if0_40573259_course_ms"; 
+$email = mysqli_real_escape_string($link, $_POST['email']);
+$pass = md5($_POST['password']); 
 
-// Lệnh kết nối (Sử dụng 4 tham số)
-$con = mysqli_connect($host, $user, $pass, $dbname);
+$s = "SELECT * FROM teachers WHERE email='$email' AND password='$pass'";
+$res = mysqli_query($link, $s);
 
-// Báo lỗi nếu kết nối thất bại
-if (!$con) {
-    die("LỖI KẾT NỐI DATABASE: Vui lòng kiểm tra lại Hostname, Username, Password.");
-}
+if(mysqli_num_rows($res) == 1){
+    $user = mysqli_fetch_assoc($res);
+    $_SESSION['username'] = $user['full_name'];
+    $_SESSION['teacher_id'] = $user['id'];
+    $_SESSION['role_id'] = $user['role_id'];
+    
+    // Lấy quyền từ DB (giả sử bạn đã chạy SQL tạo bảng roles ở bước trước)
+    // Nếu chưa có bảng role_permissions, ta fix cứng quyền cho Teacher để test
+    $_SESSION['permissions'] = ($user['role_id'] == 1) ? ['delete_data'] : ['manage_exams', 'manage_students'];
 
-/* Lấy dữ liệu */
-$email = $_POST['email'];
-$pass = md5($_POST['password']);
-
-/* Kiểm tra 'email' và 'password' trong bảng 'teachers' */
-// Đã thay '&&' thành 'AND' chuẩn SQL
-$s = "select * from teachers where email='$email' AND password='$pass'";
-
-$result = mysqli_query($con, $s);
-
-// Kiểm tra lỗi truy vấn SQL (Ví dụ: tên bảng sai)
-if (!$result) {
-    die("LỖI TRUY VẤN SQL: " . mysqli_error($con));
-}
-
-$num = mysqli_num_rows($result);
-
-if($num == 1){
-    $user_data = mysqli_fetch_assoc($result);
-
-    /* Lưu thông tin vào session */
-    $_SESSION['username'] = $user_data['full_name'];
-    $_SESSION['email'] = $user_data['email'];
-    $_SESSION['teacher_id'] = $user_data['id'];
-
-    // Chuyển hướng đến trang Home
-    header('location:home.php');
-} else {
-    // Sai thông tin, quay lại trang login
-    header('location:login.php?error=1');
+    // XỬ LÝ COOKIE
+    if(isset($_POST['remember'])) {
+        setcookie('user_email', $email, time() + (86400 * 30), "/"); // 30 ngày
+    } else {
+        if(isset($_COOKIE['user_email'])) setcookie('user_email', "", time() - 3600, "/");
+    }
+    
+    header('location:home.php'); 
+}else{
+    header('location:login.php?error=1'); 
 }
 ?>
