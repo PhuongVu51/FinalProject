@@ -13,10 +13,30 @@ $q_class = mysqli_query($link, "SELECT * FROM classes");
 if($q_class) { while($c = mysqli_fetch_assoc($q_class)) $classes[] = $c; }
 
 if(isset($_POST["insert"])) {
-    // ... Logic Insert giữ nguyên ...
-    // Để code ngắn gọn, bạn copy phần logic INSERT từ câu trả lời trước vào đây nhé
-    // Hoặc nếu cần tôi viết lại full thì bảo.
-    // ... [INSERT LOGIC HERE] ...
+    $code = mysqli_real_escape_string($link, $_POST['student_id_code']);
+    $name = mysqli_real_escape_string($link, $_POST['full_name']);
+    $email = mysqli_real_escape_string($link, $_POST['email']);
+    $class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
+    
+    // Get class name
+    $class_name = "";
+    if($class_id > 0) {
+        $r_c = mysqli_fetch_assoc(mysqli_query($link, "SELECT name FROM classes WHERE id=$class_id"));
+        if($r_c) $class_name = $r_c['name'];
+    }
+    
+    // Default password for new students: 123456 (MD5 hashed)
+    $default_password = 'e10adc3949ba59abbe56e057f20f883e';
+    
+    $sql = "INSERT INTO students (student_id_code, full_name, email, password, class_id, class_name) 
+            VALUES ('$code', '$name', '$email', '$default_password', $class_id, '$class_name')";
+    
+    if(mysqli_query($link, $sql)) {
+        header("Location: manage_students.php");
+        exit;
+    } else {
+        die("Error: " . mysqli_error($link));
+    }
 }
 ?>
 

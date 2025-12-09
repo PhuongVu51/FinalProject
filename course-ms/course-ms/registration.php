@@ -7,10 +7,10 @@ error_reporting(E_ALL);
 session_start();
 
 // --- THÔNG TIN KẾT NỐI INFINITYFREE (ĐÃ SỬA) ---
-$host = "sql100.infinityfree.com";
-$user = "if0_40573259";
-$pass = "Mavuong515"; 
-$dbname = "if0_40573259_course_ms"; 
+$host = "127.0.0.1";
+$user = "root";
+$pass = ""; 
+$dbname = "teacher_bee_db"; 
 
 $con = mysqli_connect($host, $user, $pass, $dbname);
 
