@@ -6,26 +6,15 @@ error_reporting(E_ALL);
 
 session_start();
 
-// --- CẬP NHẬT THÔNG TIN KẾT NỐI CHO INFINITYFREE ---
-$host = "sql100.infinityfree.com";
-$user = "if0_40573259";
-$pass = "Mavuong515"; // KIỂM TRA LẠI MẬT KHẨU NẾU LỖI KẾT NỐI
-$dbname = "if0_40573259_course_ms"; 
-
-// Lệnh kết nối (Sử dụng 4 tham số)
-$con = mysqli_connect($host, $user, $pass, $dbname);
-
-// Báo lỗi nếu kết nối thất bại
-if (!$con) {
-    die("LỖI KẾT NỐI DATABASE: Vui lòng kiểm tra lại Hostname, Username, Password.");
-}
+// Sử dụng kết nối cục bộ (Laragon)
+include 'connection.php'; // tạo biến $link
+$con = $link; // dùng chung biến kết nối cho rõ ràng
 
 /* Lấy dữ liệu */
 $email = $_POST['email'];
 $pass = md5($_POST['password']);
 
 /* Kiểm tra 'email' và 'password' trong bảng 'teachers' */
-// Đã thay '&&' thành 'AND' chuẩn SQL
 $s = "select * from teachers where email='$email' AND password='$pass'";
 
 $result = mysqli_query($con, $s);
