@@ -1,121 +1,74 @@
 <?php
-include "connection.php"; 
-session_start();
-if(!isset($_SESSION['username'])){ header('location:login.php'); }
+include "connection.php"; include "auth.php"; requireRole(['admin']);
 
-// Logic PHP giữ nguyên
-function generateStudentID($link) {
-    $r = mysqli_fetch_assoc(mysqli_query($link, "SELECT MAX(CAST(student_id_code AS UNSIGNED)) as max_id FROM students"));
-    return ($r['max_id']) ? $r['max_id'] + 1 : 1;
+if(isset($_POST['add'])){
+    $name=trim($_POST['name']); $user=trim($_POST['user']); $pass=md5($_POST['pass']); $code=trim($_POST['code']);
+    mysqli_query($link, "INSERT INTO users (username,password,role,full_name) VALUES ('$user','$pass','student','$name')");
+    $uid=mysqli_insert_id($link);
+    mysqli_query($link, "INSERT INTO students (user_id,student_code) VALUES ($uid,'$code')");
+    header("Location: manage_students.php");
 }
-$classes = [];
-$q_class = mysqli_query($link, "SELECT * FROM classes");
-if($q_class) { while($c = mysqli_fetch_assoc($q_class)) $classes[] = $c; }
-
-if(isset($_POST["insert"])) {
-    // ... Logic Insert giữ nguyên ...
-    // Để code ngắn gọn, bạn copy phần logic INSERT từ câu trả lời trước vào đây nhé
-    // Hoặc nếu cần tôi viết lại full thì bảo.
-    // ... [INSERT LOGIC HERE] ...
+if(isset($_GET['del'])){
+    mysqli_query($link, "DELETE FROM users WHERE id=".intval($_GET['del']));
+    header("Location: manage_students.php");
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 <head>
-    <title>Students | CourseMS Pro</title>
-    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <title>Quản Lý Học Sinh</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard_style.css">
 </head>
 <body>
-
-    <?php include "includes/sidebar.php"; ?>
-
-    <div class="main-wrapper">
-        <?php include "includes/topbar.php"; ?>
-
-        <div class="content-scroll">
-            <div style="display: grid; grid-template-columns: 320px 1fr; gap: 24px;">
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fa-duotone fa-user-plus" style="color:var(--primary)"></i> Add Student</h3>
-                    </div>
-                    <form action="" method="post">
-                        <div class="form-group" style="margin-bottom:15px;">
-                            <label class="form-label">Student ID (Auto)</label>
-                            <input type="text" class="form-control" name="student_id_code" 
-                                   value="<?php echo generateStudentID($link); ?>" readonly 
-                                   style="background:#F1F5F9; color:#64748B; font-weight:700;">
-                        </div>
-                        <div class="form-group" style="margin-bottom:15px;">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" name="full_name" required placeholder="Ex: John Doe">
-                        </div>
-                        <div class="form-group" style="margin-bottom:15px;">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="student@email.com">
-                        </div>
-                        <div class="form-group" style="margin-bottom:20px;">
-                            <label class="form-label">Class</label>
-                            <select name="class_id" class="form-control" required>
-                                <option value="">-- Select Class --</option>
-                                <?php foreach($classes as $c): ?>
-                                    <option value="<?php echo $c['id']; ?>"><?php echo htmlspecialchars($c['name']); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <button type="submit" name="insert" class="btn-primary" style="width:100%">Add New Student</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fa-duotone fa-list"></i> Student List</h3>
-                    </div>
-                    <table id="dataTable" class="display">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Class</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $q = "SELECT s.*, c.name as c_name FROM students s LEFT JOIN classes c ON s.class_id=c.id ORDER BY s.id DESC";
-                            $res = mysqli_query($link, $q);
-                            while($row = mysqli_fetch_assoc($res)) {
-                                $cls = !empty($row['c_name']) ? $row['c_name'] : '-';
-                                echo "<tr>
-                                    <td><span style='font-weight:600; color:#F59E0B'>#{$row['student_id_code']}</span></td>
-                                    <td><span style='font-weight:600; color:#334155'>{$row['full_name']}</span></td>
-                                    <td style='color:#64748B'>{$row['email']}</td>
-                                    <td><span style='background:#F1F5F9; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:600;'>$cls</span></td>
-                                    <td>
-                                        <a href='edit_student.php?id={$row['id']}' class='action-btn btn-edit'><i class='fa-solid fa-pen'></i></a>
-                                        <a href='delete_student.php?id={$row['id']}' class='action-btn btn-delete' onclick=\"return confirm('Delete?')\"><i class='fa-solid fa-trash'></i></a>
-                                    </td>
-                                </tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-
+<?php include "includes/sidebar.php"; ?>
+<div class="main-wrapper">
+    <div class="topbar"><h2 class="page-title">Quản Lý Học Sinh</h2></div>
+    
+    <div class="content-scroll">
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:30px">
+            <div class="card">
+                <div class="card-header"><h3><i class="fa-solid fa-user-plus" style="color:#F59E0B"></i> Thêm Học Sinh</h3></div>
+                <form method="post">
+                    <div style="margin-bottom:15px"><label class="form-label">Mã Sinh Viên</label><input type="text" name="code" class="form-control" required></div>
+                    <div style="margin-bottom:15px"><label class="form-label">Họ Tên</label><input type="text" name="name" class="form-control" required></div>
+                    <div style="margin-bottom:15px"><label class="form-label">Tên Đăng Nhập</label><input type="text" name="user" class="form-control" required></div>
+                    <div style="margin-bottom:20px"><label class="form-label">Mật Khẩu</label><input type="password" name="pass" class="form-control" required></div>
+                    <button name="add" class="btn-primary" style="width:100%; justify-content:center;">Thêm Mới</button>
+                </form>
             </div>
+
+            <div class="card">
+        <h3>Danh Sách Học Sinh</h3>
+        <table class="dataTable">
+            <thead><tr><th>Mã SV</th><th>Họ Tên</th><th>Lớp</th><th width="100">Hành Động</th></tr></thead>
+            <tbody>
+            <?php 
+            $q = "SELECT s.*, u.full_name, c.name as cname, u.id as uid FROM students s JOIN users u ON s.user_id=u.id LEFT JOIN classes c ON s.class_id=c.id ORDER BY s.id DESC";
+            $rs = mysqli_query($link, $q);
+            while($r = mysqli_fetch_assoc($rs)): ?>
+                <tr>
+                    <td><span style="font-family:monospace; font-weight:700; color:#64748B">#<?php echo $r['student_code']; ?></span></td>
+                    <td><b><?php echo $r['full_name']; ?></b></td>
+                    <td>
+                        <?php if($r['cname']): ?>
+                            <span class="badge badge-active"><?php echo $r['cname']; ?></span>
+                        <?php else: ?>
+                            <span style="color:#94A3B8; font-size:13px; font-style:italic">Chưa có lớp</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="manage_students.php?delete=<?php echo $r['uid']; ?>" onclick="return confirm('Xóa học sinh này?')" class="action-btn btn-delete" title="Xóa">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#dataTable').DataTable({ "pageLength": 8, "lengthChange": false, "language": { "search": "", "searchPlaceholder": "Search..." } });
-        });
-    </script>
-</body>
-</html>
+</div>
+</body></html>

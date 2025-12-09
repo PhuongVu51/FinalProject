@@ -1,40 +1,31 @@
 <?php
 session_start();
-$con=mysqli_connect('127.0.0.1','root');
-mysqli_select_db($con, 'teacher_bee_db');
+include "connection.php";
 
-/* Lấy tất cả dữ liệu từ form mới */
-$full_name = $_POST['full_name'];
-$email = $_POST['email'];
+$full_name = mysqli_real_escape_string($link, $_POST['full_name']);
+$email = mysqli_real_escape_string($link, $_POST['email']);
 $pass = md5($_POST['password']);
-$dob = $_POST['dob'];
-$gender = $_POST['gender'];
-$subjects = $_POST['subjects'];
+// Các trường khác...
 
-
-/* Kiểm tra email đã tồn tại chưa */
-$s="select * from teachers where email='$email'";
-
-$result = mysqli_query($con, $s);
-$num = mysqli_num_rows($result);
-
-if($num == 1){
-    // Trả về trang đăng ký với thông báo lỗi
-    echo "Email đã tồn tại. Vui lòng quay lại và sử dụng email khác.";
-    header("refresh:3;url=register.php");
+// Kiểm tra username tồn tại
+$check = mysqli_query($link, "SELECT id FROM users WHERE username='$email'");
+if(mysqli_num_rows($check) > 0){
+    echo "<script>alert('Email đã tồn tại!'); window.location='register.php';</script>";
 } else {
-    /* Thêm giáo viên mới với đầy đủ thông tin */
-    $reg ="INSERT INTO teachers (full_name, email, password, dob, gender, subjects) 
-           VALUES ('$full_name', '$email', '$pass', '$dob', '$gender', '$subjects')";
+    // 1. Thêm vào bảng Users trước (Role 2 = Teacher)
+    $sql_user = "INSERT INTO users (username, password, role_id, full_name) VALUES ('$email', '$pass', 2, '$full_name')";
     
-    if (mysqli_query($con, $reg)) {
-        echo "Đăng ký thành công! Đang chuyển đến trang đăng nhập...";
-        // Chuyển hướng về trang login (Màn 1)
-        header("refresh:2;url=login.php");
+    if (mysqli_query($link, $sql_user)) {
+        $user_id = mysqli_insert_id($link); // Lấy ID vừa tạo
+        
+        // 2. Thêm vào bảng Teachers (Liên kết với User ID)
+        $sql_teacher = "INSERT INTO teachers (full_name, email, password, role_id, user_id) 
+                        VALUES ('$full_name', '$email', '$pass', 2, $user_id)";
+        mysqli_query($link, $sql_teacher);
+        
+        echo "<script>alert('Đăng ký thành công!'); window.location='login.php';</script>";
     } else {
-        echo "Lỗi khi đăng ký: " . mysqli_error($con);
+        echo "Lỗi: " . mysqli_error($link);
     }
 }
-
-mysqli_close($con);
 ?>
