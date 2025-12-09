@@ -3,30 +3,47 @@ include "connection.php";
 session_start();
 if(!isset($_SESSION['username'])){ header('location:login.php'); }
 
-$id = $_GET["id"]; 
-$student_id_code = ""; $full_name = ""; $email = ""; $class_name = "";
+$id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 
-// Lấy thông tin cũ
-$res = mysqli_query($link,"select * from students where id=$id");
-while ($row = mysqli_fetch_array($res)) {
-    $student_id_code = $row["student_id_code"];
-    $full_name = $row["full_name"];
-    $email = $row["email"];
-    $class_name = $row["class_name"];
+// Lấy thông tin học sinh
+$res = mysqli_query($link,"SELECT * FROM students WHERE id=$id");
+$std = mysqli_fetch_assoc($res);
+if (!$std) { header("Location: manage_students.php"); exit; }
+
+// Lấy danh sách lớp để hiển thị dropdown
+$classes = [];
+$q_class = mysqli_query($link, "SELECT * FROM classes");
+if ($q_class) {
+    while($c = mysqli_fetch_assoc($q_class)){
+        $classes[] = $c;
+    }
 }
 
-// Xử lý Cập nhật (Update)
+// Xử lý Cập nhật
 if(isset($_POST["update"]))
 {
-    mysqli_query($link,"UPDATE students SET 
-                        student_id_code='$_POST[student_id_code]', 
-                        full_name='$_POST[full_name]', 
-                        email='$_POST[email]', 
-                        class_name='$_POST[class_name]' 
-                        WHERE id=$id")
-    or die(mysqli_error($link));
+    $code = mysqli_real_escape_string($link, $_POST['student_id_code']);
+    $name = mysqli_real_escape_string($link, $_POST['full_name']);
+    $email = mysqli_real_escape_string($link, $_POST['email']);
+    $class_id = isset($_POST['class_id']) ? intval($_POST['class_id']) : 0;
+    
+    // Cập nhật cả class_id và class_name (để tương thích ngược)
+    $class_name = "";
+    if($class_id > 0) {
+        $r_c = mysqli_fetch_assoc(mysqli_query($link, "SELECT name FROM classes WHERE id=$class_id"));
+        if($r_c) $class_name = $r_c['name'];
+    }
 
-    header("Location: manage_students.php"); // Cập nhật xong, về trang quản lý
+    $sql = "UPDATE students SET 
+            student_id_code='$code', 
+            full_name='$name', 
+            email='$email', 
+            class_id=$class_id,
+            class_name='$class_name'
+            WHERE id=$id";
+
+    mysqli_query($link, $sql) or die(mysqli_error($link));
+    header("Location: manage_students.php"); 
     exit;
 }
 ?>
@@ -34,32 +51,40 @@ if(isset($_POST["update"]))
 <html lang="en">
 <head>
     <title>Edit Student</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <style> body { background-color: #FFF8E1; padding-top: 50px; } </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="dashboard_style.css">
 </head>
 <body>
-<div class="container">
-    <div class="col-lg-4 col-lg-offset-4" style="background-color: #fff; padding: 20px; border-radius: 8px;">
-        <h2>Cập nhật Thông tin Học sinh</h2>
-        <form action="" name="form_edit_student" method="post">
+<div class="main-container">
+    <div class="content-box" style="max-width: 500px; margin: 0 auto;">
+        <h2 class="section-title">Edit Student</h2>
+        <form action="" method="post">
              <div class="form-group">
-                <label>Mã số học sinh:</label>
-                <input type="text" class="form-control" name="student_id_code" value="<?php echo $student_id_code; ?>">
+                <label>Student ID:</label>
+                <input type="text" class="form-control" name="student_id_code" value="<?php echo $std['student_id_code']; ?>" required>
             </div>
             <div class="form-group">
-                <label>Họ và tên:</label>
-                <input type="text" class="form-control" name="full_name" value="<?php echo $full_name; ?>">
+                <label>Full Name:</label>
+                <input type="text" class="form-control" name="full_name" value="<?php echo $std['full_name']; ?>" required>
             </div>
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" class="form-control" name="email" value="<?php echo $email; ?>">
+                <input type="email" class="form-control" name="email" value="<?php echo $std['email']; ?>">
             </div>
             <div class="form-group">
-                <label>Lớp:</label>
-                <input type="text" class="form-control" name="class_name" value="<?php echo $class_name; ?>">
+                <label>Class:</label>
+                <select name="class_id" class="form-control">
+                    <option value="0">-- Select Class --</option>
+                    <?php foreach($classes as $c): ?>
+                        <option value="<?php echo $c['id']; ?>" <?php if($std['class_id'] == $c['id']) echo 'selected'; ?>>
+                            <?php echo htmlspecialchars($c['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-            <button type="submit" name="update" class="btn btn-primary">Cập nhật</button>
-            <a href="manage_students.php" class="btn btn-default">Hủy</a>
+            <br>
+            <button type="submit" name="update" class="btn btn-primary">Update Student</button>
+            <a href="manage_students.php" class="btn btn-default">Cancel</a>
         </form>
     </div>
 </div>
