@@ -1,62 +1,31 @@
 <?php
-// Bật hiển thị lỗi để dễ sửa nếu có sự cố
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
+include "connection.php";
 
-// --- THÔNG TIN KẾT NỐI INFINITYFREE (ĐÃ SỬA) ---
-$host = "sql100.infinityfree.com";
-$user = "if0_40573259";
-$pass = "Mavuong515"; 
-$dbname = "if0_40573259_course_ms"; 
+$full_name = mysqli_real_escape_string($link, $_POST['full_name']);
+$email = mysqli_real_escape_string($link, $_POST['email']);
+$pass = md5($_POST['password']);
+// Các trường khác...
 
-$con = mysqli_connect($host, $user, $pass, $dbname);
-
-// Kiểm tra kết nối
-if (!$con) {
-    die("Lỗi kết nối Database: " . mysqli_connect_error());
-}
-
-/* Lấy dữ liệu từ Form */
-// Lưu ý: Đảm bảo tên trong $_POST['...'] khớp với name="" bên file HTML
-$full_name = mysqli_real_escape_string($con, $_POST['full_name']);
-$email = mysqli_real_escape_string($con, $_POST['email']);
-$pass = md5($_POST['password']); // Mã hóa mật khẩu
-$dob = mysqli_real_escape_string($con, $_POST['dob']);
-$gender = mysqli_real_escape_string($con, $_POST['gender']);
-$subjects = mysqli_real_escape_string($con, $_POST['subjects']);
-
-/* Bước 1: Kiểm tra xem email đã tồn tại chưa */
-$s = "SELECT * FROM teachers WHERE email='$email'";
-$result = mysqli_query($con, $s);
-
-if (!$result) {
-    die("Lỗi truy vấn kiểm tra email: " . mysqli_error($con));
-}
-
-$num = mysqli_num_rows($result);
-
-if ($num == 1) {
-    // Email đã có -> Báo lỗi
-    echo "Email '$email' đã tồn tại. Vui lòng chọn email khác.";
-    // Đợi 3 giây rồi quay lại trang đăng ký
-    header("refresh:3;url=register.php"); 
+// Kiểm tra username tồn tại
+$check = mysqli_query($link, "SELECT id FROM users WHERE username='$email'");
+if(mysqli_num_rows($check) > 0){
+    echo "<script>alert('Email đã tồn tại!'); window.location='register.php';</script>";
 } else {
-    /* Bước 2: Thêm giáo viên mới */
-    $reg = "INSERT INTO teachers (full_name, email, password, dob, gender, subjects) 
-            VALUES ('$full_name', '$email', '$pass', '$dob', '$gender', '$subjects')";
+    // 1. Thêm vào bảng Users trước (Role 2 = Teacher)
+    $sql_user = "INSERT INTO users (username, password, role_id, full_name) VALUES ('$email', '$pass', 2, '$full_name')";
     
-    if (mysqli_query($con, $reg)) {
-        echo "Đăng ký thành công! Đang chuyển đến trang đăng nhập...";
-        // Đợi 2 giây rồi chuyển sang trang login
-        header("refresh:2;url=login.php");
+    if (mysqli_query($link, $sql_user)) {
+        $user_id = mysqli_insert_id($link); // Lấy ID vừa tạo
+        
+        // 2. Thêm vào bảng Teachers (Liên kết với User ID)
+        $sql_teacher = "INSERT INTO teachers (full_name, email, password, role_id, user_id) 
+                        VALUES ('$full_name', '$email', '$pass', 2, $user_id)";
+        mysqli_query($link, $sql_teacher);
+        
+        echo "<script>alert('Đăng ký thành công!'); window.location='login.php';</script>";
     } else {
-        // In ra lỗi cụ thể (Ví dụ: Sai tên cột, sai kiểu dữ liệu...)
-        echo "Lỗi khi lưu dữ liệu: " . mysqli_error($con);
+        echo "Lỗi: " . mysqli_error($link);
     }
 }
-
-mysqli_close($con);
 ?>
