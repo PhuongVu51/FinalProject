@@ -1,45 +1,70 @@
--- 1. Tạo Database
-CREATE DATABASE IF NOT EXISTS teacher_bee_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- Sử dụng utf8mb4 để hỗ trợ đa ngôn ngữ và biểu tượng cảm xúc
+CREATE TABLE teachers (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  full_name varchar(150) NOT NULL,
+  email varchar(100) NOT NULL UNIQUE,
+  password varchar(255) NOT NULL,
+  dob date DEFAULT NULL,
+  gender varchar(10) DEFAULT NULL,
+  subjects varchar(255) DEFAULT NULL,
+  role_id int(11) DEFAULT 2,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 2. Sử dụng Database
-USE teacher_bee_db;
+-- ============================================
+-- Table 2: classes
+-- ============================================
+CREATE TABLE classes (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(150) NOT NULL,
+  teacher_id int(11) DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY fk_classes_teacher (teacher_id),
+  CONSTRAINT fk_classes_teacher FOREIGN KEY (teacher_id) REFERENCES teachers (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3. Bảng cho Giáo viên (dùng để đăng nhập)
-CREATE TABLE IF NOT EXISTS `teachers` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY, --tự động tăng
-  `full_name` VARCHAR(150) NOT NULL,
-  `email` VARCHAR(100) NOT NULL UNIQUE, 
-  `password` VARCHAR(255) NOT NULL,    
-  `dob` DATE,                         
-  `gender` VARCHAR(10),                 
-  `subjects` VARCHAR(255)             
-);
+-- ============================================
+-- Table 3: students
+-- ============================================
+CREATE TABLE students (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  student_id_code varchar(50) NOT NULL UNIQUE,
+  full_name varchar(150) NOT NULL,
+  email varchar(100) DEFAULT NULL,
+  password varchar(255) DEFAULT NULL,
+  class_id int(11) DEFAULT NULL,
+  class_name varchar(150) DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY fk_students_class (class_id),
+  CONSTRAINT fk_students_class FOREIGN KEY (class_id) REFERENCES classes (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4. Bảng Lớp học (Classes)
-CREATE TABLE IF NOT EXISTS `classes` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(150) NOT NULL,
-  `teacher_id` INT DEFAULT NULL,
-  UNIQUE KEY `uniq_name_teacher` (`name`, `teacher_id`),
-  CONSTRAINT `fk_classes_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE SET NULL
- );
+-- ============================================
+-- Table 4: exams
+-- ============================================
+CREATE TABLE exams (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  exam_title varchar(255) NOT NULL,
+  subject varchar(100) DEFAULT NULL,
+  exam_date date DEFAULT NULL,
+  class_id int(11) DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY fk_exams_class (class_id),
+  CONSTRAINT fk_exams_class FOREIGN KEY (class_id) REFERENCES classes (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4. Bảng Học sinh (cho chức năng Read/Delete)
-CREATE TABLE IF NOT EXISTS `students` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `student_id_code` VARCHAR(50) NOT NULL UNIQUE, -- Mã số HS
-  `full_name` VARCHAR(150) NOT NULL,
-  `email` VARCHAR(100),
-  `class_name` VARCHAR(50), -- Lớp (legacy)
-  `class_id` INT DEFAULT NULL,
-  CONSTRAINT `fk_students_class` FOREIGN KEY (`class_id`) REFERENCES `classes`(`id`) ON DELETE SET NULL
- );
-
--- 5. Bảng Bài kiểm tra (cho chức năng Create/Update)
-CREATE TABLE IF NOT EXISTS `exams` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `exam_title` VARCHAR(255) NOT NULL,
-  `subject` VARCHAR(100), -- Môn học
-  `exam_date` DATE
- );
+-- ============================================
+-- Table 5: scores
+-- ============================================
+CREATE TABLE scores (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  exam_id int(11) NOT NULL,
+  student_id int(11) NOT NULL,
+  score float NOT NULL,
+  comments text DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY unique_exam_student (exam_id, student_id),
+  KEY fk_scores_exam (exam_id),
+  KEY fk_scores_student (student_id),
+  CONSTRAINT fk_scores_exam FOREIGN KEY (exam_id) REFERENCES exams (id) ON DELETE CASCADE,
+  CONSTRAINT fk_scores_student FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
