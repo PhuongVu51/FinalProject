@@ -27,7 +27,6 @@ if(isset($_GET['del'])){
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
         body { background-color: #F8FAFC; font-family: 'Segoe UI', sans-serif; }
-        .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 24px; }
         
         /* Card Styles */
         .card { background: white; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow:hidden; height: fit-content; }
@@ -62,8 +61,6 @@ if(isset($_GET['del'])){
     <?php include "includes/topbar.php"; ?>
     
     <div class="content-scroll">
-        <h2 class="page-title">Quản Lý Giáo Viên</h2>
-        
         <div style="display:grid; grid-template-columns: 1fr 2fr; gap:24px">
             <div class="card">
                 <div class="card-header">
