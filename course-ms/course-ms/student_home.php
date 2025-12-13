@@ -43,7 +43,10 @@ $sid = $_SESSION['student_id'];
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             text-align: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
         .stat-card:hover {
             transform: translateY(-4px);
@@ -72,6 +75,112 @@ $sid = $_SESSION['student_id'];
             color: #666;
             font-size: 14px;
         }
+        .news-list-item {
+            background: white;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid #FFC107;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .news-list-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateX(4px);
+            border-left-color: #F57C00;
+        }
+        .news-list-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        .news-list-icon {
+            width: 40px;
+            height: 40px;
+            background: #FFF3E0;
+            color: #F57C00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .news-list-content {
+            flex: 1;
+        }
+        .news-list-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+        .news-list-date {
+            color: #64748B;
+            font-size: 12px;
+        }
+        .news-list-arrow {
+            color: #FFC107;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .view-all-btn {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-top: 16px;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+        }
+        .view-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+        }
+        .card-header-with-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+        .header-link {
+            color: #F57C00;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+        .header-link:hover {
+            color: #E65100;
+        }
+        .empty-news {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        .empty-news i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -80,54 +189,81 @@ $sid = $_SESSION['student_id'];
         <?php include "includes/topbar.php"; ?>
         <div class="content-scroll">
             
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm nhanh..." onkeyup="searchContent()">
+            </div>
+            
             <div class="hero-banner">
                 <h1>Chào mừng, <?php echo $_SESSION['full_name']; ?>! 👋</h1>
                 <p>Chúc bạn một ngày học tập thật hiệu quả và tràn đầy năng lượng.</p>
             </div>
 
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm tin tức, lớp học, điểm số..." onkeyup="searchContent()">
-            </div>
-
             <!-- Quick Stats -->
             <div class="quick-stats">
-                <div class="stat-card" onclick="location.href='#news'">
+                <a href="student_news.php" class="stat-card">
                     <div class="stat-icon news"><i class="fa-solid fa-newspaper"></i></div>
                     <div class="stat-number"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM news")); ?></div>
                     <div class="stat-label">Tin Tức</div>
-                </div>
-                <div class="stat-card" onclick="location.href='student_classes.php'">
+                </a>
+                <a href="student_classes.php" class="stat-card">
                     <div class="stat-icon classes"><i class="fa-solid fa-chalkboard"></i></div>
                     <div class="stat-number"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM classes")); ?></div>
                     <div class="stat-label">Lớp Học</div>
-                </div>
-                <div class="stat-card" onclick="location.href='student_scores.php'">
+                </a>
+                <a href="student_scores.php" class="stat-card">
                     <div class="stat-icon scores"><i class="fa-solid fa-chart-line"></i></div>
                     <div class="stat-number"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM scores WHERE student_id=$sid")); ?></div>
                     <div class="stat-label">Kết Quả</div>
-                </div>
+                </a>
             </div>
 
             <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
                 <!-- News Section -->
-                <div class="card" id="news">
-                    <div class="card-header">
+                <div class="card">
+                    <div class="card-header-with-link">
                         <h3 class="card-title">📢 Tin Tức Nhà Trường</h3>
+                        <a href="student_news.php" class="header-link">
+                            Xem tất cả <i class="fa-solid fa-arrow-right"></i>
+                        </a>
                     </div>
-                    <table class="dataTable">
-                        <?php 
-                        $res = mysqli_query($link, "SELECT * FROM news ORDER BY created_at DESC LIMIT 5");
+                    
+                    <?php 
+                    $res = mysqli_query($link, "SELECT * FROM news ORDER BY created_at DESC LIMIT 5");
+                    if(mysqli_num_rows($res) > 0):
                         while($r = mysqli_fetch_assoc($res)): ?>
-                        <tr class="news-item">
-                            <td width="120" style="color:#64748B; font-size:12px;"><?php echo date('d/m/Y', strtotime($r['created_at'])); ?></td>
-                            <td>
-                                <div style="font-weight:700; color:#B45309; margin-bottom:4px;"><?php echo $r['title']; ?></div>
-                                <div style="color:#475569; font-size:13px;"><?php echo $r['content']; ?></div>
-                            </td>
-                        </tr>
-                        <?php endwhile; ?>
-                    </table>
+                        <div class="news-list-item news-item" onclick="window.location.href='student_news.php'">
+                            <div class="news-list-left">
+                                <div class="news-list-icon">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                </div>
+                                <div class="news-list-content">
+                                    <div class="news-list-title">
+                                        <?php echo $r['title']; ?>
+                                    </div>
+                                    <div class="news-list-date">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <?php echo date('d/m/Y H:i', strtotime($r['created_at'])); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="news-list-arrow">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                    
+                    <a href="student_news.php" class="view-all-btn">
+                        <i class="fa-solid fa-newspaper"></i> Xem Tất Cả Tin Tức
+                    </a>
+                    
+                    <?php else: ?>
+                        <div class="empty-news">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <p>Chưa có tin tức nào</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Quick Links -->
@@ -138,7 +274,7 @@ $sid = $_SESSION['student_id'];
                         </div>
                         <h3 style="margin:0 0 10px 0; font-size:16px;">Lớp Học</h3>
                         <p style="color:#64748B; font-size:13px; margin-bottom:15px;">Xem và đăng ký các lớp học.</p>
-                        <a href="student_classes.php" class="btn-primary" style="width:100%">Xem Lớp Học</a>
+                        <a href="student_classes.php" class="btn-primary" style="width:100%; display:inline-block; text-decoration:none;">Xem Lớp Học</a>
                     </div>
 
                     <div class="card" style="text-align:center;">
@@ -147,7 +283,7 @@ $sid = $_SESSION['student_id'];
                         </div>
                         <h3 style="margin:0 0 10px 0; font-size:16px;">Kết Quả Học Tập</h3>
                         <p style="color:#64748B; font-size:13px; margin-bottom:15px;">Xem điểm số các bài kiểm tra.</p>
-                        <a href="student_scores.php" class="btn-primary" style="width:100%">Xem Điểm</a>
+                        <a href="student_scores.php" class="btn-primary" style="width:100%; display:inline-block; text-decoration:none;">Xem Điểm</a>
                     </div>
                 </div>
             </div>
