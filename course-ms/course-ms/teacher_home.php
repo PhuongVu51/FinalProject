@@ -38,7 +38,6 @@ while($n = mysqli_fetch_assoc($newsRes)) $latestNews[] = $n;
         <?php include "includes/topbar.php"; ?>
         <div class="content-scroll">
             <div class="hero-banner" style="margin-bottom:24px;">
-                <i class="fa-solid fa-bee hero-icon"></i>
                 <h1>Xin chào, <?php echo $_SESSION['full_name']; ?>! 👋</h1>
             </div>
 
