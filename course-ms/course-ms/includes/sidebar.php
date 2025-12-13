@@ -12,7 +12,10 @@ $role = $_SESSION['role'] ?? '';
             <li class="menu-label">Học Tập</li>
             <li><a href="student_home.php" class="menu-link <?php echo ($cp=='student_home.php')?'active':''; ?>"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
             <li><a href="student_classes.php" class="menu-link <?php echo ($cp=='student_classes.php')?'active':''; ?>"><i class="fa-solid fa-chalkboard-user"></i> Lớp Học</a></li>
-            <li><a href="student_dashboard.php" class="menu-link <?php echo ($cp=='student_dashboard.php')?'active':''; ?>"><i class="fa-solid fa-star"></i> Xem Điểm</a></li>
+            <li><a href="student_scores.php" class="menu-link <?php echo ($cp=='student_scores.php')?'active':''; ?>"><i class="fa-solid fa-star"></i> Kết Quả Học Tập</a></li>
+            <li class="menu-label">Thông tin</li>
+            <li><a href="student_news.php" class="menu-link <?php echo ($cp=='student_news.php')?'active':''; ?>"><i class="fa-solid fa-newspaper"></i> Tin Tức</a></li>
+
 
         <?php elseif($role == 'teacher'): ?>
             <li class="menu-label">Quản Lý</li>
@@ -41,3 +44,23 @@ $role = $_SESSION['role'] ?? '';
         </a>
     </div>
 </aside>
+
+<style>
+.menu-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+    list-style: none;
+    margin: 0;
+}
+
+.menu-label {
+    padding: 1.25rem 1.5rem 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.05em;
+}
+</style>
