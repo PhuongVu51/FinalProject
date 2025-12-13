@@ -19,8 +19,9 @@ if(isset($_POST['add'])){
 <body>
 <?php include "includes/sidebar.php"; ?>
 <div class="main-wrapper">
-    <div class="topbar"><h2 class="page-title">Quản Lý Bài Kiểm Tra</h2></div>
+    <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
+        <div style="margin-bottom:16px;"><h2 class="page-title">Quản Lý Bài Kiểm Tra</h2></div>
         
         <div class="card">
             <div class="card-header"><h3><i class="fa-solid fa-circle-plus" style="color:#F59E0B"></i> Tạo Bài Thi Mới</h3></div>
