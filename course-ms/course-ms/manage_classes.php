@@ -37,9 +37,11 @@ if(isset($_GET['del'])){
     
     .dataTable { width: 100%; border-collapse: collapse; }
     .dataTable th { background: #F8FAFC; color: #64748B; font-size: 12px; text-transform: uppercase; padding: 16px 24px; text-align: left; border-bottom: 1px solid #E2E8F0; }
-    .dataTable td { padding: 16px 24px; border-bottom: 1px solid #F1F5F9; color: #334155; font-size: 14px; }
+    .dataTable td { padding: 16px 24px; border-bottom: 1px solid #F1F5F9; color: #334155; font-size: 14px; vertical-align: middle; }
     .dataTable tr:last-child td { border-bottom: none; }
-    .action-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; margin-right: 4px; transition: 0.2s; }
+    
+    /* CSS cho nút hành động */
+    .action-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; transition: 0.2s; border: none; cursor: pointer; }
     .btn-edit { background: #EFF6FF; color: #3B82F6; } .btn-edit:hover { background: #DBEAFE; }
     .btn-delete { background: #FEF2F2; color: #EF4444; } .btn-delete:hover { background: #FEE2E2; }
 </style>
@@ -74,7 +76,13 @@ if(isset($_GET['del'])){
     <div class="card">
         <div class="card-header"><h3>Danh Sách Lớp Học</h3></div>
         <table class="dataTable">
-            <thead><tr><th>Tên Lớp</th><th>Giáo Viên Chủ Nhiệm</th><th width="120">Hành Động</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Tên Lớp</th>
+                    <th>Giáo Viên Chủ Nhiệm</th>
+                    <th width="150" style="text-align: center;">CHỈNH SỬA</th>
+                </tr>
+            </thead>
             <tbody>
             <?php $res=mysqli_query($link, "SELECT c.*, u.full_name FROM classes c LEFT JOIN teachers t ON c.teacher_id=t.id LEFT JOIN users u ON t.user_id=u.id");
             while($r=mysqli_fetch_assoc($res)): ?>
@@ -90,9 +98,15 @@ if(isset($_GET['del'])){
                             <span style="color:#94A3B8; font-style:italic; font-size:13px;">-- Trống --</span>
                         <?php endif; ?>
                     </td>
-                    <td>
-                        <a href="edit_class.php?id=<?php echo $r['id']; ?>" class="action-btn btn-edit" title="Sửa"><i class="fa-solid fa-pen"></i></a>
-                        <a href="?del=<?php echo $r['id']; ?>" onclick="return confirm('Xóa lớp?')" class="action-btn btn-delete" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <a href="edit_class.php?id=<?php echo $r['id']; ?>" class="action-btn btn-edit" title="Sửa">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <a href="?del=<?php echo $r['id']; ?>" onclick="return confirm('Xóa lớp?')" class="action-btn btn-delete" title="Xóa">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
                     </td>
                 </tr>
             <?php endwhile; ?>

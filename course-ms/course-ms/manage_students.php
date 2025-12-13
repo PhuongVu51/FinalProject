@@ -16,7 +16,7 @@ if(isset($_GET['del'])){
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quản Lý Học Sinh</title>
+    <title>Hệ Thống Quản Lý</title>
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
@@ -45,7 +45,7 @@ if(isset($_GET['del'])){
 <?php include "includes/sidebar.php"; ?>
 <div class="main-wrapper">
     <div class="content-scroll">
-        <h2 class="page-title">Quản Lý Học Sinh</h2>
+        <h2 class="page-title">Hệ Thống Quản Lý</h2>
         <div style="display:grid; grid-template-columns: 1fr 2.5fr; gap:24px">
             <div class="card" style="height: fit-content;">
                 <div class="card-header"><h3><i class="fa-solid fa-user-plus" style="color:#F59E0B"></i> Thêm Mới</h3></div>

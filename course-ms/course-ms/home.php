@@ -47,10 +47,6 @@ if($role === 'admin'){
         .dataTable tbody td { padding: 16px 24px; border-bottom: 1px solid #F1F5F9; color: var(--text-main); font-size: 14px; vertical-align: middle; }
         .dataTable tbody tr:last-child td { border-bottom: none; }
         .dataTable tbody tr:hover { background-color: #F8FAFC; }
-        
-        .welcome-banner { margin-bottom: 30px; }
-        .welcome-banner h2 { font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 5px 0; }
-        .welcome-banner p { color: var(--text-muted); margin: 0; }
     </style>
 </head>
 <body>
@@ -62,11 +58,6 @@ if($role === 'admin'){
 
         <div class="content-scroll">
                 
-                <div class="welcome-banner">
-                    <h2>Hệ Thống Quản Lý</h2>
-                    <p>Chào mừng trở lại, Administrator!</p>
-                </div>
-
                 <div class="stats-grid">
                     <div class="stat-item">
                         <div class="stat-info">
@@ -115,7 +106,7 @@ if($role === 'admin'){
                             <i class="fa-solid fa-newspaper" style="color:#F59E0B;"></i> 
                             Tin Tức & Thông Báo
                         </h3>
-                        <a href="manage_news.php" class="btn-secondary" style="border-radius:20px; font-size:13px; padding:6px 16px; border:1px solid #E2E8F0;">
+                        <a href="manage_news.php" class="btn-secondary" style="border-radius:20px; font-size:13px; padding:6px 16px; border:1px solid #E2E8F0; text-decoration:none; color:#64748B;">
                             Xem tất cả
                         </a>
                     </div>
