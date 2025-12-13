@@ -4,7 +4,7 @@ include "connection.php";
 
 $error = "";
 if (isset($_POST['register'])) {
-    $role = $_POST['role_selector']; // Lấy role từ hidden input
+    $role = $_POST['role_selector']; // 'teacher' or 'student'
     $name = trim($_POST['full_name']);
     $email = trim($_POST['email']);
     $pass = $_POST['password'];
@@ -24,18 +24,22 @@ if (isset($_POST['register'])) {
             $pass_hash = md5($pass);
             $clean_name = mysqli_real_escape_string($link, $name);
 
-            // Insert User
-            $sql = "INSERT INTO users (username, password, role, full_name) VALUES ('$clean_email', '$pass_hash', '$role', '$clean_name')";
+            // Map role string to role_id: teacher=2, student=3
+            $role_id = ($role == 'teacher') ? 2 : 3;
+
+            // Insert User with role_id instead of role
+            $sql = "INSERT INTO users (username, password, role_id, full_name) VALUES ('$clean_email', '$pass_hash', $role_id, '$clean_name')";
             
             if(mysqli_query($link, $sql)){
                 $uid = mysqli_insert_id($link);
-                // Insert bảng phụ
+                
+                // Insert into respective table
                 if($role == 'teacher') {
-                    mysqli_query($link, "INSERT INTO teachers (user_id, email) VALUES ($uid, '$clean_email')");
+                    mysqli_query($link, "INSERT INTO teachers (user_id, email, full_name, password, role_id) VALUES ($uid, '$clean_email', '$clean_name', '$pass_hash', 2)");
                 } else {
-                    // Tạo mã SV tự động
+                    // Generate student code
                     $scode = "SV" . str_pad($uid, 4, "0", STR_PAD_LEFT);
-                    mysqli_query($link, "INSERT INTO students (user_id, student_code) VALUES ($uid, '$scode')");
+                    mysqli_query($link, "INSERT INTO students (user_id, student_id_code, full_name, email, password) VALUES ($uid, '$scode', '$clean_name', '$clean_email', '$pass_hash')");
                 }
                 echo "<script>alert('Đăng ký thành công!'); window.location='login.php';</script>";
             } else {
@@ -204,7 +208,7 @@ if (isset($_POST['register'])) {
                 teacherFields.style.display = 'none';
             }
         }
-        setRegisterRole('teacher'); // Default
+        setRegisterRole('teacher');
     </script>
 </body>
 </html>

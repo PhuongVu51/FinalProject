@@ -9,8 +9,13 @@ function checkLogin($link) {
         $res = mysqli_query($link, "SELECT * FROM users WHERE remember_token = '$token'");
         if ($user = mysqli_fetch_assoc($res)) {
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role'] = $user['role']; // 'admin', 'teacher', 'student'
             $_SESSION['full_name'] = $user['full_name'];
+            
+            // Map role_id to role string
+            if ($user['role_id'] == 1) $_SESSION['role'] = 'admin';
+            elseif ($user['role_id'] == 2) $_SESSION['role'] = 'teacher';
+            elseif ($user['role_id'] == 3) $_SESSION['role'] = 'student';
+            
             loadSubId($link, $user);
             return true;
         }
@@ -19,10 +24,17 @@ function checkLogin($link) {
 }
 
 function loadSubId($link, $user) {
-    if ($user['role'] == 'teacher') {
+    // Map role_id to role string if not already set
+    if (!isset($_SESSION['role'])) {
+        if ($user['role_id'] == 1) $_SESSION['role'] = 'admin';
+        elseif ($user['role_id'] == 2) $_SESSION['role'] = 'teacher';
+        elseif ($user['role_id'] == 3) $_SESSION['role'] = 'student';
+    }
+    
+    if ($_SESSION['role'] == 'teacher') {
         $r = mysqli_fetch_assoc(mysqli_query($link, "SELECT id FROM teachers WHERE user_id=".$user['id']));
         if($r) $_SESSION['teacher_id'] = $r['id'];
-    } elseif ($user['role'] == 'student') {
+    } elseif ($_SESSION['role'] == 'student') {
         $r = mysqli_fetch_assoc(mysqli_query($link, "SELECT id FROM students WHERE user_id=".$user['id']));
         if($r) $_SESSION['student_id'] = $r['id'];
     }

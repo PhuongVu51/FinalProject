@@ -23,33 +23,37 @@ if(isset($_POST['login'])) {
         $clean_user = mysqli_real_escape_string($link, $username);
         $hash_pass = md5($password);
         
-        // Kiểm tra User
-        $sql = "SELECT * FROM users WHERE username='$clean_user' AND password='$hash_pass'";
+        // Map selected role to role_id
+        $role_id_map = ['admin' => 1, 'teacher' => 2, 'student' => 3];
+        $expected_role_id = $role_id_map[$selected_role];
+        
+        // Kiểm tra User với role_id
+        $sql = "SELECT * FROM users WHERE username='$clean_user' AND password='$hash_pass' AND role_id=$expected_role_id";
         $res = mysqli_query($link, $sql);
 
         if(mysqli_num_rows($res) == 1) {
             $user = mysqli_fetch_assoc($res);
             
-            // Kiểm tra xem Role user chọn có khớp với DB không
-            if($user['role'] !== $selected_role) {
-                $error = "Tài khoản này không phải là " . ucfirst($selected_role) . ". Vui lòng chọn đúng vai trò!";
-            } else {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['role'] = $user['role'];
-                $_SESSION['full_name'] = $user['full_name'];
-                loadSubId($link, $user);
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['full_name'] = $user['full_name'];
+            
+            // Map role_id to role string
+            if ($user['role_id'] == 1) $_SESSION['role'] = 'admin';
+            elseif ($user['role_id'] == 2) $_SESSION['role'] = 'teacher';
+            elseif ($user['role_id'] == 3) $_SESSION['role'] = 'student';
+            
+            loadSubId($link, $user);
 
-                if(isset($_POST['remember'])) {
-                    $token = bin2hex(random_bytes(16));
-                    mysqli_query($link, "UPDATE users SET remember_token='$token' WHERE id=".$user['id']);
-                    setcookie('remember_token', $token, time() + (86400 * 30), "/");
-                }
-
-                $redirect = ($user['role'] == 'student') ? 'student_home.php' : 'home.php';
-                header("Location: $redirect"); exit;
+            if(isset($_POST['remember'])) {
+                $token = bin2hex(random_bytes(16));
+                mysqli_query($link, "UPDATE users SET remember_token='$token' WHERE id=".$user['id']);
+                setcookie('remember_token', $token, time() + (86400 * 30), "/");
             }
+
+            $redirect = ($user['role_id'] == 3) ? 'student_home.php' : 'home.php';
+            header("Location: $redirect"); exit;
         } else {
-            $error = "Email hoặc mật khẩu không chính xác.";
+            $error = "Email, mật khẩu hoặc vai trò không đúng.";
         }
     }
 }
@@ -196,10 +200,8 @@ if(isset($_POST['login'])) {
         const roles = ['admin', 'teacher', 'student'];
         
         function switchRole(role) {
-            // Cập nhật input hidden để PHP biết
             document.getElementById('role_selector').value = role;
 
-            // Cập nhật giao diện nút bấm
             roles.forEach(r => {
                 const btn = document.getElementById(`btn-${r}`);
                 if (r === role) {

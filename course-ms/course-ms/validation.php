@@ -22,8 +22,13 @@ if (mysqli_num_rows($res) === 1) {
     $user = mysqli_fetch_assoc($res);
     
     $_SESSION['user_id'] = $user['id'];
-    $_SESSION['role'] = $user['role'];
     $_SESSION['full_name'] = $user['full_name'];
+    
+    // Map role_id to role string
+    if ($user['role_id'] == 1) $_SESSION['role'] = 'admin';
+    elseif ($user['role_id'] == 2) $_SESSION['role'] = 'teacher';
+    elseif ($user['role_id'] == 3) $_SESSION['role'] = 'student';
+    
     loadSubId($link, $user);
 
     if (isset($_POST['remember'])) {
@@ -32,7 +37,7 @@ if (mysqli_num_rows($res) === 1) {
         setcookie('remember_token', $token, time() + (86400 * 30), "/");
     }
 
-    if ($user['role'] == 'student') header("Location: student_home.php");
+    if ($user['role_id'] == 3) header("Location: student_home.php");
     else header("Location: home.php");
     exit();
 } else {

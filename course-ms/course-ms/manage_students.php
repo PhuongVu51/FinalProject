@@ -2,10 +2,15 @@
 include "connection.php"; include "auth.php"; requireRole(['admin']);
 
 if(isset($_POST['add'])){
-    $name=trim($_POST['name']); $user=trim($_POST['user']); $pass=md5($_POST['pass']); $code=trim($_POST['code']);
-    mysqli_query($link, "INSERT INTO users (username,password,role,full_name) VALUES ('$user','$pass','student','$name')");
+    $name=trim($_POST['name']); 
+    $user=trim($_POST['user']); 
+    $pass=md5($_POST['pass']); 
+    $code=trim($_POST['code']);
+    
+    // FIXED: Use role_id=3 for student instead of role='student'
+    mysqli_query($link, "INSERT INTO users (username,password,role_id,full_name) VALUES ('$user','$pass',3,'$name')");
     $uid=mysqli_insert_id($link);
-    mysqli_query($link, "INSERT INTO students (user_id,student_code) VALUES ($uid,'$code')");
+    mysqli_query($link, "INSERT INTO students (user_id,student_id_code,full_name,email,password) VALUES ($uid,'$code','$name','$user','$pass')");
     header("Location: manage_students.php");
 }
 if(isset($_GET['del'])){
@@ -49,7 +54,7 @@ if(isset($_GET['del'])){
             $rs = mysqli_query($link, $q);
             while($r = mysqli_fetch_assoc($rs)): ?>
                 <tr>
-                    <td><span style="font-family:monospace; font-weight:700; color:#64748B">#<?php echo $r['student_code']; ?></span></td>
+                    <td><span style="font-family:monospace; font-weight:700; color:#64748B">#<?php echo $r['student_id_code']; ?></span></td>
                     <td><b><?php echo $r['full_name']; ?></b></td>
                     <td>
                         <?php if($r['cname']): ?>
@@ -59,7 +64,7 @@ if(isset($_GET['del'])){
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="manage_students.php?delete=<?php echo $r['uid']; ?>" onclick="return confirm('Xóa học sinh này?')" class="action-btn btn-delete" title="Xóa">
+                        <a href="manage_students.php?del=<?php echo $r['uid']; ?>" onclick="return confirm('Xóa học sinh này?')" class="action-btn btn-delete" title="Xóa">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>

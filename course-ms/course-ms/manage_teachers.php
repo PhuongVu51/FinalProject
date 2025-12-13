@@ -5,10 +5,15 @@ if(isset($_POST['add'])) {
     $name = mysqli_real_escape_string($link, $_POST['name']); 
     $email = mysqli_real_escape_string($link, $_POST['email']); 
     $pass = md5($_POST['pass']);
-    // ... (Giữ nguyên logic thêm)
-    mysqli_query($link, "INSERT INTO users (username,password,role,full_name) VALUES ('$email','$pass','teacher','$name')");
+    
+    // FIXED: Use role_id=2 for teacher instead of role='teacher'
+    mysqli_query($link, "INSERT INTO users (username,password,role_id,full_name) VALUES ('$email','$pass',2,'$name')");
     $uid = mysqli_insert_id($link);
-    mysqli_query($link, "INSERT INTO teachers (user_id,email) VALUES ($uid,'$email')");
+    mysqli_query($link, "INSERT INTO teachers (user_id,email,full_name,password,role_id) VALUES ($uid,'$email','$name','$pass',2)");
+    header("Location: manage_teachers.php");
+}
+if(isset($_GET['del'])){
+    mysqli_query($link, "DELETE FROM users WHERE id=".intval($_GET['del']));
     header("Location: manage_teachers.php");
 }
 ?>
