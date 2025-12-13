@@ -15,7 +15,10 @@ if(isset($_GET['del'])){ mysqli_query($link, "DELETE FROM news WHERE id=".intval
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
         body { background-color: #F8FAFC; font-family: 'Segoe UI', system-ui, sans-serif; }
-        .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 20px; }
+        
+        /* CHUẨN HÓA TIÊU ĐỀ */
+        .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 30px; margin-top: 0; }
+        
         .card { background: white; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding: 24px; margin-bottom: 24px; }
         .form-control { border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 14px; width: 100%; transition: border 0.2s; background: #F8FAFC; }
         .form-control:focus { border-color: #F59E0B; background: white; outline: none; }
@@ -28,8 +31,10 @@ if(isset($_GET['del'])){ mysqli_query($link, "DELETE FROM news WHERE id=".intval
 <body>
 <?php include "includes/sidebar.php"; ?>
 <div class="main-wrapper">
+    <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
-    <h2 class="page-title">Bảng Tin Nhà Trường</h2>
+    
+    <h2 class="page-title">Hệ Thống Quản Lý</h2>
         
     <div class="card">
         <h3 style="margin:0 0 20px 0; color:#334155;">Đăng Tin Mới</h3>
@@ -47,23 +52,16 @@ if(isset($_GET['del'])){ mysqli_query($link, "DELETE FROM news WHERE id=".intval
     </div>
 
     <div class="card">
-        <h3 style="margin:0 0 25px 0; color:#334155; display:flex; align-items:center; gap:10px;">
-            <i class="fa-solid fa-list-ul" style="color:#64748B;"></i> Danh Sách Tin Tức
-        </h3>
+        <h3 style="margin:0 0 25px 0; color:#334155; display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-list-ul" style="color:#64748B;"></i> Danh Sách Tin Tức</h3>
         <?php $res=mysqli_query($link, "SELECT * FROM news ORDER BY created_at DESC");
         while($r=mysqli_fetch_assoc($res)): ?>
         <div class="news-item">
             <div style="padding-right: 20px;">
                 <h4 style="margin:0 0 6px 0; color:#1E293B; font-size:16px; font-weight:700;"><?php echo $r['title']; ?></h4>
-                <div style="font-size:12px; color:#94A3B8; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
-                    <i class="fa-regular fa-clock"></i> <?php echo date('d/m/Y H:i', strtotime($r['created_at'])); ?>
-                </div>
+                <div style="font-size:12px; color:#94A3B8; margin-bottom:10px; display:flex; align-items:center; gap:6px;"><i class="fa-regular fa-clock"></i> <?php echo date('d/m/Y H:i', strtotime($r['created_at'])); ?></div>
                 <p style="margin:0; color:#475569; font-size:14px; line-height:1.6;"><?php echo nl2br($r['content']); ?></p>
             </div>
-            <a href="?del=<?php echo $r['id']; ?>" onclick="return confirm('Xóa tin này?')" class="action-btn btn-delete" 
-               style="background:#FEF2F2; color:#EF4444; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; transition:0.2s;" title="Xóa">
-                <i class="fa-solid fa-trash"></i>
-            </a>
+            <a href="?del=<?php echo $r['id']; ?>" onclick="return confirm('Xóa tin này?')" class="action-btn btn-delete" style="background:#FEF2F2; color:#EF4444; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:8px; transition:0.2s;" title="Xóa"><i class="fa-solid fa-trash"></i></a>
         </div>
         <?php endwhile; ?>
     </div>

@@ -21,7 +21,10 @@ if(isset($_GET['del'])){
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
         body { background-color: #F8FAFC; font-family: 'Segoe UI', sans-serif; }
-        .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 24px; }
+        
+        /* CHUẨN HÓA TIÊU ĐỀ */
+        .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 30px; margin-top: 0; }
+        
         .card { background: white; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow:hidden; }
         .card-header { padding: 20px 24px; border-bottom: 1px solid #F1F5F9; background: white; }
         .card-header h3 { margin:0; font-size:18px; color:#1E293B; display:flex; align-items:center; gap:10px; }
@@ -32,7 +35,6 @@ if(isset($_GET['del'])){
         .form-control:focus { border-color: #F59E0B; background: white; outline:none; }
         .btn-primary { width: 100%; padding: 12px; background: #F59E0B; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-primary:hover { background: #D97706; }
-        
         .dataTable { width: 100%; border-collapse: collapse; }
         .dataTable th { background: #F8FAFC; color: #64748B; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 16px 24px; text-align: left; border-bottom: 1px solid #E2E8F0; }
         .dataTable td { padding: 14px 24px; border-bottom: 1px solid #F1F5F9; color: #334155; font-size: 14px; }
@@ -44,8 +46,11 @@ if(isset($_GET['del'])){
 <body>
 <?php include "includes/sidebar.php"; ?>
 <div class="main-wrapper">
+    <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
+        
         <h2 class="page-title">Hệ Thống Quản Lý</h2>
+        
         <div style="display:grid; grid-template-columns: 1fr 2.5fr; gap:24px">
             <div class="card" style="height: fit-content;">
                 <div class="card-header"><h3><i class="fa-solid fa-user-plus" style="color:#F59E0B"></i> Thêm Mới</h3></div>
@@ -59,7 +64,6 @@ if(isset($_GET['del'])){
                     </form>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header"><h3>Danh Sách Học Sinh</h3></div>
                 <table class="dataTable">
@@ -72,18 +76,8 @@ if(isset($_GET['del'])){
                         <tr>
                             <td><span style="font-family:'Courier New', monospace; font-weight:700; color:#64748B; background:#F1F5F9; padding:2px 6px; border-radius:4px;">#<?php echo $r['student_code']; ?></span></td>
                             <td><b style="color:#0F172A;"><?php echo $r['full_name']; ?></b></td>
-                            <td>
-                                <?php if($r['cname']): ?>
-                                    <span class="badge-active"><?php echo $r['cname']; ?></span>
-                                <?php else: ?>
-                                    <span style="color:#94A3B8; font-size:12px; font-style:italic">Chưa xếp lớp</span>
-                                <?php endif; ?>
-                            </td>
-                            <td align="center">
-                                <a href="manage_students.php?delete=<?php echo $r['uid']; ?>" onclick="return confirm('Xóa học sinh này?')" class="btn-delete" title="Xóa">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
-                            </td>
+                            <td><?php if($r['cname']): ?><span class="badge-active"><?php echo $r['cname']; ?></span><?php else: ?><span style="color:#94A3B8; font-size:12px; font-style:italic">Chưa xếp lớp</span><?php endif; ?></td>
+                            <td align="center"><a href="manage_students.php?delete=<?php echo $r['uid']; ?>" onclick="return confirm('Xóa học sinh này?')" class="btn-delete" title="Xóa"><i class="fa-solid fa-trash"></i></a></td>
                         </tr>
                     <?php endwhile; ?>
                     </tbody>
