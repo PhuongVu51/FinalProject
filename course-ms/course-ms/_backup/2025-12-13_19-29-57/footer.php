@@ -1,0 +1,1 @@
+<footer class="main-footer">© <?php echo date("Y"); ?> Teacher Bee System</footer>
