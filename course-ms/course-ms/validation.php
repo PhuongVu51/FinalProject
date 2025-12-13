@@ -3,31 +3,39 @@ session_start();
 include "connection.php";
 include "auth.php";
 
-$email = mysqli_real_escape_string($link, $_POST['email']);
-$pass = md5($_POST['password']); 
+if (!isset($_POST['login'])) { header("Location: login.php"); exit(); }
 
-$s = "SELECT * FROM teachers WHERE email='$email' AND password='$pass'";
-$res = mysqli_query($link, $s);
+$username = trim($_POST['username']);
+$password = $_POST['password'];
 
-if(mysqli_num_rows($res) == 1){
+if (empty($username) || empty($password)) {
+    header("Location: login.php?error=empty"); exit();
+}
+
+$clean_user = mysqli_real_escape_string($link, $username);
+$hash_pass = md5($password);
+
+$sql = "SELECT * FROM users WHERE username='$clean_user' AND password='$hash_pass'";
+$res = mysqli_query($link, $sql);
+
+if (mysqli_num_rows($res) === 1) {
     $user = mysqli_fetch_assoc($res);
-    $_SESSION['username'] = $user['full_name'];
-    $_SESSION['teacher_id'] = $user['id'];
-    $_SESSION['role_id'] = $user['role_id'];
     
-    // Lấy quyền từ DB (giả sử bạn đã chạy SQL tạo bảng roles ở bước trước)
-    // Nếu chưa có bảng role_permissions, ta fix cứng quyền cho Teacher để test
-    $_SESSION['permissions'] = ($user['role_id'] == 1) ? ['delete_data'] : ['manage_exams', 'manage_students'];
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['role'] = $user['role'];
+    $_SESSION['full_name'] = $user['full_name'];
+    loadSubId($link, $user);
 
-    // XỬ LÝ COOKIE
-    if(isset($_POST['remember'])) {
-        setcookie('user_email', $email, time() + (86400 * 30), "/"); // 30 ngày
-    } else {
-        if(isset($_COOKIE['user_email'])) setcookie('user_email', "", time() - 3600, "/");
+    if (isset($_POST['remember'])) {
+        $token = bin2hex(random_bytes(16));
+        mysqli_query($link, "UPDATE users SET remember_token='$token' WHERE id=".$user['id']);
+        setcookie('remember_token', $token, time() + (86400 * 30), "/");
     }
-    
-    header('location:home.php'); 
-}else{
-    header('location:login.php?error=1'); 
+
+    if ($user['role'] == 'student') header("Location: student_home.php");
+    else header("Location: home.php");
+    exit();
+} else {
+    header("Location: login.php?error=fail"); exit();
 }
 ?>
