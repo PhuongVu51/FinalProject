@@ -24,19 +24,14 @@ $role = $_SESSION['role'] ?? '';
             <li class="menu-label">Tổng Quan</li>
             <li><a href="home.php" class="menu-link <?php echo ($cp=='home.php')?'active':''; ?>"><i class="fa-solid fa-chart-simple"></i> Dashboard</a></li>
             
-            <li class="menu-label">Quản Trị</li>
-            <li><a href="manage_classes.php" class="menu-link <?php echo ($cp=='manage_classes.php'||$cp=='edit_class.php')?'active':''; ?>"><i class="fa-solid fa-chalkboard"></i> Lớp Học</a></li>
-            <li><a href="manage_teachers.php" class="menu-link <?php echo ($cp=='manage_teachers.php')?'active':''; ?>"><i class="fa-solid fa-person-chalkboard"></i> Giáo Viên</a></li>
-            <li><a href="manage_students.php" class="menu-link <?php echo ($cp=='manage_students.php'||$cp=='edit_student.php')?'active':''; ?>"><i class="fa-solid fa-user-graduate"></i> Học Sinh</a></li>
-            
-            <li class="menu-label">Hệ Thống</li>
+            <li class="menu-label">Giảng Dạy</li>
             <li><a href="manage_applications.php" class="menu-link <?php echo ($cp=='manage_applications.php')?'active':''; ?>"><i class="fa-solid fa-file-signature"></i> Duyệt Đơn</a></li>
             <li><a href="manage_news.php" class="menu-link <?php echo ($cp=='manage_news.php')?'active':''; ?>"><i class="fa-regular fa-newspaper"></i> Tin Tức</a></li>
         <?php endif; ?>
 
     </ul>
     <div class="sidebar-footer">
-        <a href="logout.php" class="menu-link" style="color:#EF4444; justify-content:center; background:#FEF2F2;">
+        <a href="../public/logout.php" class="menu-link" style="color:#EF4444; justify-content:center; background:#FEF2F2;">
             <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất
         </a>
     </div>

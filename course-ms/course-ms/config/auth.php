@@ -30,9 +30,9 @@ function loadSubId($link, $user) {
 
 function requireRole($allowed_roles) {
     global $link;
-    if (!checkLogin($link)) { header("Location: /course-ms/public/login.php"); exit(); }
+    if (!checkLogin($link)) { header("Location: /FinalProject/course-ms/course-ms/public/login.php"); exit(); }
     if (!in_array($_SESSION['role'], $allowed_roles)) {
-        die("<h1>🚫 Access Denied</h1><p>Bạn không có quyền vào trang này.</p><a href='logout.php'>Đăng xuất</a>");
+        die("<h1>🚫 Access Denied</h1><p>Bạn không có quyền vào trang này.</p><a href='/FinalProject/course-ms/course-ms/public/logout.php'>Đăng xuất</a>");
     }
 }
 ?>

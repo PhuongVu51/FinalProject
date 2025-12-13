@@ -36,7 +36,7 @@ $role = $_SESSION['role'] ?? '';
 
     </ul>
     <div class="sidebar-footer">
-        <a href="logout.php" class="menu-link" style="color:#EF4444; justify-content:center; background:#FEF2F2;">
+        <a href="../public/logout.php" class="menu-link" style="color:#EF4444; justify-content:center; background:#FEF2F2;">
             <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất
         </a>
     </div>

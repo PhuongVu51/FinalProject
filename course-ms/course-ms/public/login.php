@@ -7,7 +7,7 @@ include "../config/auth.php";
 checkLogin($link);
 
 if(isset($_SESSION['user_id'])) {
-    $redirect = ($_SESSION['role'] == 'student') ? 'student_home.php' : 'home.php';
+    $redirect = ($_SESSION['role'] == 'student') ? '../student/student_home.php' : (($_SESSION['role'] == 'teacher') ? '../teacher/home.php' : '../admin/home.php');
     header("Location: $redirect"); exit;
 }
 
