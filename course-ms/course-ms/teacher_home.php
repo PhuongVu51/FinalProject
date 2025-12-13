@@ -32,7 +32,6 @@ if(!empty($teacherClasses)){
 <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 <head>
     <title>Dashboard | Teacher</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard_style.css">
 </head>
 <body>

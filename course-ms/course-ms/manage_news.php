@@ -9,10 +9,9 @@ if(isset($_GET['del'])){ mysqli_query($link, "DELETE FROM news WHERE id=".intval
 ?>
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 <head>
     <title>Tin Tức</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link rel="stylesheet" href="dashboard_style.css">
 </head>
 <body>
