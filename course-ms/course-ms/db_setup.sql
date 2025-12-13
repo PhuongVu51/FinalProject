@@ -37,7 +37,6 @@ CREATE TABLE `applications` (
 
 -- --------------------------------------------------------
 
---
 -- Cấu trúc bảng cho bảng `classes`
 --
 
@@ -392,8 +391,6 @@ ALTER TABLE `scores`
 ALTER TABLE `students`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
---
--- AUTO_INCREMENT cho bảng `teachers`
 --
 ALTER TABLE `teachers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;

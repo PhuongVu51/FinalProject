@@ -7,7 +7,7 @@ include "auth.php";
 checkLogin($link);
 
 if(isset($_SESSION['user_id'])) {
-    $redirect = ($_SESSION['role'] == 'student') ? 'student_home.php' : 'home.php';
+    $redirect = ($_SESSION['role'] == 'student') ? 'student_home.php' : (($_SESSION['role']=='teacher') ? 'teacher_home.php' : 'home.php');
     header("Location: $redirect"); exit;
 }
 
@@ -45,7 +45,7 @@ if(isset($_POST['login'])) {
                     setcookie('remember_token', $token, time() + (86400 * 30), "/");
                 }
 
-                $redirect = ($user['role'] == 'student') ? 'student_home.php' : 'home.php';
+                $redirect = ($user['role'] == 'student') ? 'student_home.php' : (($user['role']=='teacher') ? 'teacher_home.php' : 'home.php');
                 header("Location: $redirect"); exit;
             }
         } else {

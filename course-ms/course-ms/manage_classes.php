@@ -13,6 +13,8 @@ if(isset($_GET['del'])){
     mysqli_query($link, "DELETE FROM classes WHERE id=".intval($_GET['del']));
     header("Location: manage_classes.php");
 }
+
+// Không còn workflow duyệt giáo viên nhận lớp
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,7 +24,7 @@ if(isset($_GET['del'])){
 <?php include "includes/sidebar.php"; ?>
 <div class="main-wrapper"><?php include "includes/topbar.php"; ?>
 <div class="content-scroll">
-<<div class="card">
+    <div class="card">
         <h3>Danh Sách Lớp Học</h3>
         <table class="dataTable">
             <thead><tr><th>Tên Lớp</th><th>Giáo Viên Chủ Nhiệm</th><th width="120">Hành Động</th></tr></thead>
