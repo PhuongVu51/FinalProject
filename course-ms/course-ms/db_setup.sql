@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1:3306
--- Thời gian đã tạo: Th12 09, 2025 lúc 04:52 AM
+-- Thời gian đã tạo: Th12 09, 2025 lúc 06:01 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -33,7 +33,15 @@ CREATE TABLE `applications` (
   `class_id` int(11) NOT NULL,
   `status` enum('pending','approved','rejected') DEFAULT 'pending',
   `applied_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `applications`
+--
+
+INSERT INTO `applications` (`id`, `student_id`, `class_id`, `status`, `applied_at`) VALUES
+(1, 4, 1, 'pending', '2025-12-09 04:42:13'),
+(2, 2, 2, 'approved', '2025-12-09 04:45:14');
 
 -- --------------------------------------------------------
 
@@ -45,15 +53,16 @@ CREATE TABLE `classes` (
   `id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
   `teacher_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `classes`
 --
 
 INSERT INTO `classes` (`id`, `name`, `teacher_id`) VALUES
-(2, 'Math 101', 2),
-(1, 'MIS2023B', 2);
+(1, 'MIS2023B', 2),
+(2, 'Math 101', 1),
+(3, 'Math01', 2);
 
 -- --------------------------------------------------------
 
@@ -66,17 +75,17 @@ CREATE TABLE `exams` (
   `exam_title` varchar(255) NOT NULL,
   `subject` varchar(100) DEFAULT NULL,
   `exam_date` date DEFAULT NULL,
-  `class_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `class_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `exams`
 --
 
-INSERT INTO `exams` (`id`, `exam_title`, `subject`, `exam_date`, `class_id`) VALUES
-(1, 'MID', 'English', '2025-12-15', NULL),
-(3, 'English', 'MIS', '2025-02-12', 1),
-(4, 'English', 'MIS', '2025-12-08', 1);
+INSERT INTO `exams` (`id`, `exam_title`, `subject`, `exam_date`, `class_id`, `teacher_id`) VALUES
+(1, 'English Midterm', 'English', '2025-02-12', 1, 2),
+(2, 'Math Final', 'Math', '2025-12-15', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -89,57 +98,16 @@ CREATE TABLE `news` (
   `title` varchar(255) NOT NULL,
   `content` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `news`
 --
 
 INSERT INTO `news` (`id`, `title`, `content`, `created_at`) VALUES
-(1, 'Chào mừng năm học mới', 'Hệ thống CourseMS chào đón các bạn học sinh...', '2025-12-09 03:39:41'),
-(2, 'Lịch thi học kỳ 1', 'Các bạn học sinh chú ý lịch thi toán vào ngày 15...', '2025-12-09 03:39:41');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `permissions`
---
-
-CREATE TABLE `permissions` (
-  `permission_id` int(11) NOT NULL,
-  `permission_name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `roles`
---
-
-CREATE TABLE `roles` (
-  `role_id` int(11) NOT NULL,
-  `role_name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `roles`
---
-
-INSERT INTO `roles` (`role_id`, `role_name`) VALUES
-(1, 'Admin'),
-(3, 'Student'),
-(2, 'Teacher');
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `role_permissions`
---
-
-CREATE TABLE `role_permissions` (
-  `role_id` int(11) NOT NULL,
-  `permission_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(1, 'Chào mừng năm học mới', 'Hệ thống CourseMS chào đón các bạn học sinh...', '2025-12-09 04:42:13'),
+(2, 'Lịch thi học kỳ 1', 'Các bạn học sinh chú ý lịch thi toán vào ngày 15...', '2025-12-09 04:42:13'),
+(3, 'Hello', 'ABC', '2025-12-09 04:51:41');
 
 -- --------------------------------------------------------
 
@@ -153,16 +121,17 @@ CREATE TABLE `scores` (
   `student_id` int(11) NOT NULL,
   `score` float DEFAULT 0,
   `comments` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `scores`
 --
 
 INSERT INTO `scores` (`id`, `exam_id`, `student_id`, `score`, `comments`) VALUES
-(1, 4, 4, 10, 'good job'),
-(2, 3, 4, 10, 'good job'),
-(3, 3, 5, 9, 'good');
+(1, 1, 1, 10, 'Excellent'),
+(2, 1, 2, 9, 'Good job'),
+(3, 1, 3, 8.5, 'Well done'),
+(4, 2, 4, 7.5, 'Keep trying');
 
 -- --------------------------------------------------------
 
@@ -172,27 +141,20 @@ INSERT INTO `scores` (`id`, `exam_id`, `student_id`, `score`, `comments`) VALUES
 
 CREATE TABLE `students` (
   `id` int(11) NOT NULL,
-  `student_id_code` varchar(50) NOT NULL,
-  `full_name` varchar(150) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `class_name` varchar(50) DEFAULT NULL,
-  `password` varchar(255) DEFAULT md5('123456'),
-  `class_id` int(11) DEFAULT NULL,
-  `username` varchar(100) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `user_id` int(11) NOT NULL,
+  `student_code` varchar(50) NOT NULL,
+  `class_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `students`
 --
 
-INSERT INTO `students` (`id`, `student_id_code`, `full_name`, `email`, `class_name`, `password`, `class_id`, `username`, `user_id`) VALUES
-(1, '23070123', 'Nguyễn Minh Thuý ', '123@lms.com', 'MathAU', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 8),
-(2, 'a', 'a', 'a@lms.com', 'a', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 9),
-(3, '123123', 'Pham Ha Chi', 'hc@lms.com', 'MIS2023B', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 10),
-(4, '251267', 'Nguyễn Minh Thuý', 'mtn@lms.com', 'MIS2023B', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL, 11),
-(5, '23070124', 'Pham Ha Chi', 'phc@lms.com', 'MIS2023B', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL, 12),
-(6, '23070125', 'Phung Duc Duy', 'pd@lms.com', 'MIS2023B', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL, 13);
+INSERT INTO `students` (`id`, `user_id`, `student_code`, `class_id`) VALUES
+(1, 4, '23070123', 1),
+(2, 5, '123123', 2),
+(3, 6, '251267', 1),
+(4, 7, '23070125', 2);
 
 -- --------------------------------------------------------
 
@@ -202,25 +164,18 @@ INSERT INTO `students` (`id`, `student_id_code`, `full_name`, `email`, `class_na
 
 CREATE TABLE `teachers` (
   `id` int(11) NOT NULL,
-  `full_name` varchar(150) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `dob` date DEFAULT NULL,
-  `gender` varchar(10) DEFAULT NULL,
-  `subjects` varchar(255) DEFAULT NULL,
-  `role_id` int(11) DEFAULT 2,
-  `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `user_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `teachers`
 --
 
-INSERT INTO `teachers` (`id`, `full_name`, `email`, `password`, `dob`, `gender`, `subjects`, `role_id`, `user_id`) VALUES
-(1, 'Nguyen Minh Thuy', '23070553@vnu.edu.vn', 'e10adc3949ba59abbe56e057f20f883e', '2004-12-16', 'female', 'toán', 2, 1),
-(2, 'Vũ Thị Minh Phương', 'mp@lms.com', 'e10adc3949ba59abbe56e057f20f883e', '2005-07-19', 'female', 'English', 2, 2),
-(3, 'a', 'a@lms.com', '81dc9bdb52d04dc20036dbd8313ed055', '2005-11-11', 'other', 'English', 2, 3),
-(4, 'Minh Thuý', 'mt@lms.com', 'e10adc3949ba59abbe56e057f20f883e', '2004-09-17', 'female', 'English', 2, 4);
+INSERT INTO `teachers` (`id`, `user_id`, `email`) VALUES
+(1, 1, '23070553@vnu.edu.vn'),
+(2, 2, 'mp@lms.com'),
+(3, 8, 'ntl@cms.com');
 
 -- --------------------------------------------------------
 
@@ -232,27 +187,25 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role_id` int(11) NOT NULL,
+  `role` enum('admin','teacher','student') NOT NULL DEFAULT 'student',
   `full_name` varchar(150) DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
+  `remember_token` varchar(64) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `role_id`, `full_name`, `avatar`, `created_at`) VALUES
-(1, '23070553@vnu.edu.vn', 'e10adc3949ba59abbe56e057f20f883e', 2, 'Nguyen Minh Thuy', NULL, '2025-12-09 03:44:58'),
-(2, 'mp@lms.com', 'e10adc3949ba59abbe56e057f20f883e', 2, 'Vũ Thị Minh Phương', NULL, '2025-12-09 03:44:58'),
-(3, 'a@lms.com', '81dc9bdb52d04dc20036dbd8313ed055', 2, 'a', NULL, '2025-12-09 03:44:58'),
-(4, 'mt@lms.com', 'e10adc3949ba59abbe56e057f20f883e', 1, 'Minh Thuý', NULL, '2025-12-09 03:44:58'),
-(8, '23070123', 'e10adc3949ba59abbe56e057f20f883e', 3, 'Nguyễn Minh Thuý ', NULL, '2025-12-09 03:44:58'),
-(9, 'a', 'e10adc3949ba59abbe56e057f20f883e', 3, 'a', NULL, '2025-12-09 03:44:58'),
-(10, '123123', 'e10adc3949ba59abbe56e057f20f883e', 3, 'Pham Ha Chi', NULL, '2025-12-09 03:44:58'),
-(11, '251267', 'e10adc3949ba59abbe56e057f20f883e', 3, 'Nguyễn Minh Thuý', NULL, '2025-12-09 03:44:58'),
-(12, '23070124', 'e10adc3949ba59abbe56e057f20f883e', 3, 'Pham Ha Chi', NULL, '2025-12-09 03:44:58'),
-(13, '23070125', 'e10adc3949ba59abbe56e057f20f883e', 3, 'Phung Duc Duy', NULL, '2025-12-09 03:44:58');
+INSERT INTO `users` (`id`, `username`, `password`, `role`, `full_name`, `remember_token`, `created_at`) VALUES
+(1, '23070553@vnu.edu.vn', 'e10adc3949ba59abbe56e057f20f883e', 'teacher', 'Nguyen Minh Thuy', NULL, '2025-12-09 04:42:13'),
+(2, 'mp@lms.com', 'e10adc3949ba59abbe56e057f20f883e', 'teacher', 'Vũ Thị Minh Phương', 'd80aef941f9ac8d0ca1ca8fdf2f40851', '2025-12-09 04:42:13'),
+(3, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'admin', 'Super Admin', '9ded635328b570f2d08dd231779a4342', '2025-12-09 04:42:13'),
+(4, '23070123', 'e10adc3949ba59abbe56e057f20f883e', 'student', 'Nguyễn Minh Thuý', NULL, '2025-12-09 04:42:13'),
+(5, '123123', 'e10adc3949ba59abbe56e057f20f883e', 'student', 'Pham Ha Chi', NULL, '2025-12-09 04:42:13'),
+(6, '251267', 'e10adc3949ba59abbe56e057f20f883e', 'student', 'Nguyễn Minh Thuý (B)', NULL, '2025-12-09 04:42:13'),
+(7, '23070125', 'e10adc3949ba59abbe56e057f20f883e', 'student', 'Phung Duc Duy', NULL, '2025-12-09 04:42:13'),
+(8, 'ntl@cms.com', 'e10adc3949ba59abbe56e057f20f883e', 'teacher', 'Nguyễn Thuỳ Linh', NULL, '2025-12-09 04:52:19');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -271,41 +224,21 @@ ALTER TABLE `applications`
 --
 ALTER TABLE `classes`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uniq_name_teacher` (`name`,`teacher_id`),
-  ADD KEY `fk_classes_teacher` (`teacher_id`);
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Chỉ mục cho bảng `exams`
 --
 ALTER TABLE `exams`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `class_id` (`class_id`),
+  ADD KEY `teacher_id` (`teacher_id`);
 
 --
 -- Chỉ mục cho bảng `news`
 --
 ALTER TABLE `news`
   ADD PRIMARY KEY (`id`);
-
---
--- Chỉ mục cho bảng `permissions`
---
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`permission_id`),
-  ADD UNIQUE KEY `permission_name` (`permission_name`);
-
---
--- Chỉ mục cho bảng `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`role_id`),
-  ADD UNIQUE KEY `role_name` (`role_name`);
-
---
--- Chỉ mục cho bảng `role_permissions`
---
-ALTER TABLE `role_permissions`
-  ADD PRIMARY KEY (`role_id`,`permission_id`),
-  ADD KEY `permission_id` (`permission_id`);
 
 --
 -- Chỉ mục cho bảng `scores`
@@ -320,25 +253,23 @@ ALTER TABLE `scores`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `student_id_code` (`student_id_code`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD KEY `fk_students_class_new` (`class_id`);
+  ADD UNIQUE KEY `student_code` (`student_code`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `class_id` (`class_id`);
 
 --
 -- Chỉ mục cho bảng `teachers`
 --
 ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `fk_teachers_role` (`role_id`);
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD KEY `role_id` (`role_id`);
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
@@ -348,61 +279,49 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `applications`
 --
 ALTER TABLE `applications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `exams`
 --
 ALTER TABLE `exams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT cho bảng `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `roles`
---
-ALTER TABLE `roles`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `scores`
 --
 ALTER TABLE `scores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -419,14 +338,14 @@ ALTER TABLE `applications`
 -- Các ràng buộc cho bảng `classes`
 --
 ALTER TABLE `classes`
-  ADD CONSTRAINT `fk_classes_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE SET NULL;
 
 --
--- Các ràng buộc cho bảng `role_permissions`
+-- Các ràng buộc cho bảng `exams`
 --
-ALTER TABLE `role_permissions`
-  ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `role_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`permission_id`) ON DELETE CASCADE;
+ALTER TABLE `exams`
+  ADD CONSTRAINT `exams_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `exams_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `scores`
@@ -439,19 +358,14 @@ ALTER TABLE `scores`
 -- Các ràng buộc cho bảng `students`
 --
 ALTER TABLE `students`
-  ADD CONSTRAINT `fk_students_class_new` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `students_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE SET NULL;
 
 --
 -- Các ràng buộc cho bảng `teachers`
 --
 ALTER TABLE `teachers`
-  ADD CONSTRAINT `fk_teachers_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
-
---
--- Các ràng buộc cho bảng `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+  ADD CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
