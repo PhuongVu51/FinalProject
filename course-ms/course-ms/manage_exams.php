@@ -2,18 +2,43 @@
 include "connection.php"; include "auth.php"; requireRole(['teacher']);
 $tid = $_SESSION['teacher_id'];
 
+// Lấy danh sách lớp mà giáo viên phụ trách trước khi xử lý form
+$teacherClasses = [];
+$classMap = [];
+$classesRes = mysqli_query($link, "SELECT id, name FROM classes WHERE teacher_id=$tid ORDER BY id DESC");
+while($c = mysqli_fetch_assoc($classesRes)){
+    $teacherClasses[] = $c;
+    $classMap[$c['id']] = $c['name'];
+}
+$noClasses = empty($teacherClasses);
+
+$errorMsg = '';
+
 if(isset($_POST['add'])){
-    $tit=$_POST['title']; $sub=$_POST['sub']; $date=$_POST['date']; $cid=intval($_POST['cid']);
-    mysqli_query($link, "INSERT INTO exams (exam_title,subject,exam_date,class_id,teacher_id) VALUES ('$tit','$sub','$date',$cid,$tid)");
-    header("Location: manage_exams.php");
+    $tit = trim($_POST['title'] ?? '');
+    $sub = trim($_POST['sub'] ?? '');
+    $date = trim($_POST['date'] ?? '');
+    $cid = isset($_POST['cid']) ? intval($_POST['cid']) : 0;
+
+    if(empty($teacherClasses)){
+        $errorMsg = "Bạn chưa có lớp nào để tạo bài thi.";
+    } elseif($cid === 0 || !array_key_exists($cid, $classMap)){
+        $errorMsg = "Vui lòng chọn lớp hợp lệ.";
+    } else {
+        $tit = mysqli_real_escape_string($link, $tit);
+        $sub = mysqli_real_escape_string($link, $sub);
+        $date = mysqli_real_escape_string($link, $date);
+        mysqli_query($link, "INSERT INTO exams (exam_title,subject,exam_date,class_id,teacher_id) VALUES ('$tit','$sub','$date',$cid,$tid)");
+        header("Location: manage_exams.php");
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 <head>
     <title>Quản Lý Thi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link rel="stylesheet" href="dashboard_style.css">
 </head>
 <body>
@@ -22,21 +47,35 @@ if(isset($_POST['add'])){
     <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
         <div style="margin-bottom:16px;"><h2 class="page-title">Quản Lý Bài Kiểm Tra</h2></div>
+
+        <?php if($errorMsg): ?>
+            <div class="card" style="background:#FEF2F2; color:#B91C1C; border:1px solid #FECACA;">
+                <?php echo $errorMsg; ?>
+            </div>
+        <?php endif; ?>
         
         <div class="card">
             <div class="card-header"><h3><i class="fa-solid fa-circle-plus" style="color:#F59E0B"></i> Tạo Bài Thi Mới</h3></div>
             <form method="post" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap:15px; align-items:end;">
-                <div><label class="form-label">Tên bài thi</label><input type="text" name="title" class="form-control" required></div>
-                <div><label class="form-label">Môn học</label><input type="text" name="sub" class="form-control" required></div>
-                <div><label class="form-label">Ngày thi</label><input type="date" name="date" class="form-control" required></div>
+                <div><label class="form-label">Tên bài thi</label><input type="text" name="title" class="form-control" required <?php echo $noClasses?'disabled':''; ?>></div>
+                <div><label class="form-label">Môn học</label><input type="text" name="sub" class="form-control" required <?php echo $noClasses?'disabled':''; ?>></div>
+                <div><label class="form-label">Ngày thi</label><input type="date" name="date" class="form-control" required <?php echo $noClasses?'disabled':''; ?>></div>
                 <div><label class="form-label">Lớp áp dụng</label>
-                    <select name="cid" class="form-control">
-                        <?php $rs=mysqli_query($link, "SELECT * FROM classes WHERE teacher_id=$tid");
-                        while($c=mysqli_fetch_assoc($rs)) echo "<option value='{$c['id']}'>{$c['name']}</option>"; ?>
+                    <select name="cid" class="form-control" <?php echo $noClasses?'disabled':''; ?>>
+                        <?php if($noClasses): ?>
+                            <option value="">Chưa có lớp nào</option>
+                        <?php else: ?>
+                            <?php foreach($teacherClasses as $c): ?>
+                                <option value="<?php echo $c['id']; ?>"><?php echo $c['name']; ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
                 </div>
-                <button name="add" class="btn-primary" style="height:52px;">Tạo</button>
+                <button name="add" class="btn-primary" style="height:52px; opacity:<?php echo $noClasses?'0.5':'1'; ?>; cursor:<?php echo $noClasses?'not-allowed':'pointer'; ?>;" <?php echo $noClasses?'disabled':''; ?>>Tạo</button>
             </form>
+            <?php if($noClasses): ?>
+                <div style="margin-top:10px; color:#B45309; font-weight:700; font-size:14px;">Bạn chưa có lớp nào, hãy đợi admin giao lớp trước rồi quay lại tạo bài thi.</div>
+            <?php endif; ?>
         </div>
 
         <div class="card">

@@ -43,6 +43,8 @@ CREATE TABLE `applications` (
 CREATE TABLE `classes` (
   `id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `capacity` int(11) DEFAULT NULL,
   `teacher_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
