@@ -11,7 +11,68 @@ $sid = $_SESSION['student_id'];
     <title>Trang Chủ | Student</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard_style.css">
-
+    <style>
+        .search-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .search-bar input:focus {
+            outline: none;
+            border-color: #FFC107;
+        }
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+        }
+        .stat-icon.news { background: #E3F2FD; color: #1976D2; }
+        .stat-icon.classes { background: #FFF3E0; color: #F57C00; }
+        .stat-icon.scores { background: #E8F5E9; color: #388E3C; }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
     <?php include "includes/sidebar.php"; ?>
@@ -20,7 +81,6 @@ $sid = $_SESSION['student_id'];
         <div class="content-scroll">
             
             <div class="hero-banner">
-                <i class="fa-solid fa-bee hero-icon"></i>
                 <h1>Chào mừng, <?php echo $_SESSION['full_name']; ?>! 👋</h1>
                 <p>Chúc bạn một ngày học tập thật hiệu quả và tràn đầy năng lượng.</p>
             </div>
