@@ -7,23 +7,14 @@ $tid = intval($_SESSION['teacher_id']);
 
 $classCount = 0;
 $examTotal = 0;
-$latestNews = [];
-
-// Rút gọn nội dung tin để chỉ hiển thị 1-2 dòng
-function newsPreview($text, $limit = 160){
-    $plain = strip_tags($text);
-    $plain = trim(preg_replace('/\s+/', ' ', $plain));
-    if(strlen($plain) <= $limit) return $plain;
-    return substr($plain, 0, $limit) . '...';
-}
+$latestNews = null;
 
 // Thống kê nhanh: số lớp đang dạy, tổng bài kiểm tra
 $classCountRow = mysqli_fetch_assoc(mysqli_query($link, "SELECT COUNT(*) as c FROM classes WHERE teacher_id=$tid"));
 $classCount = $classCountRow['c'] ?? 0;
 $examTotalRow = mysqli_fetch_assoc(mysqli_query($link, "SELECT COUNT(*) as c FROM exams WHERE teacher_id=$tid"));
 $examTotal = $examTotalRow['c'] ?? 0;
-$newsRes = mysqli_query($link, "SELECT id, title, content, created_at FROM news ORDER BY created_at DESC LIMIT 3");
-while($n = mysqli_fetch_assoc($newsRes)) $latestNews[] = $n;
+$latestNews = mysqli_fetch_assoc(mysqli_query($link, "SELECT title, content, created_at FROM news ORDER BY created_at DESC LIMIT 1"));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,33 +54,24 @@ while($n = mysqli_fetch_assoc($newsRes)) $latestNews[] = $n;
                 </a>
             </div>
 
-            <div class="card" style="margin-bottom:24px;">
-                <div class="card-header" style="display:flex; align-items:center; gap:12px;">
+            <a href="news.php" class="card" style="margin-bottom:24px; display:block; text-decoration:none; color:inherit;">
+                <div class="card-header" style="align-items:center;">
                     <h3 style="margin:0;">Tin tức mới nhất</h3>
-                    <a href="news.php" class="btn-primary" style="margin-left:auto; padding:8px 12px; font-size:13px; box-shadow:none; background:#E2E8F0; color:#0F172A; border:1px solid #CBD5E1;">Xem tất cả</a>
+                    <div style="color:#94A3B8; font-size:13px;">
+                        <?php echo $latestNews ? date('d/m/Y H:i', strtotime($latestNews['created_at'])) : ''; ?>
+                    </div>
                 </div>
-                <?php if(!empty($latestNews)): ?>
-                    <div style="margin-top:12px; display:grid; gap:14px;">
-                    <?php foreach($latestNews as $item): ?>
-                        <a href="news_detail.php?id=<?php echo $item['id']; ?>" style="text-decoration:none; color:inherit; display:block;">
-                            <div class="card" style="margin:0; padding:20px; box-shadow:none; border:1px solid #E2E8F0;">
-                                <div style="font-size:18px; font-weight:800; color:#0F172A; margin-bottom:6px;">
-                                    <?php echo htmlspecialchars($item['title']); ?>
-                                </div>
-                                <div style="color:#94A3B8; font-size:14px; line-height:1.6; margin-bottom:10px;">
-                                    <?php echo nl2br(htmlspecialchars(newsPreview($item['content'], 180))); ?>
-                                </div>
-                                <div style="font-size:12px; color:#94A3B8; display:flex; align-items:center; gap:6px;">
-                                    <i class="fa-regular fa-clock"></i> <?php echo date('d/m/Y', strtotime($item['created_at'])); ?>
-                                </div>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
+                <?php if($latestNews): ?>
+                    <div style="font-size:18px; font-weight:800; color:#0F172A; margin-bottom:8px;">
+                        <?php echo $latestNews['title']; ?>
+                    </div>
+                    <div style="color:#475569; line-height:1.6;">
+                        <?php echo nl2br(htmlspecialchars($latestNews['content'])); ?>
                     </div>
                 <?php else: ?>
-                    <div style="padding:14px; color:#94A3B8;">Chưa có tin tức.</div>
+                    <div style="color:#94A3B8;">Chưa có tin tức.</div>
                 <?php endif; ?>
-            </div>
+            </a>
 
         </div>
     </div>
