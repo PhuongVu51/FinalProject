@@ -23,6 +23,7 @@ if(isset($_POST['login'])) {
 }
 ?>
 <html lang="en">
+<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 <head>
     <title>Student Login</title>
     <link rel="stylesheet" href="style.css">
