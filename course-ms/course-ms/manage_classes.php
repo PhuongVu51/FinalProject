@@ -23,7 +23,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Class Management | Teacher Bee</title>
+    <title>Quản lý lớp học | Teacher Bee</title>
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard_style.css">
@@ -100,21 +100,21 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
         <div class="content-scroll" style="padding: 30px;">
             
             <div class="page-header">
-                <h2>Class Management</h2>
+                <h2>Quản lý lớp học</h2>
                 
                 <a href="add_class.php" class="btn-create">
-                    <i class="fa-solid fa-plus"></i> Create New Class
+                    <i class="fa-solid fa-plus"></i> Tạo Lớp Mới
                 </a>
             </div>
             
-            <a href="home.php" class="back-link">&lt; Back to Dashboard</a>
+            <a href="home.php" class="back-link">&lt; Quay lại trang chủ</a>
 
             <div class="white-card">
                 <div class="card-top-row">
-                    <h3>Class List</h3>
+                    <h3>Danh sách lớp</h3>
                     
                     <form method="GET" class="search-box">
-                        <input type="text" name="q" class="search-input" placeholder="Search class name..." value="<?php echo htmlspecialchars($search); ?>">
+                        <input type="text" name="q" class="search-input" placeholder="Tìm kiếm lớp học..." value="<?php echo htmlspecialchars($search); ?>">
                         <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
@@ -122,11 +122,11 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Class Name</th>
-                            <th>Description</th>
-                            <th>Limit</th>
-                            <th>Homeroom Teacher</th>
-                            <th>Actions</th>
+                            <th>Tên lớp</th>
+                            <th>Mô tả</th>
+                            <th>Giới hạn</th>
+                            <th>Giáo viên</th>
+                            <th>Chỉnh sửa</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -165,23 +165,23 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                             <?php echo htmlspecialchars($row['full_name']); ?>
                                         </div>
                                     <?php else: ?>
-                                        <span style="color:#CBD5E1; font-style:italic;">-- Unassigned --</span>
+                                        <span style="color:#CBD5E1; font-style:italic;">-- Chưa được chỉ định --</span>
                                     <?php endif; ?>
                                 </td>
                                 
                                 <td>
-                                    <a href="edit_class.php?id=<?php echo $row['id']; ?>" class="action-icon edit-icon" title="Edit">
+                                    <a href="edit_class.php?id=<?php echo $row['id']; ?>" class="action-icon edit-icon" title="Chỉnh sửa">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
                                     <a href="?del=<?php echo $row['id']; ?>" class="action-icon delete-icon" 
-                                       onclick="return confirm('Are you sure you want to delete this class?');" title="Delete">
+                                       onclick="return confirm('Bạn chắc chắn muốn xóa?');" title="Xóa">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
                         <?php endwhile; 
                     else: ?>
-                        <tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">No classes found.</td></tr>
+                        <tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>

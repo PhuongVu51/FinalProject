@@ -45,7 +45,7 @@ if(isset($_POST['create_class'])){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Create Class | Teacher Bee</title>
+    <title>Tạo lớp | Teacher Bee</title>
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
@@ -66,7 +66,7 @@ if(isset($_POST['create_class'])){
         <div class="content-scroll" style="padding: 40px;">
             <div class="white-card">
                 <h3 style="margin-top:0; color: #F59E0B; margin-bottom: 20px; font-size: 22px;">
-                    <i class="fa-solid fa-circle-plus"></i> Create New Class
+                    <i class="fa-solid fa-circle-plus"></i> Tạo lớp mới
                 </h3>
                 
                 <?php if($error): ?>
@@ -77,25 +77,25 @@ if(isset($_POST['create_class'])){
 
                 <form method="post">
                     <div style="margin-bottom: 20px;">
-                        <label class="form-label">Class Name <span style="color:red">*</span></label>
-                        <input type="text" name="class_name" class="form-control" required placeholder="e.g. Mathematics 101">
+                        <label class="form-label">Tên lớp <span style="color:red">*</span></label>
+                        <input type="text" name="class_name" class="form-control" required placeholder="Ví dụ: Toán Học 101">
                     </div>
 
                     <div style="margin-bottom: 20px;">
-                        <label class="form-label">Description (Intro, Goals...)</label>
-                        <textarea name="description" class="form-control" rows="4" placeholder="Introduction about the class..."></textarea>
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Giới thiệu lớp học..."></textarea>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div style="margin-bottom: 20px;">
-                            <label class="form-label">Student Limit</label>
+                            <label class="form-label">Giới hạn học sinh </label>
                             <input type="number" name="student_limit" class="form-control" value="40" min="1">
                         </div>
 
                         <div style="margin-bottom: 20px;">
-                            <label class="form-label">Assign Teacher</label>
+                            <label class="form-label">Chọn Giáo viên </label>
                             <select name="teacher_id" class="form-control">
-                                <option value="0">-- Select Teacher --</option>
+                                <option value="0">-- Chọn --</option>
                                 <?php foreach($teachers as $t): ?>
                                     <option value="<?php echo $t['id']; ?>">
                                         <?php echo htmlspecialchars($t['full_name']); ?>
@@ -106,9 +106,9 @@ if(isset($_POST['create_class'])){
                     </div>
 
                     <div style="margin-top: 30px; text-align: right;">
-                        <a href="manage_classes.php" class="btn-cancel">Cancel</a>
+                        <a href="manage_classes.php" class="btn-cancel">Hủy</a>
                         <button type="submit" name="create_class" class="btn-submit">
-                            Save Class
+                            Lưu lớp học
                         </button>
                     </div>
                 </form>
