@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Bee - Tạo bài kiểm tra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Be Vietnam Pro"', 'sans-serif'] },
+                    colors: {
+                        honey: { 50:'#FFF8E1', 100:'#FFECB3', 500:'#FFB300', 600:'#FFA000' },
+                        dark: { 900:'#2D3436', 500:'#636E72', 100:'#F9FAFB' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .step-active { @apply border-honey-500 text-honey-600 bg-honey-50; }
+        .step-inactive { @apply border-gray-200 text-gray-400; }
+        /* Custom Checkbox for Quiz Type */
+        .quiz-type-radio:checked + div { @apply border-honey-500 bg-honey-50 ring-1 ring-honey-500; }
+        .quiz-type-radio:checked + div i { @apply text-honey-600; }
+    </style>
+</head>
+<body class="bg-dark-100 min-h-screen font-sans text-dark-900 pb-20">
+
+    <div class="bg-white shadow-sm h-16 flex items-center justify-between px-6 fixed top-0 w-full z-20">
+        <div class="flex items-center gap-3">
+            <a href="#" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                <i class="ph-bold ph-arrow-left"></i>
+            </a>
+            <h1 class="text-lg font-bold">Tạo bài kiểm tra mới</h1>
+        </div>
+        <div class="flex gap-3">
+            <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-dark-900">Lưu nháp</button>
+            <button class="px-4 py-2 bg-honey-500 hover:bg-honey-600 text-white text-sm font-bold rounded-lg shadow-sm transition">
+                Đăng bài
+            </button>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto mt-24 px-4">
+        
+        <div class="flex items-center justify-center mb-8">
+            <div class="flex items-center w-full max-w-2xl">
+                <div class="flex-1 relative">
+                    <div class="flex items-center justify-center w-10 h-10 bg-honey-500 text-white rounded-full font-bold z-10 relative shadow-md">1</div>
+                    <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -z-0"></div> <div class="absolute top-12 left-1/2 -translate-x-1/2 text-xs font-bold text-honey-600 w-max">Thông tin</div>
+                </div>
+                <div class="flex-1 relative">
+                    <div id="step-indicator-2" class="flex items-center justify-center w-10 h-10 bg-white border-2 border-gray-200 text-gray-400 rounded-full font-bold z-10 relative mx-auto transition-colors">2</div>
+                    <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -z-0"></div>
+                    <div class="absolute top-12 left-1/2 -translate-x-1/2 text-xs font-medium text-gray-500 w-max">Cấu hình</div>
+                </div>
+                <div class="flex-1 relative text-right">
+                    <div id="step-indicator-3" class="flex items-center justify-center w-10 h-10 bg-white border-2 border-gray-200 text-gray-400 rounded-full font-bold z-10 relative ml-auto transition-colors">3</div>
+                     <div class="absolute top-1/2 right-0 w-full h-1 bg-gray-200 -z-0"></div>
+                    <div class="absolute top-12 right-0 text-xs font-medium text-gray-500 w-max">Nội dung</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
+            
+            <div id="step-content-1" class="p-8 space-y-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-dark-900">Tên bài kiểm tra <span class="text-red-500">*</span></label>
+                    <input type="text" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-honey-500 focus:ring-2 focus:ring-honey-500/20 outline-none transition" placeholder="VD: Kiểm tra 15 phút - Chương 1">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-dark-900">Mô tả / Hướng dẫn</label>
+                    <textarea class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-honey-500 focus:ring-2 focus:ring-honey-500/20 outline-none transition h-32" placeholder="Nhập hướng dẫn làm bài cho học sinh..."></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-dark-900">Loại bài kiểm tra</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" class="quiz-type-radio sr-only" checked>
+                            <div class="p-4 border border-gray-200 rounded-xl flex flex-col items-center gap-2 hover:bg-gray-50 transition">
+                                <i class="ph-duotone ph-list-checks text-3xl text-gray-400"></i>
+                                <span class="text-sm font-medium">Trắc nghiệm</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" class="quiz-type-radio sr-only">
+                            <div class="p-4 border border-gray-200 rounded-xl flex flex-col items-center gap-2 hover:bg-gray-50 transition">
+                                <i class="ph-duotone ph-text-t text-3xl text-gray-400"></i>
+                                <span class="text-sm font-medium">Tự luận</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" class="quiz-type-radio sr-only">
+                            <div class="p-4 border border-gray-200 rounded-xl flex flex-col items-center gap-2 hover:bg-gray-50 transition">
+                                <i class="ph-duotone ph-files text-3xl text-gray-400"></i>
+                                <span class="text-sm font-medium">Kết hợp</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-content-2" class="p-8 space-y-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-dark-900">Thời gian bắt đầu</label>
+                        <input type="datetime-local" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-dark-900">Hạn chót nộp bài</label>
+                        <input type="datetime-local" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-dark-900">Thời gian làm bài (Phút)</label>
+                    <div class="flex items-center gap-4">
+                        <input type="number" value="45" class="w-24 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-center font-bold outline-none focus:border-honey-500">
+                        <span class="text-gray-500 text-sm">Để trống nếu không giới hạn thời gian.</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                     <input type="checkbox" id="shuffle" class="w-5 h-5 text-honey-500 rounded border-gray-300 focus:ring-honey-500">
+                     <label for="shuffle" class="text-sm font-medium text-dark-900 select-none">Đảo lộn thứ tự câu hỏi</label>
+                </div>
+            </div>
+
+            <div id="step-content-3" class="hidden bg-gray-50/50 min-h-[500px]">
+                <div class="p-8 space-y-6">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm relative group">
+                        <div class="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
+                            <button class="p-2 text-gray-400 hover:text-blue-500"><i class="ph-bold ph-pencil-simple"></i></button>
+                            <button class="p-2 text-gray-400 hover:text-red-500"><i class="ph-bold ph-trash"></i></button>
+                        </div>
+                        <div class="flex gap-4">
+                            <span class="text-honey-500 font-bold text-lg">Q1.</span>
+                            <div class="flex-1">
+                                <p class="font-medium text-dark-900 mb-4">Thủ đô của Việt Nam là gì?</p>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-2 p-3 border border-gray-100 rounded-lg bg-red-50/50 border-red-200">
+                                        <div class="w-5 h-5 rounded-full border border-red-400 flex items-center justify-center text-xs text-red-500 font-bold">A</div>
+                                        <span class="text-sm">TP. Hồ Chí Minh</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 p-3 border border-green-200 rounded-lg bg-green-50">
+                                        <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-xs text-white font-bold"><i class="ph-bold ph-check"></i></div>
+                                        <span class="text-sm font-medium text-green-800">Hà Nội</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 p-3 border border-gray-100 rounded-lg">
+                                        <div class="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-xs text-gray-400 font-bold">C</div>
+                                        <span class="text-sm">Đà Nẵng</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 p-3 border border-gray-100 rounded-lg">
+                                        <div class="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-xs text-gray-400 font-bold">D</div>
+                                        <span class="text-sm">Cần Thơ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 font-medium hover:border-honey-500 hover:text-honey-600 hover:bg-honey-50 transition flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-plus-circle text-xl"></i>
+                        Thêm câu hỏi mới
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-gray-100 flex justify-between bg-white">
+                <button onclick="prevStep()" id="btn-prev" class="px-6 py-2.5 rounded-lg font-medium text-gray-500 hover:bg-gray-100 disabled:opacity-50 transition hidden">
+                    Quay lại
+                </button>
+                <button onclick="nextStep()" id="btn-next" class="ml-auto px-6 py-2.5 rounded-lg font-bold bg-dark-900 text-white hover:bg-black transition flex items-center gap-2">
+                    Tiếp tục <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateUI() {
+            // Hide all content
+            [1, 2, 3].forEach(i => document.getElementById(`step-content-${i}`).classList.add('hidden'));
+            // Show current content
+            document.getElementById(`step-content-${currentStep}`).classList.remove('hidden');
+
+            // Update Header Indicators
+            for(let i = 2; i <= totalSteps; i++) {
+                const el = document.getElementById(`step-indicator-${i}`);
+                if(i <= currentStep) {
+                    el.className = "flex items-center justify-center w-10 h-10 bg-honey-500 text-white rounded-full font-bold z-10 relative mx-auto transition-colors";
+                } else {
+                    el.className = "flex items-center justify-center w-10 h-10 bg-white border-2 border-gray-200 text-gray-400 rounded-full font-bold z-10 relative mx-auto transition-colors";
+                }
+            }
+
+            // Buttons
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            
+            btnPrev.classList.toggle('hidden', currentStep === 1);
+            
+            if(currentStep === totalSteps) {
+                btnNext.innerHTML = 'Hoàn tất <i class="ph-bold ph-check"></i>';
+                btnNext.classList.replace('bg-dark-900', 'bg-honey-500');
+            } else {
+                btnNext.innerHTML = 'Tiếp tục <i class="ph-bold ph-arrow-right"></i>';
+                btnNext.classList.replace('bg-honey-500', 'bg-dark-900');
+            }
+        }
+
+        function nextStep() {
+            if(currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if(currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+    </script>
+</body>
+</html>

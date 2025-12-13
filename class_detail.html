@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Bee - Chi tiết lớp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Be Vietnam Pro"', 'sans-serif'] },
+                    colors: {
+                        honey: { 50:'#FFF8E1', 100:'#FFECB3', 500:'#FFB300', 600:'#FFA000' },
+                        dark: { 900:'#2D3436', 800:'#636E72', 100:'#F9FAFB' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tab-active { @apply border-b-2 border-honey-500 text-honey-600 bg-honey-50/50; }
+        .tab-inactive { @apply border-transparent text-gray-500 hover:text-dark-900 hover:bg-gray-50; }
+    </style>
+</head>
+<body class="bg-dark-100 min-h-screen font-sans text-dark-900">
+
+    <div class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 pt-6 pb-0">
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                <a href="teacher-dashboard.html" class="hover:underline">Dashboard</a>
+                <i class="ph-bold ph-caret-right text-xs"></i>
+                <span class="text-dark-900 font-medium">Lớp Toán 10A</span>
+            </div>
+
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex gap-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-honey-500 to-yellow-600 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-honey-500/30">
+                        10A
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-dark-900">Toán 10A - Đại số cơ bản</h1>
+                        <p class="text-gray-500 mt-1 flex items-center gap-2">
+                            <i class="ph-fill ph-chalkboard-teacher text-honey-500"></i> GV: Cô Thu Thủy 
+                            <span class="mx-1">•</span> 
+                            <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-bold">Đang hoạt động</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg font-bold text-sm hover:bg-gray-50 transition flex items-center gap-2">
+                        <i class="ph-bold ph-gear"></i> Cài đặt
+                    </button>
+                    <button class="px-4 py-2 bg-honey-500 text-white rounded-lg font-bold text-sm hover:bg-honey-600 shadow-md transition flex items-center gap-2">
+                        <i class="ph-bold ph-plus"></i> Tạo mới
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex gap-1">
+                <button onclick="switchTab('students')" id="tab-btn-students" class="tab-active px-6 py-3 text-sm font-bold transition-all rounded-t-lg flex items-center gap-2">
+                    <i class="ph-bold ph-users"></i> Học sinh <span class="bg-honey-100 text-honey-700 px-1.5 rounded text-xs ml-1">38</span>
+                </button>
+                <button onclick="switchTab('tests')" id="tab-btn-tests" class="tab-inactive px-6 py-3 text-sm font-bold transition-all rounded-t-lg flex items-center gap-2">
+                    <i class="ph-bold ph-exam"></i> Bài kiểm tra
+                </button>
+                <button onclick="switchTab('docs')" id="tab-btn-docs" class="tab-inactive px-6 py-3 text-sm font-bold transition-all rounded-t-lg flex items-center gap-2">
+                    <i class="ph-bold ph-files"></i> Tài liệu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        
+        <div id="tab-content-students" class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
+                <div class="relative w-72">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="Tìm kiếm học sinh..." class="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:border-honey-500 outline-none">
+                </div>
+                <button class="text-sm font-bold text-honey-600 hover:underline flex items-center gap-1">
+                    <i class="ph-bold ph-user-plus"></i> Duyệt yêu cầu vào lớp
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase font-semibold">
+                        <tr>
+                            <th class="px-6 py-4">Họ tên</th>
+                            <th class="px-6 py-4">Email</th>
+                            <th class="px-6 py-4">Tiến độ bài tập</th>
+                            <th class="px-6 py-4 text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <tr class="hover:bg-honey-50/30 transition">
+                            <td class="px-6 py-4 font-bold text-dark-900 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs">A</div>
+                                Nguyễn Văn An
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">an.nguyen@email.com</td>
+                            <td class="px-6 py-4">
+                                <div class="w-full bg-gray-200 rounded-full h-2 w-32">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 80%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500 mt-1 block">Hoàn thành 80%</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-gray-400 hover:text-dark-900"><i class="ph-bold ph-dots-three text-xl"></i></button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-honey-50/30 transition">
+                            <td class="px-6 py-4 font-bold text-dark-900 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-xs">B</div>
+                                Trần Thị Bình
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">binh.tran@email.com</td>
+                            <td class="px-6 py-4">
+                                <div class="w-full bg-gray-200 rounded-full h-2 w-32">
+                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 40%"></div>
+                                </div>
+                                <span class="text-xs text-gray-500 mt-1 block">Hoàn thành 40%</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="text-gray-400 hover:text-dark-900"><i class="ph-bold ph-dots-three text-xl"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-content-tests" class="hidden space-y-6">
+            <div class="text-right">
+                <a href="create-quiz.html" class="inline-flex items-center gap-2 bg-honey-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-honey-600 shadow-sm transition">
+                    <i class="ph-bold ph-plus-circle"></i> Tạo bài kiểm tra
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-honey-500 transition flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-honey-50 text-honey-600 rounded-lg flex items-center justify-center text-2xl">
+                            <i class="ph-duotone ph-list-checks"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-dark-900 group-hover:text-honey-600 transition">Kiểm tra 15 phút - Chương 1</h3>
+                            <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                                <span class="flex items-center gap-1"><i class="ph-bold ph-clock"></i> 15 phút</span>
+                                <span class="flex items-center gap-1"><i class="ph-bold ph-calendar"></i> Hạn: 12/10/2024</span>
+                                <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold">Đang mở</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-dark-900">25 <span class="text-sm text-gray-400 font-normal">/ 38</span></div>
+                        <p class="text-xs text-gray-500">Đã nộp bài</p>
+                        <a href="grading.html" class="mt-2 inline-block text-sm font-bold text-honey-600 hover:underline">Chấm bài ngay</a>
+                    </div>
+                </div>
+
+                 <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-honey-500 transition flex items-center justify-between group opacity-75">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-100 text-gray-500 rounded-lg flex items-center justify-center text-2xl">
+                            <i class="ph-duotone ph-text-t"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-dark-900 group-hover:text-honey-600 transition">Bài tập về nhà - Tự luận</h3>
+                            <div class="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                                <span class="flex items-center gap-1"><i class="ph-bold ph-calendar"></i> Hạn: 05/10/2024</span>
+                                <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-bold">Đã đóng</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                         <div class="text-2xl font-bold text-dark-900">38 <span class="text-sm text-gray-400 font-normal">/ 38</span></div>
+                         <p class="text-xs text-gray-500">Đã nộp bài</p>
+                         <button class="mt-2 text-sm font-bold text-gray-500 hover:text-dark-900">Xem kết quả</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-content-docs" class="hidden space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 hover:border-honey-400 transition cursor-pointer">
+                <i class="ph-duotone ph-cloud-arrow-up text-4xl text-gray-400 mb-2"></i>
+                <p class="font-bold text-dark-900">Tải lên tài liệu mới</p>
+                <p class="text-sm text-gray-500">Kéo thả file hoặc click để chọn (PDF, DOCX, PPTX)</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition group relative">
+                    <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                        <button class="text-gray-400 hover:text-red-500"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                    <div class="w-12 h-12 bg-red-50 text-red-500 rounded-lg flex items-center justify-center text-2xl mb-3">
+                        <i class="ph-fill ph-file-pdf"></i>
+                    </div>
+                    <h4 class="font-bold text-sm truncate">De_cuong_on_tap.pdf</h4>
+                    <p class="text-xs text-gray-500 mt-1">2.4 MB • 10/10/2024</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition group relative">
+                     <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition">
+                        <button class="text-gray-400 hover:text-red-500"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center text-2xl mb-3">
+                        <i class="ph-fill ph-file-doc"></i>
+                    </div>
+                    <h4 class="font-bold text-sm truncate">Bai_tap_chuong_1.docx</h4>
+                    <p class="text-xs text-gray-500 mt-1">1.2 MB • 08/10/2024</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // 1. Hide all contents
+            ['students', 'tests', 'docs'].forEach(t => {
+                document.getElementById(`tab-content-${t}`).classList.add('hidden');
+                
+                // Reset button styles
+                const btn = document.getElementById(`tab-btn-${t}`);
+                btn.className = "tab-inactive px-6 py-3 text-sm font-bold transition-all rounded-t-lg flex items-center gap-2";
+            });
+
+            // 2. Show selected content
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+
+            // 3. Highlight selected button
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            activeBtn.className = "tab-active px-6 py-3 text-sm font-bold transition-all rounded-t-lg flex items-center gap-2";
+        }
+    </script>
+</body>
+</html>
