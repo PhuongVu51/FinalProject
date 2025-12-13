@@ -23,37 +23,33 @@ if(isset($_POST['login'])) {
         $clean_user = mysqli_real_escape_string($link, $username);
         $hash_pass = md5($password);
         
-        // Map selected role to role_id
-        $role_id_map = ['admin' => 1, 'teacher' => 2, 'student' => 3];
-        $expected_role_id = $role_id_map[$selected_role];
-        
-        // Kiểm tra User với role_id
-        $sql = "SELECT * FROM users WHERE username='$clean_user' AND password='$hash_pass' AND role_id=$expected_role_id";
+        // Kiểm tra User
+        $sql = "SELECT * FROM users WHERE username='$clean_user' AND password='$hash_pass'";
         $res = mysqli_query($link, $sql);
 
         if(mysqli_num_rows($res) == 1) {
             $user = mysqli_fetch_assoc($res);
             
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['full_name'] = $user['full_name'];
-            
-            // Map role_id to role string
-            if ($user['role_id'] == 1) $_SESSION['role'] = 'admin';
-            elseif ($user['role_id'] == 2) $_SESSION['role'] = 'teacher';
-            elseif ($user['role_id'] == 3) $_SESSION['role'] = 'student';
-            
-            loadSubId($link, $user);
+            // Kiểm tra xem Role user chọn có khớp với DB không
+            if($user['role'] !== $selected_role) {
+                $error = "Tài khoản này không phải là " . ucfirst($selected_role) . ". Vui lòng chọn đúng vai trò!";
+            } else {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['full_name'] = $user['full_name'];
+                loadSubId($link, $user);
 
-            if(isset($_POST['remember'])) {
-                $token = bin2hex(random_bytes(16));
-                mysqli_query($link, "UPDATE users SET remember_token='$token' WHERE id=".$user['id']);
-                setcookie('remember_token', $token, time() + (86400 * 30), "/");
+                if(isset($_POST['remember'])) {
+                    $token = bin2hex(random_bytes(16));
+                    mysqli_query($link, "UPDATE users SET remember_token='$token' WHERE id=".$user['id']);
+                    setcookie('remember_token', $token, time() + (86400 * 30), "/");
+                }
+
+                $redirect = ($user['role'] == 'student') ? 'student_home.php' : 'home.php';
+                header("Location: $redirect"); exit;
             }
-
-            $redirect = ($user['role_id'] == 3) ? 'student_home.php' : 'home.php';
-            header("Location: $redirect"); exit;
         } else {
-            $error = "Email, mật khẩu hoặc vai trò không đúng.";
+            $error = "Email hoặc mật khẩu không chính xác.";
         }
     }
 }
@@ -79,7 +75,7 @@ if(isset($_POST['login'])) {
                     fontFamily: { sans: ['"Be Vietnam Pro"', 'sans-serif'], },
                     colors: {
                         honey: { 50: '#FFF8E1', 100: '#FFECB3', 400: '#FFCA28', 500: '#FFB300', 600: '#FFA000', 700: '#FF8F00', },
-                        dark: { 900: '#2D3436', 500: '#636E72', 100: '#F9FAFB', }
+dark: { 900: '#2D3436', 500: '#636E72', 100: '#F9FAFB', }
                     },
                     boxShadow: {
                         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
@@ -130,7 +126,7 @@ if(isset($_POST['login'])) {
                 <div class="w-8 h-8 bg-honey-500 rounded-lg flex items-center justify-center text-white">
                     <i class="ph-bold ph-student text-xl"></i>
                 </div>
-                <span class="text-xl font-bold text-dark-900">Teacher Bee</span>
+<span class="text-xl font-bold text-dark-900">Teacher Bee</span>
             </div>
 
             <div class="mb-8 text-center lg:text-left">
@@ -169,7 +165,7 @@ if(isset($_POST['login'])) {
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="ph ph-lock-key text-gray-400 text-xl transition-colors"></i>
                         </div>
-                        <input type="password" name="password" id="password" class="w-full pl-11 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-dark-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-honey-500/20 focus:border-honey-500 transition-all" placeholder="••••••••" required>
+<input type="password" name="password" id="password" class="w-full pl-11 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-dark-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-honey-500/20 focus:border-honey-500 transition-all" placeholder="••••••••" required>
                         <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-dark-900 focus:outline-none">
                             <i id="eye-icon" class="ph ph-eye-slash text-xl"></i>
                         </button>
@@ -200,8 +196,10 @@ if(isset($_POST['login'])) {
         const roles = ['admin', 'teacher', 'student'];
         
         function switchRole(role) {
+            // Cập nhật input hidden để PHP biết
             document.getElementById('role_selector').value = role;
 
+            // Cập nhật giao diện nút bấm
             roles.forEach(r => {
                 const btn = document.getElementById(`btn-${r}`);
                 if (r === role) {
@@ -217,7 +215,7 @@ if(isset($_POST['login'])) {
             const icon = document.getElementById('eye-icon');
             if (passInput.type === 'password') {
                 passInput.type = 'text';
-                icon.classList.replace('ph-eye-slash', 'ph-eye');
+icon.classList.replace('ph-eye-slash', 'ph-eye');
                 icon.classList.add('text-honey-600');
             } else {
                 passInput.type = 'password';

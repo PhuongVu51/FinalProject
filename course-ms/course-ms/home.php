@@ -6,8 +6,9 @@ requireRole(['admin', 'teacher']);
 // Hàm đếm nhanh - FIXED: Use role_id instead of role
 function getC($link, $sql){ $r=mysqli_fetch_assoc(mysqli_query($link, $sql)); return $r['c']; }
 
-$s_count = getC($link, "SELECT COUNT(*) as c FROM users WHERE role_id=3"); // 3 = student
-$t_count = getC($link, "SELECT COUNT(*) as c FROM users WHERE role_id=2"); // 2 = teacher
+// SỬA LẠI: Dùng cột 'role' và tìm theo tên 'student'/'teacher'
+$s_count = getC($link, "SELECT COUNT(*) as c FROM users WHERE role='student'"); 
+$t_count = getC($link, "SELECT COUNT(*) as c FROM users WHERE role='teacher'");
 $c_count = getC($link, "SELECT COUNT(*) as c FROM classes");
 $e_count = getC($link, "SELECT COUNT(*) as c FROM exams");
 ?>
