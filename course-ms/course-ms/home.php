@@ -51,8 +51,7 @@ if($role === 'admin'){
     <div class="main-wrapper">
         <?php include "includes/topbar.php"; ?>
         <div class="content-scroll">
-            
-            <h2 class="page-title">Hệ Thống Quản Lý</h2>
+        
 
             <div class="stats-grid">
                 <div class="stat-item">

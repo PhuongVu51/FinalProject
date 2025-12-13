@@ -34,8 +34,6 @@ if(isset($_GET['del'])){ mysqli_query($link, "DELETE FROM news WHERE id=".intval
     <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
     
-    <h2 class="page-title">Hệ Thống Quản Lý</h2>
-        
     <div class="card">
         <h3 style="margin:0 0 20px 0; color:#334155;">Đăng Tin Mới</h3>
         <form method="post">

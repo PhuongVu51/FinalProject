@@ -49,8 +49,6 @@ if(isset($_GET['del'])){
     <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
         
-        <h2 class="page-title">Hệ Thống Quản Lý</h2>
-        
         <div style="display:grid; grid-template-columns: 1fr 2.5fr; gap:24px">
             <div class="card" style="height: fit-content;">
                 <div class="card-header"><h3><i class="fa-solid fa-user-plus" style="color:#F59E0B"></i> Thêm Mới</h3></div>

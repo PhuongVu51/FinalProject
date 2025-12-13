@@ -24,7 +24,7 @@ if(isset($_GET['del'])){
     <style>
         body { background-color: #F8FAFC; font-family: 'Segoe UI', sans-serif; }
         
-        /* CHUẨN HÓA TIÊU ĐỀ */
+        /* ĐỒNG BỘ TIÊU ĐỀ */
         .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 30px; margin-top: 0; }
         
         .card { background: white; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow:hidden; height: fit-content; }
@@ -50,8 +50,6 @@ if(isset($_GET['del'])){
 <div class="main-wrapper">
     <?php include "includes/topbar.php"; ?>
     <div class="content-scroll">
-        
-        <h2 class="page-title">Hệ Thống Quản Lý</h2>
         
         <div style="display:grid; grid-template-columns: 1fr 2fr; gap:24px">
             <div class="card">

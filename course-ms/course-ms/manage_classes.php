@@ -48,8 +48,7 @@ if(isset($_GET['del'])){
 <?php include "includes/sidebar.php"; ?>
 <div class="main-wrapper"><?php include "includes/topbar.php"; ?>
 <div class="content-scroll">
-
-    <h2 class="page-title">Hệ Thống Quản Lý</h2>
+    
 
     <div class="card">
         <div class="card-header"><h3><i class="fa-solid fa-circle-plus" style="color:#F59E0B"></i> Tạo Lớp Học</h3></div>

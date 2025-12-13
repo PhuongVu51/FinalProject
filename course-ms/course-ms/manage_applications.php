@@ -35,8 +35,6 @@ if(isset($_GET['ok'])){
 <div class="main-wrapper"><?php include "includes/topbar.php"; ?>
 <div class="content-scroll">
     
-    <h2 class="page-title">Hệ Thống Quản Lý</h2>
-
     <div class="card">
         <h3>Đơn Xin Vào Lớp <span style="font-size:14px; font-weight:normal; color:#64748B; margin-left:10px; background:#F1F5F9; padding:4px 10px; border-radius:12px;">Cần duyệt</span></h3>
         <table class="dataTable">
