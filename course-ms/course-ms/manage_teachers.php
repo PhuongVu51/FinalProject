@@ -29,7 +29,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
         body { background-color: #FFFDF7; font-family: 'Be Vietnam Pro', sans-serif; }
-        /* Match brand and topbar font/size used in manage_applications.php */
+         /* Match brand and topbar font/size used in manage_applications.php */
         .brand { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; }
         .topbar .page-breadcrumb { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 800; color: #0F172A; margin: 0; }
         
@@ -215,6 +215,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             <div class="content-container">
             
                 <div class="page-header">
+                    <h2>Quản lý giáo viên</h2>
                     
                     <a href="add_teacher.php" class="btn-create">
                         <i class="fa-solid fa-user-plus"></i> Thêm Giáo Viên
@@ -273,12 +274,14 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                 
                                 <!-- Cột Họ và Tên -->
                                 <td>
-                                    <div class="teacher-avatar"><?php echo $initial; ?></div>
-                                    <div class="teacher-info">
-                                        <span class="teacher-name">
-                                            <?php echo htmlspecialchars($row['full_name']); ?>
-                                        </span>
-                                    </div>
+                                    <a href="view_teacher.php?id=<?php echo $row['id']; ?>" style="text-decoration: none; color: inherit; display: flex; align-items: center; transition: 0.2s;">
+                                        <div class="teacher-avatar"><?php echo $initial; ?></div>
+                                        <div class="teacher-info">
+                                            <span class="teacher-name">
+                                                <?php echo htmlspecialchars($row['full_name']); ?>
+                                            </span>
+                                        </div>
+                                    </a>
                                 </td>
                                 
                                 <!-- Cột Email -->

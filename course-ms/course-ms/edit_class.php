@@ -29,6 +29,9 @@ if(isset($_POST['update'])){
             background-color: #FFFDF7; 
             font-family: 'Be Vietnam Pro', sans-serif; 
         }
+        /* Match brand and topbar font/size used in manage_applications.php */
+        .brand { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; }
+        .topbar .page-breadcrumb { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 800; color: #0F172A; margin: 0; }
         
         .edit-card {
             background: #FFFFFF;
