@@ -152,14 +152,42 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             font-weight: 500;
         }
 
+        /* Action Icons - Giống hình 1 */
         .action-icon { 
-            font-size: 16px; margin-right: 12px; text-decoration: none; 
-            transition: 0.2s; cursor: pointer; 
+            font-size: 16px; 
+            margin-right: 8px; 
+            text-decoration: none; 
+            transition: 0.2s; 
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
         }
-        .edit-icon { color: #3B82F6; }
-        .delete-icon { color: #1E293B; }
-        .edit-icon:hover { color: #2563EB; }
-        .delete-icon:hover { color: #DC2626; }
+        
+        .edit-icon { 
+            color: #3B82F6; 
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+        }
+        
+        .delete-icon { 
+            color: #EF4444;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+        }
+        
+        .edit-icon:hover { 
+            background: #DBEAFE;
+            transform: translateY(-1px);
+        }
+        
+        .delete-icon:hover { 
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
 
         .btn-create {
             background-color: #F59E0B; color: white; text-decoration: none; 
@@ -184,7 +212,6 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             <div class="content-container">
             
                 <div class="page-header">
-                    <h2>Quản lý Giáo Viên</h2>
                     
                     <a href="add_teacher.php" class="btn-create">
                         <i class="fa-solid fa-user-plus"></i> Thêm Giáo Viên
@@ -215,7 +242,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                 <th>Email</th>
                                 <th>Môn học</th>
                                 <th>Số lớp dạy</th>
-                                <th>Xóa</th>
+                                <th style="text-align: center;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -278,7 +305,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                     </span>
                                 </td>
                                 
-                                <!-- Cột Xóa -->
+                                <!-- Cột Hành động -->
                                 <td style="text-align: center;">
                                     <a href="?del=<?php echo $row['user_id']; ?>" 
                                        class="action-icon delete-icon" 

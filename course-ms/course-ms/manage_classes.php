@@ -30,25 +30,15 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
     <style>
         body { background-color: #FFFDF7; font-family: 'Be Vietnam Pro', sans-serif; }
         
-        /* Page Header */
+        /* Page Header Style */
         .page-header {
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
         }
         .page-header h2 { font-size: 24px; font-weight: 700; color: #1E293B; margin: 0; }
         
         /* Back Link */
-        .back-link { 
-            display: inline-block; margin-bottom: 15px; font-size: 15px; 
-            color: #64748B; text-decoration: none; font-weight: 600; 
-        }
+        .back-link { display: inline-block; margin-bottom: 15px; font-size: 15px; color: #64748B; text-decoration: none; font-weight: 600; }
         .back-link:hover { color: #F59E0B; }
-
-        /* Content Container - Căn giữa */
-        .content-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
 
         /* Card Style */
         .white-card {
@@ -60,43 +50,24 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
         }
 
         .card-top-row {
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 25px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
         }
-        .white-card h3 { 
-            font-size: 18px; font-weight: 700; color: #1E293B; margin: 0; 
-        }
+        .white-card h3 { font-size: 18px; font-weight: 700; color: #1E293B; margin: 0; }
 
         /* Search Box Style */
         .search-box { display: flex; gap: 10px; }
         .search-input {
-            padding: 8px 15px; border: 1px solid #E2E8F0; border-radius: 8px; 
-            outline: none; font-size: 14px; width: 250px;
+            padding: 8px 15px; border: 1px solid #E2E8F0; border-radius: 8px; outline: none; font-size: 14px; width: 250px;
         }
         .search-btn {
-            background: #F59E0B; color: white; border: none; 
-            padding: 8px 15px; border-radius: 8px; cursor: pointer;
+            background: #F59E0B; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer;
         }
 
         /* Table Style */
         .custom-table { width: 100%; border-collapse: collapse; }
-        .custom-table th { 
-            text-align: left; color: #64748B; font-weight: 600; 
-            font-size: 14px; padding: 15px 10px; 
-            border-bottom: 1px solid #F1F5F9; 
-        }
-        .custom-table td { 
-            padding: 15px 10px; color: #1E293B; font-size: 14px; 
-            font-weight: 600; border-bottom: 1px solid #F1F5F9; 
-            vertical-align: middle; 
-        }
+        .custom-table th { text-align: left; color: #64748B; font-weight: 600; font-size: 14px; padding: 15px 10px; border-bottom: 1px solid #F1F5F9; }
+        .custom-table td { padding: 15px 10px; color: #1E293B; font-size: 14px; font-weight: 600; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
         .custom-table tr:last-child td { border-bottom: none; }
-
-        /* Hover effect cho tên lớp */
-        .custom-table td a:hover {
-            color: #F59E0B !important;
-            text-decoration: underline !important;
-        }
 
         /* Code Badge - Mã lớp */
         .code-badge {
@@ -113,48 +84,51 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
 
         .teacher-badge {
             display: inline-flex; align-items: center; gap: 8px;
-            background: #F8FAFC; padding: 5px 10px; border-radius: 20px; 
-            font-size: 13px; color: #475569; border: 1px solid #E2E8F0;
+            background: #F8FAFC; padding: 5px 10px; border-radius: 20px; font-size: 13px; color: #475569; border: 1px solid #E2E8F0;
         }
         .teacher-icon { color: #3B82F6; }
 
         .limit-badge {
-            background: #FFFBEB; color: #D97706; padding: 4px 8px; 
-            border-radius: 6px; font-weight: 700; font-size: 12px;
-        }
-
-        /* Student Count Badge */
-        .student-count-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #DBEAFE;
-            color: #1E40AF;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 13px;
-            border: 1px solid #93C5FD;
+            background: #FFFBEB; color: #D97706; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px;
         }
 
         .action-icon { 
-            font-size: 16px; margin-right: 12px; text-decoration: none; 
-            transition: 0.2s; cursor: pointer; 
+            font-size: 16px; 
+            margin-right: 8px; 
+            text-decoration: none; 
+            transition: 0.2s; 
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
         }
-        .edit-icon { color: #3B82F6; }
-        .delete-icon { color: #1E293B; }
-        .edit-icon:hover { color: #2563EB; }
-        .delete-icon:hover { color: #DC2626; }
+        .edit-icon { 
+            color: #3B82F6; 
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+        }
+        .delete-icon { 
+            color: #EF4444;
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+        }
+        .edit-icon:hover { 
+            background: #DBEAFE;
+            transform: translateY(-1px);
+        }
+        .delete-icon:hover { 
+            background: #FEE2E2;
+            transform: translateY(-1px);
+        }
 
         .btn-create {
-            background-color: #F59E0B; color: white; text-decoration: none; 
-            padding: 10px 20px; border-radius: 10px; font-weight: 600; 
-            font-size: 14px; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2); 
-            transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;
+            background-color: #F59E0B; color: white; text-decoration: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2); transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
         }
-        .btn-create:hover { 
-            background-color: #D97706; transform: translateY(-1px); 
-        }
+        .btn-create:hover { background-color: #D97706; transform: translateY(-1px); }
     </style>
 </head>
 <body>
@@ -163,13 +137,11 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
     <div class="main-wrapper">
         <?php include "includes/topbar.php"; ?>
 
-        <div class="content-scroll" style="padding: 30px;">
-            
-            <!-- Content Container - Căn giữa -->
-            <div class="content-container">
+        <div class="content-scroll">
+            <!-- WRAPPER ĐỂ CĂN GIỮA -->
+            <div style="width: 100%; max-width: 1400px; margin: 0 auto;">
             
                 <div class="page-header">
-                    <h2>Quản lý lớp học</h2>
                     
                     <a href="add_class.php" class="btn-create">
                         <i class="fa-solid fa-plus"></i> Tạo Lớp Mới
@@ -179,103 +151,103 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                 <a href="home.php" class="back-link">&lt; Quay lại trang chủ</a>
 
                 <div class="white-card">
-                <div class="card-top-row">
-                    <h3>Danh sách lớp</h3>
-                    
-                    <form method="GET" class="search-box">
-                        <input type="text" name="q" class="search-input" placeholder="Tìm kiếm lớp học hoặc mã lớp..." value="<?php echo htmlspecialchars($search); ?>">
-                        <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </form>
-                </div>
+                    <div class="card-top-row">
+                        <h3>Danh sách lớp</h3>
+                        
+                        <form method="GET" class="search-box">
+                            <input type="text" name="q" class="search-input" placeholder="Tìm kiếm lớp học hoặc mã lớp..." value="<?php echo htmlspecialchars($search); ?>">
+                            <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </div>
 
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Mã lớp</th>
-                            <th>Tên lớp</th>
-                            <th>Số học sinh</th>
-                            <th>Giới hạn</th>
-                            <th>Giáo viên</th>
-                            <th>Chỉnh sửa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php 
-                    // Query data with student count
-                    $sql = "SELECT c.*, u.full_name,
-                            (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) as student_count
-                            FROM classes c 
-                            LEFT JOIN teachers t ON c.teacher_id=t.id 
-                            LEFT JOIN users u ON t.user_id=u.id
-                            $sql_search
-                            ORDER BY c.id DESC";
-                    $res = mysqli_query($link, $sql);
-                    
-                    if(mysqli_num_rows($res) > 0):
-                        while($row = mysqli_fetch_assoc($res)): ?>
+                    <table class="custom-table">
+                        <thead>
                             <tr>
-                                <!-- Cột Mã lớp -->
-                                <td>
-                                    <span class="code-badge">
-                                        <?php echo $row['class_code'] ? htmlspecialchars($row['class_code']) : 'N/A'; ?>
-                                    </span>
-                                </td>
-                                
-                                <!-- Cột Tên lớp - Click để xem chi tiết -->
-                                <td>
-                                    <a href="view_class.php?id=<?php echo $row['id']; ?>" 
-                                       style="color: #1E293B; text-decoration: none; font-weight: 700; transition: 0.2s;">
-                                        <?php echo htmlspecialchars($row['name']); ?>
-                                    </a>
-                                </td>
-
-                                <!-- Cột Số học sinh -->
-                                <td>
-                                    <span class="student-count-badge">
-                                        <i class="fa-solid fa-users"></i>
-                                        <?php echo $row['student_count']; ?> học sinh
-                                    </span>
-                                </td>
-
-                                <!-- Cột Giới hạn -->
-                                <td>
-                                    <span class="limit-badge">
-                                        <?php echo isset($row['student_limit']) ? $row['student_limit'] : '40'; ?>
-                                    </span>
-                                </td>
-                                
-                                <!-- Cột Giáo viên -->
-                                <td>
-                                    <?php if($row['full_name']): ?>
-                                        <div class="teacher-badge">
-                                            <i class="fa-solid fa-user-tie teacher-icon"></i>
-                                            <?php echo htmlspecialchars($row['full_name']); ?>
-                                        </div>
-                                    <?php else: ?>
-                                        <span style="color:#CBD5E1; font-style:italic;">-- Chưa được chỉ định --</span>
-                                    <?php endif; ?>
-                                </td>
-                                
-                                <!-- Cột Chỉnh sửa -->
-                                <td>
-                                    <a href="edit_class.php?id=<?php echo $row['id']; ?>" class="action-icon edit-icon" title="Chỉnh sửa">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                    <a href="?del=<?php echo $row['id']; ?>" class="action-icon delete-icon" 
-                                       onclick="return confirm('Bạn chắc chắn muốn xóa?');" title="Xóa">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </td>
+                                <th>Mã lớp</th>
+                                <th>Tên lớp</th>
+                                <th>Mô tả</th>
+                                <th>Giới hạn</th>
+                                <th>Giáo viên</th>
+                                <th>Chỉnh sửa</th>
                             </tr>
-                        <?php endwhile; 
-                    else: ?>
-                        <tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                        <?php 
+                        // Query data
+                        $sql = "SELECT c.*, u.full_name 
+                                FROM classes c 
+                                LEFT JOIN teachers t ON c.teacher_id=t.id 
+                                LEFT JOIN users u ON t.user_id=u.id
+                                $sql_search
+                                ORDER BY c.id DESC";
+                        $res = mysqli_query($link, $sql);
+                        
+                        if(mysqli_num_rows($res) > 0):
+                            while($row = mysqli_fetch_assoc($res)): ?>
+                                <tr>
+                                    <!-- Cột Mã lớp -->
+                                    <td>
+                                        <span class="code-badge">
+                                            <?php echo $row['class_code'] ? htmlspecialchars($row['class_code']) : 'N/A'; ?>
+                                        </span>
+                                    </td>
+                                    
+                                    <!-- Cột Tên lớp - Click để xem chi tiết -->
+                                    <td>
+                                        <a href="view_class.php?id=<?php echo $row['id']; ?>" 
+                                           style="color: #1E293B; text-decoration: none; font-weight: 700; transition: 0.2s;">
+                                            <?php echo htmlspecialchars($row['name']); ?>
+                                        </a>
+                                    </td>
+                                    
+                                    <!-- Cột Mô tả -->
+                                    <td style="font-weight:400; color:#64748B; font-size:13px;">
+                                        <?php 
+                                            $desc = isset($row['description']) ? $row['description'] : '';
+                                            echo (strlen($desc) > 30) ? substr($desc,0,30)."..." : $desc; 
+                                        ?>
+                                    </td>
+
+                                    <!-- Cột Giới hạn -->
+                                    <td>
+                                        <span class="limit-badge">
+                                            <?php echo isset($row['student_limit']) ? $row['student_limit'] : '40'; ?>
+                                        </span>
+                                    </td>
+                                    
+                                    <!-- Cột Giáo viên -->
+                                    <td>
+                                        <?php if($row['full_name']): ?>
+                                            <div class="teacher-badge">
+                                                <i class="fa-solid fa-user-tie teacher-icon"></i>
+                                                <?php echo htmlspecialchars($row['full_name']); ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <span style="color:#CBD5E1; font-style:italic;">-- Chưa được chỉ định --</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    
+                                    <!-- Cột Chỉnh sửa -->
+                                    <td>
+                                        <a href="edit_class.php?id=<?php echo $row['id']; ?>" class="action-icon edit-icon" title="Chỉnh sửa">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a href="?del=<?php echo $row['id']; ?>" class="action-icon delete-icon" 
+                                           onclick="return confirm('Bạn chắc chắn muốn xóa?');" title="Xóa">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; 
+                        else: ?>
+                            <tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             
-            </div><!-- End content-container -->
+            </div>
+            <!-- KẾT THÚC WRAPPER CĂN GIỮA -->
         </div>
     </div>
 </body>
