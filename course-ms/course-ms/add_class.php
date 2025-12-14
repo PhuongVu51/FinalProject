@@ -71,6 +71,10 @@ if(isset($_POST['create_class'])){
         .btn-cancel { background-color: #F1F5F9; color: #64748B; padding: 12px 25px; border-radius: 10px; font-weight: 600; text-decoration: none; margin-right: 10px; }
         
         /* Info Box - Hiển thị mã lớp sẽ được tạo */
+        /* Match brand and topbar font/size used in manage_applications.php */
+        .brand { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; }
+        .topbar .page-breadcrumb { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 800; color: #0F172A; margin: 0; }
+        
         .info-box {
             background: #F0F9FF; 
             border: 1px solid #BAE6FD; 
