@@ -77,6 +77,7 @@ $sid = $_SESSION['student_id'];
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             transition: all 0.3s;
             position: relative;
+            text-align: center;
         }
         .class-card:hover {
             transform: translateY(-4px);
@@ -91,17 +92,18 @@ $sid = $_SESSION['student_id'];
             justify-content: center;
             font-size: 24px;
             margin-bottom: 16px;
+            margin: 0 auto 12px auto; 
         }
         .class-name {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         .class-teacher {
             color: #666;
             font-size: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 0;
         }
         .class-action-btn {
             width: 100%;
@@ -196,31 +198,31 @@ $sid = $_SESSION['student_id'];
             </div>
 
             <!-- Quick Stats Grid -->
-            <div class="classes-grid" style="margin-bottom: 40px;">
-                <a href="student_news.php" class="class-card" style="text-decoration: none; cursor: pointer;">
-                    <div class="class-icon" style="background: #E3F2FD; color: #1976D2;">
-                        <i class="fa-solid fa-newspaper"></i>
-                    </div>
-                    <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM news")); ?></div>
-                    <div class="class-teacher">Tin Tức</div>
-                </a>
+                <div class="classes-grid" style="margin-bottom: 40px;">
+                    <a href="student_news.php" class="class-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="class-icon" style="background: #E3F2FD; color: #1976D2;">
+                            <i class="fa-solid fa-newspaper"></i>
+                        </div>
+                        <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM news")); ?></div>
+                        <div class="class-teacher">Tin Tức</div>
+                    </a>
 
-                <a href="student_classes.php" class="class-card" style="text-decoration: none; cursor: pointer;">
-                    <div class="class-icon" style="background: #FFF3E0; color: #F57C00;">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                    </div>
-                    <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM student_classes WHERE student_id=$sid")); ?></div>
-                    <div class="class-teacher">Lớp Học Của Tôi</div>
-                </a>
+                    <a href="student_classes.php" class="class-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="class-icon" style="background: #FFF3E0; color: #F57C00;">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM student_classes WHERE student_id=$sid")); ?></div>
+                        <div class="class-teacher">Lớp Học Của Tôi</div>
+                    </a>
 
-                <a href="student_scores.php" class="class-card" style="text-decoration: none; cursor: pointer;">
-                    <div class="class-icon" style="background: #FFF9C4; color: #F9A825;">
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM scores WHERE student_id=$sid")); ?></div>
-                    <div class="class-teacher">Kết Quả</div>
-                </a>
-            </div>
+                    <a href="student_scores.php" class="class-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="class-icon" style="background: #FFF9C4; color: #F9A825;">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM scores WHERE student_id=$sid")); ?></div>
+                        <div class="class-teacher">Kết Quả</div>
+                    </a>
+                </div>
 
             <!-- News Section -->
             <div class="section-header">
