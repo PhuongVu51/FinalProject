@@ -165,8 +165,13 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                     </span>
                                 </td>
                                 
-                                <!-- Cột Tên lớp -->
-                                <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                <!-- Cột Tên lớp - Click để xem chi tiết -->
+                                <td>
+                                    <a href="view_class.php?id=<?php echo $row['id']; ?>" 
+                                       style="color: #1E293B; text-decoration: none; font-weight: 700; transition: 0.2s;">
+                                        <?php echo htmlspecialchars($row['name']); ?>
+                                    </a>
+                                </td>
                                 
                                 <!-- Cột Mô tả -->
                                 <td style="font-weight:400; color:#64748B; font-size:13px;">
