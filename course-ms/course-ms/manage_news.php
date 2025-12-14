@@ -3,6 +3,7 @@ include "connection.php";
 include "auth.php"; 
 requireRole(['admin']);
 
+// Handle Add
 if(isset($_POST['add'])){
     $t = mysqli_real_escape_string($link, $_POST['title']); 
     $c = mysqli_real_escape_string($link, $_POST['content']);
@@ -11,10 +12,28 @@ if(isset($_POST['add'])){
     exit;
 }
 
+// Handle Update
+if(isset($_POST['update'])){
+    $id = intval($_POST['news_id']);
+    $t = mysqli_real_escape_string($link, $_POST['title']); 
+    $c = mysqli_real_escape_string($link, $_POST['content']);
+    mysqli_query($link, "UPDATE news SET title='$t', content='$c' WHERE id=$id"); 
+    header("Location: manage_news.php");
+    exit;
+}
+
+// Handle Delete
 if(isset($_GET['del'])){ 
     mysqli_query($link, "DELETE FROM news WHERE id=".intval($_GET['del'])); 
     header("Location: manage_news.php");
     exit;
+}
+
+// Get news item for editing
+$editNews = null;
+if(isset($_GET['edit'])){
+    $editId = intval($_GET['edit']);
+    $editNews = mysqli_fetch_assoc(mysqli_query($link, "SELECT * FROM news WHERE id=$editId"));
 }
 ?>
 <!DOCTYPE html>
@@ -119,6 +138,29 @@ if(isset($_GET['del'])){
             background: #D97706;
         }
         
+        .btn-cancel {
+            width: 100%;
+            padding: 12px;
+            background: #F1F5F9;
+            color: #64748B;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        
+        .btn-cancel:hover {
+            background: #E2E8F0;
+        }
+        
         .news-list-card {
             background: white;
             border-radius: 16px;
@@ -173,6 +215,20 @@ if(isset($_GET['del'])){
         .news-actions {
             display: flex;
             align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .edit-mode-indicator {
+            background: #DBEAFE;
+            color: #1E40AF;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
     </style>
 </head>
@@ -194,31 +250,52 @@ if(isset($_GET['del'])){
             </div>
             
             <div class="two-column-layout">
-                <!-- Add News Form -->
+                <!-- Add/Edit News Form -->
                 <div class="form-card">
                     <div class="form-card-header">
                         <h3>
                             <i class="fa-solid fa-pen-to-square" style="color: #F59E0B;"></i>
-                            Đăng Tin Mới
+                            <?php echo $editNews ? 'Chỉnh Sửa Tin' : 'Đăng Tin Mới'; ?>
                         </h3>
                     </div>
                     <div class="form-card-body">
+                        <?php if($editNews): ?>
+                            <div class="edit-mode-indicator">
+                                <i class="fa-solid fa-circle-info"></i>
+                                Đang chỉnh sửa bài viết
+                            </div>
+                        <?php endif; ?>
+                        
                         <form method="post">
+                            <?php if($editNews): ?>
+                                <input type="hidden" name="news_id" value="<?php echo $editNews['id']; ?>">
+                            <?php endif; ?>
+                            
                             <div class="form-group">
                                 <label class="form-label">Tiêu đề bài viết</label>
                                 <input type="text" name="title" class="form-control" 
-                                       placeholder="Ví dụ: Thông báo nghỉ lễ..." required>
+                                       placeholder="Ví dụ: Thông báo nghỉ lễ..." 
+                                       value="<?php echo $editNews ? htmlspecialchars($editNews['title']) : ''; ?>"
+                                       required>
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label">Nội dung chi tiết</label>
                                 <textarea name="content" class="form-control" 
-                                          placeholder="Nhập nội dung tin tức..." required></textarea>
+                                          placeholder="Nhập nội dung tin tức..." 
+                                          required><?php echo $editNews ? htmlspecialchars($editNews['content']) : ''; ?></textarea>
                             </div>
                             
-                            <button name="add" class="btn-submit">
-                                <i class="fa-solid fa-paper-plane"></i> Đăng Bài Viết
+                            <button name="<?php echo $editNews ? 'update' : 'add'; ?>" class="btn-submit">
+                                <i class="fa-solid fa-<?php echo $editNews ? 'check' : 'paper-plane'; ?>"></i> 
+                                <?php echo $editNews ? 'Cập Nhật Bài Viết' : 'Đăng Bài Viết'; ?>
                             </button>
+                            
+                            <?php if($editNews): ?>
+                                <a href="manage_news.php" class="btn-cancel">
+                                    <i class="fa-solid fa-xmark"></i> Hủy Chỉnh Sửa
+                                </a>
+                            <?php endif; ?>
                         </form>
                     </div>
                 </div>
@@ -253,6 +330,11 @@ if(isset($_GET['del'])){
                                     </p>
                                 </div>
                                 <div class="news-actions">
+                                    <a href="?edit=<?php echo $r['id']; ?>" 
+                                       class="action-btn edit-btn" 
+                                       title="Chỉnh sửa">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
                                     <a href="?del=<?php echo $r['id']; ?>" 
                                        onclick="return confirm('Xóa tin này?')" 
                                        class="action-btn delete-btn" 

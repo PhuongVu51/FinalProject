@@ -388,46 +388,84 @@ if(isset($_GET['reject'])){
                     <table class="modern-table">
                         <thead>
                             <tr>
-                                <th>HỌC SINH</th>
-                                <th width="120">MÃ SV</th>
-                                <th>LỚP</th>
-                                <th width="150">NGÀY DUYỆT</th>
+                                <th>LỚP HỌC</th>
+                                <th width="150" class="text-center">SỐ LƯỢNG</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
-                            $res2 = mysqli_query($link, "SELECT a.*, u.full_name, s.student_code, c.name 
-                                                        FROM applications a 
-                                                        JOIN students s ON a.student_id=s.id 
-                                                        JOIN users u ON s.user_id=u.id 
-                                                        JOIN classes c ON a.class_id=c.id 
-                                                        WHERE a.status='approved' 
-                                                        ORDER BY a.applied_at DESC 
-                                                        LIMIT 20");
+                            // Group approved applications by class
+                            $approved_classes_query = "SELECT c.id, c.name, COUNT(a.id) as student_count
+                                                      FROM applications a 
+                                                      JOIN classes c ON a.class_id = c.id
+                                                      WHERE a.status='approved'
+                                                      GROUP BY c.id, c.name
+                                                      ORDER BY c.name ASC";
+                            $approved_classes_res = mysqli_query($link, $approved_classes_query);
                             
-                            if(mysqli_num_rows($res2) > 0):
-                                while($r = mysqli_fetch_assoc($res2)): 
+                            if(mysqli_num_rows($approved_classes_res) > 0):
+                                while($class = mysqli_fetch_assoc($approved_classes_res)): 
+                                    $class_id = $class['id'];
                             ?>
-                                <tr>
+                                <!-- Class Header Row -->
+                                <tr class="class-row" onclick="toggleStudents('approved_<?php echo $class_id; ?>')">
                                     <td>
-                                        <div class="student-name">
-                                            <?php echo htmlspecialchars($r['full_name']); ?>
+                                        <div class="class-header">
+                                            <i class="fa-solid fa-chevron-right toggle-icon" id="icon-approved_<?php echo $class_id; ?>"></i>
+                                            <span class="class-name"><?php echo htmlspecialchars($class['name']); ?></span>
                                         </div>
                                     </td>
-                                    <td>
-                                        <span class="student-code">
-                                            <?php echo htmlspecialchars($r['student_code']); ?>
+                                    <td class="text-center">
+                                        <span class="student-count" style="background: #D1FAE5; color: #065F46;">
+                                            <?php echo $class['student_count']; ?> học sinh
                                         </span>
                                     </td>
-                                    <td>
-                                        <div class="class-wish">
-                                            <?php echo htmlspecialchars($r['name']); ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="date-cell">
-                                            <i class="fa-regular fa-calendar"></i>
-                                            <?php echo date('d/m/Y', strtotime($r['applied_at'])); ?>
+                                </tr>
+                                
+                                <!-- Students Dropdown Row -->
+                                <tr class="students-dropdown" id="students-approved_<?php echo $class_id; ?>">
+                                    <td colspan="2">
+                                        <div class="students-list">
+                                            <?php 
+                                            // Get approved students for this class
+                                            $approved_students_query = "SELECT a.id as app_id, a.applied_at, 
+                                                                              u.full_name, s.student_code
+                                                                       FROM applications a 
+                                                                       JOIN students s ON a.student_id=s.id 
+                                                                       JOIN users u ON s.user_id=u.id 
+                                                                       WHERE a.status='approved' AND a.class_id=$class_id
+                                                                       ORDER BY a.applied_at DESC";
+                                            $approved_students_res = mysqli_query($link, $approved_students_query);
+                                            
+                                            while($student = mysqli_fetch_assoc($approved_students_res)):
+                                                $initial = strtoupper(substr($student['full_name'], 0, 1));
+                                            ?>
+                                                <div class="student-item">
+                                                    <div class="student-code">
+                                                        <?php echo htmlspecialchars($student['student_code']); ?>
+                                                    </div>
+                                                    
+                                                    <div class="student-info">
+                                                        <div class="student-avatar" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                                                            <?php echo $initial; ?>
+                                                        </div>
+                                                        <div class="student-name">
+                                                            <?php echo htmlspecialchars($student['full_name']); ?>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="date-cell">
+                                                        <i class="fa-regular fa-calendar"></i>
+                                                        <?php echo date('d/m/Y', strtotime($student['applied_at'])); ?>
+                                                    </div>
+                                                    
+                                                    <div class="action-buttons">
+                                                        <span style="background: #D1FAE5; color: #065F46; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                                                            <i class="fa-solid fa-circle-check"></i> Đã duyệt
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            <?php endwhile; ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -436,7 +474,7 @@ if(isset($_GET['reject'])){
                             else: 
                             ?>
                                 <tr>
-                                    <td colspan="4" class="empty-state">
+                                    <td colspan="2" class="empty-state">
                                         <i class="fa-solid fa-inbox"></i>
                                         <p>Chưa có đơn nào được duyệt</p>
                                     </td>
@@ -446,8 +484,6 @@ if(isset($_GET['reject'])){
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
     
     <script>
         function switchTab(tabName) {
