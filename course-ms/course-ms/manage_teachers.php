@@ -215,7 +215,6 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             <div class="content-container">
             
                 <div class="page-header">
-                    <h2>Quản lý giáo viên</h2>
                     
                     <a href="add_teacher.php" class="btn-create">
                         <i class="fa-solid fa-user-plus"></i> Thêm Giáo Viên
