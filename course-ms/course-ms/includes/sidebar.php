@@ -27,7 +27,7 @@ $role = $_SESSION['role'] ?? '';
 
         <?php elseif($role == 'admin'): ?>
             <li class="menu-label">Tổng Quan</li>
-            <li><a href="home.php" class="menu-link <?php echo ($cp=='home.php')?'active':''; ?>"><i class="fa-solid fa-chart-simple"></i> Dashboard</a></li>
+            <li><a href="home.php" class="menu-link <?php echo ($cp=='home.php')?'active':''; ?>"><i class="fa-solid fa-chart-simple"></i> Trang Chủ</a></li>
             
             <li class="menu-label">Quản Trị</li>
             <li><a href="manage_classes.php" class="menu-link <?php echo ($cp=='manage_classes.php'||$cp=='edit_class.php')?'active':''; ?>"><i class="fa-solid fa-chalkboard"></i> Lớp Học</a></li>
