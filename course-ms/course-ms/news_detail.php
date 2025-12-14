@@ -1,7 +1,7 @@
 <?php
 include "connection.php";
 include "auth.php";
-requireRole(['teacher','student']);
+requireRole(['admin','teacher','student']);
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $news = null;

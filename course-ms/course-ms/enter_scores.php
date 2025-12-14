@@ -27,13 +27,21 @@ if(isset($_POST['save'])){
         <h3>Nhập Điểm: <?php echo $ex['exam_title']; ?></h3>
         <form method="post">
             <table class="dataTable">
-                <tr><th>Học Sinh</th><th>Điểm</th></tr>
+                <tr><th>Mã số</th><th>Học Sinh</th><th>Điểm</th></tr>
                 <?php 
-                $st=mysqli_query($link, "SELECT s.id, u.full_name, sc.score FROM students s JOIN users u ON s.user_id=u.id LEFT JOIN scores sc ON s.id=sc.student_id AND sc.exam_id=$eid WHERE s.class_id=".$ex['class_id']);
+                 $st=mysqli_query($link, "SELECT s.id,
+                                        s.student_code,
+                                        u.full_name,
+                                        sc.score
+                                    FROM students s
+                                    JOIN users u ON s.user_id=u.id
+                                    LEFT JOIN scores sc ON s.id=sc.student_id AND sc.exam_id=$eid
+                                    WHERE s.class_id=".$ex['class_id']);
                 while($r=mysqli_fetch_assoc($st)): ?>
                 <tr>
+                    <td><?php echo htmlspecialchars($r['student_code']); ?></td>
                     <td><?php echo $r['full_name']; ?></td>
-                    <td><input type="number" step="0.1" name="s[<?php echo $r['id']; ?>]" value="<?php echo $r['score']; ?>" class="form-control" style="width:100px"></td>
+                    <td><input type="number" step="0.1" name="s[<?php echo $r['id']; ?>]" value="<?php echo $r['score']; ?>" class="form-control" style="width:100%; max-width:120px;"></td>
                 </tr>
                 <?php endwhile; ?>
             </table>

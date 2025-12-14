@@ -17,7 +17,9 @@ requireRole(['teacher','student']);
         <div class="content-scroll">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">📰 Tin Tức & Thông Báo</h3>
+                    <h3 class="card-title" style="display:flex; align-items:center; gap:10px;">
+                        <i class="fa-regular fa-newspaper" style="color:#F59E0B;"></i> Tin Tức & Thông Báo
+                    </h3>
                 </div>
                 <?php 
                 $res = mysqli_query($link, "SELECT * FROM news ORDER BY created_at DESC");

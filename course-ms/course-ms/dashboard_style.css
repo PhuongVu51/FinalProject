@@ -77,8 +77,10 @@ body {
     display: flex; align-items: center; gap: 15px;
     background: var(--white); padding: 8px 12px 8px 20px;
     border-radius: 50px; box-shadow: var(--shadow);
-    border: none; cursor: default;
+    border: none; cursor: pointer; text-decoration: none; color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+.user-box:hover { transform: translateY(-2px); box-shadow: 0 12px 22px rgba(15,23,42,0.12); }
 .user-avatar {
     width: 45px; height: 45px; background: linear-gradient(135deg, #F59E0B, #FBBF24);
     color: white; border-radius: 50%; font-weight: 800; font-size: 18px;
@@ -137,6 +139,28 @@ body {
 }
 .pretty-table td { padding: 20px; border-bottom: 1px solid #F1F5F9; font-weight: 600; color: var(--text-dark); vertical-align: middle; }
 .pretty-table tr:hover td { background: #FFFEF7; }
+
+/* Compact table for nhập điểm */
+.dataTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; /* add horizontal breathing room */
+}
+.dataTable th {
+    text-align: left;
+    padding: 10px 16px 6px 0;
+    color: var(--text-dark);
+    font-size: 14px;
+    font-weight: 800;
+}
+.dataTable td {
+    padding: 10px 16px 10px 0;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+.dataTable td:first-child { padding-right: 28px; }
+.dataTable td:nth-child(2) { padding-right: 60px; }
+.dataTable input.form-control { max-width: 120px; }
 
 /* --- HERO CARD --- */
 .hero-box {

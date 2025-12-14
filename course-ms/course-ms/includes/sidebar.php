@@ -14,6 +14,7 @@ $role = $_SESSION['role'] ?? '';
             <li><a href="student_classes.php" class="menu-link <?php echo ($cp=='student_classes.php')?'active':''; ?>"><i class="fa-solid fa-chalkboard-user"></i> Lớp Học</a></li>
             <li><a href="student_dashboard.php" class="menu-link <?php echo ($cp=='student_dashboard.php')?'active':''; ?>"><i class="fa-solid fa-star"></i> Xem Điểm</a></li>
             <li class="menu-label">Thông Tin</li>
+            <li><a href="notifications.php" class="menu-link <?php echo ($cp=='notifications.php')?'active':''; ?>"><i class="fa-solid fa-bell"></i> Thông báo</a></li>
             <li><a href="news.php" class="menu-link <?php echo ($cp=='news.php')?'active':''; ?>"><i class="fa-regular fa-newspaper"></i> Tin Tức</a></li>
 
         <?php elseif($role == 'teacher'): ?>
@@ -23,6 +24,7 @@ $role = $_SESSION['role'] ?? '';
             <li><a href="teacher_classes.php" class="menu-link <?php echo ($cp=='teacher_classes.php')?'active':''; ?>"><i class="fa-solid fa-chalkboard"></i> Lớp Học</a></li>
             <li><a href="manage_exams.php" class="menu-link <?php echo ($cp=='manage_exams.php'||$cp=='enter_scores.php')?'active':''; ?>"><i class="fa-solid fa-file-pen"></i> Bài Thi & Điểm</a></li>
             <li class="menu-label">Thông Tin</li>
+            <li><a href="notifications.php" class="menu-link <?php echo ($cp=='notifications.php')?'active':''; ?>"><i class="fa-solid fa-bell"></i> Thông báo</a></li>
             <li><a href="news.php" class="menu-link <?php echo ($cp=='news.php')?'active':''; ?>"><i class="fa-regular fa-newspaper"></i> Tin Tức</a></li>
 
         <?php elseif($role == 'admin'): ?>
@@ -36,6 +38,7 @@ $role = $_SESSION['role'] ?? '';
             
             <li class="menu-label">Hệ Thống</li>
             <li><a href="manage_applications.php" class="menu-link <?php echo ($cp=='manage_applications.php')?'active':''; ?>"><i class="fa-solid fa-file-signature"></i> Duyệt Đơn</a></li>
+            <li><a href="notifications.php" class="menu-link <?php echo ($cp=='notifications.php')?'active':''; ?>"><i class="fa-solid fa-bell"></i> Thông báo</a></li>
             <li><a href="manage_news.php" class="menu-link <?php echo ($cp=='manage_news.php' || $cp=='news.php')?'active':''; ?>"><i class="fa-regular fa-newspaper"></i> Tin Tức</a></li>
         <?php endif; ?>
 

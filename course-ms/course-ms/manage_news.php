@@ -40,7 +40,9 @@ if(isset($_GET['del'])){ mysqli_query($link, "DELETE FROM news WHERE id=".intval
         while($r=mysqli_fetch_assoc($res)): ?>
         <div style="border-bottom:1px solid #F1F5F9; padding-bottom:15px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:start;">
             <div>
-                <h4 style="margin:0 0 5px 0; color:#1E293B; font-size:16px;"><?php echo $r['title']; ?></h4>
+                    <h4 style="margin:0 0 5px 0; color:#1E293B; font-size:16px;">
+                        <a href="news_detail.php?id=<?php echo $r['id']; ?>" style="color:inherit; text-decoration:none;"><?php echo $r['title']; ?></a>
+                    </h4>
                 <div style="font-size:12px; color:#94A3B8; margin-bottom:8px;">
                     <i class="fa-regular fa-clock"></i> <?php echo date('d/m/Y H:i', strtotime($r['created_at'])); ?>
                 </div>
