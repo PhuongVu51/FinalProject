@@ -1,100 +1,161 @@
 <?php
-include "connection.php"; include "auth.php"; requireRole(['admin']);
+include "connection.php";
+include "auth.php";
+requireRole(['admin']);
 
-$teacherOptions = [];
-$tRes = mysqli_query($link, "SELECT t.id, u.full_name FROM teachers t JOIN users u ON t.user_id=u.id ORDER BY u.full_name");
-while($t = mysqli_fetch_assoc($tRes)) $teacherOptions[] = $t;
-
-if(isset($_POST['add'])){
-    $name = trim($_POST['name'] ?? '');
-    $tid = intval($_POST['tid'] ?? 0);
-    $tsql = ($tid>0)?$tid:"NULL";
-    $nameEsc = mysqli_real_escape_string($link, $name);
-    mysqli_query($link, "INSERT INTO classes (name, teacher_id) VALUES ('$nameEsc', $tsql)");
-    header("Location: manage_classes.php");
-}
+// Handle Delete
 if(isset($_GET['del'])){
-    mysqli_query($link, "DELETE FROM classes WHERE id=".intval($_GET['del']));
+    $id = intval($_GET['del']);
+    mysqli_query($link, "DELETE FROM classes WHERE id=$id");
     header("Location: manage_classes.php");
+    exit;
+}
+
+// Handle Search
+$search = "";
+$sql_search = "";
+if(isset($_GET['q']) && !empty($_GET['q'])){
+    $search = mysqli_real_escape_string($link, $_GET['q']);
+    $sql_search = " WHERE c.name LIKE '%$search%' OR c.class_code LIKE '%$search%' ";
 }
 ?>
 <!DOCTYPE html>
-<html>
-<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
-<head><title>Classes</title>
-<link rel="stylesheet" href="dashboard_style.css">
-<style>
-    body { background-color: #F8FAFC; font-family: 'Segoe UI', sans-serif; }
-    
-    /* CHUẨN HÓA TIÊU ĐỀ */
-    .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 30px; margin-top: 0; }
-    
-    .card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; overflow: hidden; margin-bottom: 24px; }
-    .card-header { padding: 20px 24px; border-bottom: 1px solid #F1F5F9; background: white; }
-    .card-header h3 { margin:0; color: #1E293B; font-size: 18px; display:flex; align-items:center; gap:10px;}
-    .form-control { border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px; width: 100%; background: #F8FAFC; }
-    .btn-primary { background: #F59E0B; border:none; border-radius:8px; color:white; font-weight:600; cursor:pointer; }
-    .btn-primary:hover { background: #D97706; }
-    .dataTable { width: 100%; border-collapse: collapse; }
-    .dataTable th { background: #F8FAFC; color: #64748B; font-size: 12px; text-transform: uppercase; padding: 16px 24px; text-align: left; border-bottom: 1px solid #E2E8F0; }
-    .dataTable td { padding: 16px 24px; border-bottom: 1px solid #F1F5F9; color: #334155; font-size: 14px; vertical-align: middle; }
-    .dataTable tr:last-child td { border-bottom: none; }
-    .action-btn { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; transition: 0.2s; border: none; cursor: pointer; }
-    .btn-edit { background: #EFF6FF; color: #3B82F6; } .btn-edit:hover { background: #DBEAFE; }
-    .btn-delete { background: #FEF2F2; color: #EF4444; } .btn-delete:hover { background: #FEE2E2; }
-</style>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý lớp học | Teacher Bee</title>
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard_style.css">
+    <link rel="stylesheet" href="admin_tables.css">
 </head>
 <body>
-<?php include "includes/sidebar.php"; ?>
-<div class="main-wrapper"><?php include "includes/topbar.php"; ?>
-<div class="content-scroll">
-    
+    <?php include "includes/sidebar.php"; ?>
 
-    <div class="card">
-        <div class="card-header"><h3><i class="fa-solid fa-circle-plus" style="color:#F59E0B"></i> Tạo Lớp Học</h3></div>
-        <div style="padding: 24px;">
-            <form method="post" style="display:grid; grid-template-columns: 1.4fr 1fr auto; gap:16px; align-items:end;">
-                <div><label style="font-weight:600; color:#475569; font-size:13px; margin-bottom:6px; display:block;">Tên lớp học</label><input type="text" name="name" class="form-control" placeholder="VD: Toán 12A" required></div>
+    <div class="main-wrapper">
+        <?php include "includes/topbar.php"; ?>
+
+        <div class="content-scroll">
+            
+            <div class="page-header">
                 <div>
-                    <label style="font-weight:600; color:#475569; font-size:13px; margin-bottom:6px; display:block;">Giáo viên</label>
-                    <select name="tid" class="form-control">
-                        <option value="0">-- Chưa gán giáo viên --</option>
-                        <?php foreach($teacherOptions as $t): ?>
-                            <option value="<?php echo $t['id']; ?>"><?php echo $t['full_name']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <h2 class="page-title">Quản lý lớp học</h2>
+                    <p class="page-subtitle">
+                        <a href="home.php" style="color: #94A3B8; text-decoration: none;">
+                            &lt; Quay lại trang chủ
+                        </a>
+                    </p>
                 </div>
-                <button name="add" class="btn-primary" style="height:42px; padding:0 24px;">Tạo lớp</button>
-            </form>
+            </div>
+
+            <div class="white-card">
+                <div class="card-top-row">
+                    <h3 class="card-title">Danh sách lớp</h3>
+                    
+                    <div class="actions-row">
+                        <form method="GET" class="search-box">
+                            <input type="text" name="q" class="search-input" 
+                                   placeholder="Tìm kiếm lớp học hoặc mã..." 
+                                   value="<?php echo htmlspecialchars($search); ?>">
+                            <button type="submit" class="search-btn">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                        
+                        <a href="add_class.php" class="btn-create">
+                            <i class="fa-solid fa-plus"></i> Tạo Lớp Mới
+                        </a>
+                    </div>
+                </div>
+
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th width="120">MÃ LỚP</th>
+                            <th>TÊN LỚP</th>
+                            <th>MÔ TẢ</th>
+                            <th width="100">GIỚI HẠN</th>
+                            <th>GIÁO VIÊN</th>
+                            <th width="100" class="text-center">CHỈNH SỬA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php 
+                    $sql = "SELECT c.*, u.full_name 
+                            FROM classes c 
+                            LEFT JOIN teachers t ON c.teacher_id=t.id 
+                            LEFT JOIN users u ON t.user_id=u.id
+                            $sql_search
+                            ORDER BY c.id DESC";
+                    $res = mysqli_query($link, $sql);
+                    
+                    if(mysqli_num_rows($res) > 0):
+                        while($row = mysqli_fetch_assoc($res)): ?>
+                            <tr>
+                                <td>
+                                    <span class="code-badge">
+                                        <?php echo $row['class_code'] ? htmlspecialchars($row['class_code']) : 'N/A'; ?>
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <span class="class-name-link">
+                                        <?php echo htmlspecialchars($row['name']); ?>
+                                    </span>
+                                </td>
+                                
+                                <td class="desc-cell">
+                                    <?php 
+                                        $desc = isset($row['description']) ? $row['description'] : '';
+                                        echo (strlen($desc) > 50) ? substr($desc,0,50)."..." : $desc; 
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <span class="limit-badge">
+                                        <?php echo isset($row['student_limit']) ? $row['student_limit'] : '40'; ?>
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <?php if($row['full_name']): ?>
+                                        <div class="teacher-info">
+                                            <i class="fa-solid fa-user-tie"></i>
+                                            <?php echo htmlspecialchars($row['full_name']); ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="not-assigned">Chưa xếp lớp</span>
+                                    <?php endif; ?>
+                                </td>
+                                
+                                <td class="text-center">
+                                    <div class="action-buttons">
+                                        <a href="edit_class.php?id=<?php echo $row['id']; ?>" 
+                                           class="action-btn edit-btn" title="Chỉnh sửa">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a href="?del=<?php echo $row['id']; ?>" 
+                                           class="action-btn delete-btn" 
+                                           onclick="return confirm('Bạn chắc chắn muốn xóa?');" 
+                                           title="Xóa">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; 
+                    else: ?>
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fa-solid fa-inbox"></i>
+                                <p>Không tìm thấy lớp học</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-header"><h3>Danh Sách Lớp Học</h3></div>
-        <table class="dataTable">
-            <thead>
-                <tr><th>Tên Lớp</th><th>Giáo Viên Chủ Nhiệm</th><th width="150" style="text-align: center;">CHỈNH SỬA</th></tr>
-            </thead>
-            <tbody>
-            <?php $res=mysqli_query($link, "SELECT c.*, u.full_name FROM classes c LEFT JOIN teachers t ON c.teacher_id=t.id LEFT JOIN users u ON t.user_id=u.id");
-            while($r=mysqli_fetch_assoc($res)): ?>
-                <tr>
-                    <td style="font-size:15px; font-weight:700; color:#0F172A;"><?php echo $r['name']; ?></td>
-                    <td>
-                        <?php if($r['full_name']): ?>
-                            <div style="display:flex; align-items:center; gap:10px;"><div style="width:28px; height:28px; background:#EFF6FF; color:#3B82F6; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px;"><i class="fa-solid fa-user-tie"></i></div><span style="font-weight:500;"><?php echo $r['full_name']; ?></span></div>
-                        <?php else: ?><span style="color:#94A3B8; font-style:italic; font-size:13px;">-- Trống --</span><?php endif; ?>
-                    </td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <a href="edit_class.php?id=<?php echo $r['id']; ?>" class="action-btn btn-edit" title="Sửa"><i class="fa-solid fa-pen"></i></a>
-                            <a href="?del=<?php echo $r['id']; ?>" onclick="return confirm('Xóa lớp?')" class="action-btn btn-delete" title="Xóa"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-            </tbody>
-        </table>
-    </div>
-</div></div>
-</body></html>
+</body>
+</html>

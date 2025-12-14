@@ -6,7 +6,10 @@ requireRole(['admin', 'teacher']);
 $role = $_SESSION['role'];
 if($role === 'teacher') { header("Location: teacher_home.php"); exit; }
 
-function getCount($link, $sql){ $r = mysqli_fetch_assoc(mysqli_query($link, $sql)); return $r['c']; }
+function getCount($link, $sql){ 
+    $r = mysqli_fetch_assoc(mysqli_query($link, $sql)); 
+    return $r['c']; 
+}
 
 if($role === 'admin'){
     $s_count = getCount($link, "SELECT COUNT(*) as c FROM users WHERE role='student'");
@@ -16,87 +19,287 @@ if($role === 'admin'){
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-    <title>Dashboard | Teacher Bee</title>
+    <title>Hệ Thống Quản Lý | Teacher Bee</title>
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
-        :root { --primary-bg: #F8FAFC; --card-bg: #FFFFFF; --text-main: #1E293B; --text-muted: #64748B; }
-        body { background-color: var(--primary-bg); font-family: 'Segoe UI', system-ui, sans-serif; }
-        .main-wrapper { padding: 30px; }
+        body { background-color: #FFFDF7; }
         
-        /* ĐỒNG BỘ TIÊU ĐỀ */
-        .page-title { font-size: 24px; font-weight: 800; color: #1E293B; margin-bottom: 30px; margin-top: 0; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 30px; }
-        .stat-item { background: var(--card-bg); border-radius: 16px; padding: 24px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.2s ease; }
-        .stat-item:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: transparent; }
-        .stat-info p { margin: 0 0 5px; color: var(--text-muted); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-info h3 { margin: 0; font-size: 28px; font-weight: 700; color: var(--text-main); }
-        .stat-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-
-        .card { background: var(--card-bg); border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 0; overflow: hidden; margin-bottom: 30px; }
-        .card-header { padding: 20px 24px; border-bottom: 1px solid #F1F5F9; display: flex; justify-content: space-between; align-items: center; background: white; }
-        .card-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 10px; }
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
         
-        .dataTable { width: 100%; border-collapse: collapse; }
-        .dataTable thead th { background: #F8FAFC; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; padding: 16px 24px; text-align: left; border-bottom: 1px solid #E2E8F0; }
-        .dataTable tbody td { padding: 16px 24px; border-bottom: 1px solid #F1F5F9; color: var(--text-main); font-size: 14px; vertical-align: middle; }
-        .dataTable tbody tr:last-child td { border-bottom: none; }
+        .dashboard-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .stat-content p {
+            margin: 0 0 4px 0;
+            color: #64748B;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-content h3 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E293B;
+        }
+        
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .stat-icon.students {
+            background: #EFF6FF;
+            color: #3B82F6;
+        }
+        
+        .stat-icon.teachers {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+        
+        .stat-icon.classes {
+            background: #FEF3C7;
+            color: #F59E0B;
+        }
+        
+        .stat-icon.exams {
+            background: #F3E8FF;
+            color: #A855F7;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+        }
+        
+        .news-card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #F1F5F9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .news-card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E293B;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .view-all-link {
+            color: #64748B;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        
+        .view-all-link:hover {
+            color: #F59E0B;
+        }
+        
+        .news-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .news-table thead th {
+            text-align: left;
+            padding: 16px 24px;
+            background: #FAFBFC;
+            color: #94A3B8;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
+        .news-table tbody td {
+            padding: 20px 24px;
+            border-bottom: 1px solid #F1F5F9;
+            color: #334155;
+            font-size: 14px;
+        }
+        
+        .news-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .news-table tbody tr:hover {
+            background-color: #FAFBFC;
+        }
+        
+        .news-date {
+            color: #64748B;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .news-title {
+            font-weight: 700;
+            color: #1E293B;
+        }
+        
+        .news-content {
+            color: #64748B;
+            font-size: 13px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
     <?php include "includes/sidebar.php"; ?>
+    
     <div class="main-wrapper">
         <?php include "includes/topbar.php"; ?>
-        <div class="content-scroll">
         
+        <div class="content-scroll">
+            <div class="dashboard-header">
+                <h1>Hệ Thống Quản Lý</h1>
+            </div>
 
             <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-info"><p>Tổng Học Sinh</p><h3><?php echo $s_count; ?></h3></div>
-                    <div class="stat-icon" style="background:#EFF6FF; color:#3B82F6;"><i class="fa-solid fa-user-graduate"></i></div>
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <p>TỔNG HỌC SINH</p>
+                        <h3><?php echo $s_count; ?></h3>
+                    </div>
+                    <div class="stat-icon students">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-info"><p>Giáo Viên</p><h3><?php echo $t_count; ?></h3></div>
-                    <div class="stat-icon" style="background:#ECFDF5; color:#10B981;"><i class="fa-solid fa-chalkboard-user"></i></div>
+                
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <p>GIÁO VIÊN</p>
+                        <h3><?php echo $t_count; ?></h3>
+                    </div>
+                    <div class="stat-icon teachers">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-info"><p>Lớp Học</p><h3><?php echo $c_count; ?></h3></div>
-                    <div class="stat-icon" style="background:#FFFBEB; color:#F59E0B;"><i class="fa-solid fa-chalkboard"></i></div>
+                
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <p>LỚP HỌC</p>
+                        <h3><?php echo $c_count; ?></h3>
+                    </div>
+                    <div class="stat-icon classes">
+                        <i class="fa-solid fa-chalkboard"></i>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-info"><p>Bài Thi</p><h3><?php echo $e_count; ?></h3></div>
-                    <div class="stat-icon" style="background:#F3E8FF; color:#9333EA;"><i class="fa-solid fa-file-pen"></i></div>
+                
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <p>BÀI THI</p>
+                        <h3><?php echo $e_count; ?></h3>
+                    </div>
+                    <div class="stat-icon exams">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-newspaper" style="color:#F59E0B;"></i> Tin Tức & Thông Báo</h3>
-                    <a href="manage_news.php" class="btn-secondary" style="border-radius:20px; font-size:13px; padding:6px 16px; border:1px solid #E2E8F0; text-decoration:none; color:#64748B;">Xem tất cả</a>
+            <div class="news-card">
+                <div class="news-card-header">
+                    <h3>
+                        <i class="fa-solid fa-newspaper" style="color: #F59E0B;"></i>
+                        Tin Tức & Thông Báo
+                    </h3>
+                    <a href="manage_news.php" class="view-all-link">Xem tất cả</a>
                 </div>
-                <table class="dataTable">
-                    <thead><tr><th width="150">Ngày đăng</th><th width="250">Tiêu đề</th><th>Nội dung tóm tắt</th></tr></thead>
+                
+                <table class="news-table">
+                    <thead>
+                        <tr>
+                            <th width="150">NGÀY ĐĂNG</th>
+                            <th width="280">TIÊU ĐỀ</th>
+                            <th>NỘI DUNG TÓM TẮT</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <?php 
                         $res = mysqli_query($link, "SELECT * FROM news ORDER BY created_at DESC LIMIT 5");
                         if(mysqli_num_rows($res) > 0):
                             while($r = mysqli_fetch_assoc($res)): ?>
                             <tr>
-                                <td style="color:#64748B;"><div style="display:flex; align-items:center; gap:8px;"><i class="fa-regular fa-calendar" style="font-size:12px;"></i><?php echo date('d/m/Y', strtotime($r['created_at'])); ?></div></td>
-                                <td style="font-weight:600; color:#0F172A;"><?php echo htmlspecialchars($r['title']); ?></td>
-                                <td style="color:#475569; line-height:1.5;"><?php echo htmlspecialchars(substr($r['content'], 0, 90)) . (strlen($r['content'])>90?'...':''); ?></td>
+                                <td>
+                                    <div class="news-date">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <?php echo date('d/m/Y', strtotime($r['created_at'])); ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="news-title">
+                                        <?php echo htmlspecialchars($r['title']); ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="news-content">
+                                        <?php echo htmlspecialchars(substr($r['content'], 0, 100)) . (strlen($r['content'])>100?'...':''); ?>
+                                    </div>
+                                </td>
                             </tr>
                             <?php endwhile; 
                         else: ?>
-                            <tr><td colspan="3" align="center" style="padding:30px; color:#94A3B8;">Chưa có tin tức nào.</td></tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 40px; color: #94A3B8;">
+                                    Chưa có tin tức nào.
+                                </td>
+                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
-            <?php include "includes/footer.php"; ?>
         </div>
     </div>
 </body>
