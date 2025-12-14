@@ -123,6 +123,20 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             border-radius: 6px; font-weight: 700; font-size: 12px;
         }
 
+        /* Student Count Badge */
+        .student-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #DBEAFE;
+            color: #1E40AF;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid #93C5FD;
+        }
+
         .action-icon { 
             font-size: 16px; margin-right: 12px; text-decoration: none; 
             transition: 0.2s; cursor: pointer; 
@@ -179,6 +193,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                         <tr>
                             <th>Mã lớp</th>
                             <th>Tên lớp</th>
+                            <th>Số học sinh</th>
                             <th>Giới hạn</th>
                             <th>Giáo viên</th>
                             <th>Chỉnh sửa</th>
@@ -186,8 +201,9 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                     </thead>
                     <tbody>
                     <?php 
-                    // Query data
-                    $sql = "SELECT c.*, u.full_name 
+                    // Query data with student count
+                    $sql = "SELECT c.*, u.full_name,
+                            (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) as student_count
                             FROM classes c 
                             LEFT JOIN teachers t ON c.teacher_id=t.id 
                             LEFT JOIN users u ON t.user_id=u.id
@@ -211,6 +227,14 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                        style="color: #1E293B; text-decoration: none; font-weight: 700; transition: 0.2s;">
                                         <?php echo htmlspecialchars($row['name']); ?>
                                     </a>
+                                </td>
+
+                                <!-- Cột Số học sinh -->
+                                <td>
+                                    <span class="student-count-badge">
+                                        <i class="fa-solid fa-users"></i>
+                                        <?php echo $row['student_count']; ?> học sinh
+                                    </span>
                                 </td>
 
                                 <!-- Cột Giới hạn -->
@@ -245,7 +269,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                             </tr>
                         <?php endwhile; 
                     else: ?>
-                        <tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
+                        <tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>
