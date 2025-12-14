@@ -65,27 +65,118 @@ if(isset($_GET['reject'])){
             display: block;
         }
         
-        .student-info-cell {
+        /* Class Row Styles */
+        .class-row {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .class-row:hover {
+            background: #FFFBEB !important;
+        }
+        
+        .class-row.expanded {
+            background: #FEF3C7 !important;
+        }
+        
+        .class-header {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: #1E293B;
+            font-size: 15px;
+        }
+        
+        .toggle-icon {
+            color: #94A3B8;
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+        
+        .class-row.expanded .toggle-icon {
+            transform: rotate(90deg);
+        }
+        
+        .class-name {
+            color: #F59E0B;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .student-count {
+            background: #DBEAFE;
+            color: #1E40AF;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        /* Dropdown Students */
+        .students-dropdown {
+            display: none;
+            background: #F8FAFC;
+        }
+        
+        .students-dropdown.show {
+            display: table-row;
+        }
+        
+        .students-list {
+            padding: 0;
+        }
+        
+        .student-item {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 120px 1fr 150px 200px;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .student-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .student-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .student-code {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #64748B;
+            font-size: 13px;
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .student-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6, #60A5FA);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
         }
         
         .student-name {
             font-weight: 700;
             color: #1E293B;
-            font-size: 15px;
-        }
-        
-        .student-code {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #64748B;
-        }
-        
-        .class-wish {
-            color: #F59E0B;
-            font-weight: 600;
             font-size: 14px;
         }
         
@@ -137,7 +228,7 @@ if(isset($_GET['reject'])){
             background: #FECACA;
         }
         
-        .action-cell {
+        .action-buttons {
             display: flex;
             gap: 8px;
         }
@@ -152,6 +243,7 @@ if(isset($_GET['reject'])){
         <div class="content-scroll">
             <div class="page-header">
                 <div>
+                    <h2 class="page-title">Đơn Xin Vào Lớp</h2>
                     <p class="page-subtitle">
                         <a href="home.php" style="color: #94A3B8; text-decoration: none;">
                             &lt; Quay lại trang chủ
@@ -181,63 +273,90 @@ if(isset($_GET['reject'])){
                     <table class="modern-table">
                         <thead>
                             <tr>
-                                <th>HỌC SINH</th>
-                                <th width="120">MÃ SV</th>
                                 <th>NGUYỆN VỌNG</th>
-                                <th width="150">NGÀY NỘP</th>
-                                <th width="200">XỬ LÝ</th>
+                                <th width="150" class="text-center">SỐ LƯỢNG</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
-                            $res = mysqli_query($link, "SELECT a.*, u.full_name, s.student_code, c.name 
-                                                       FROM applications a 
-                                                       JOIN students s ON a.student_id=s.id 
-                                                       JOIN users u ON s.user_id=u.id 
-                                                       JOIN classes c ON a.class_id=c.id 
-                                                       WHERE a.status='pending' 
-                                                       ORDER BY a.applied_at DESC");
+                            // Group applications by class
+                            $classes_query = "SELECT c.id, c.name, COUNT(a.id) as student_count
+                                            FROM applications a 
+                                            JOIN classes c ON a.class_id = c.id
+                                            WHERE a.status='pending'
+                                            GROUP BY c.id, c.name
+                                            ORDER BY c.name ASC";
+                            $classes_res = mysqli_query($link, $classes_query);
                             
-                            if(mysqli_num_rows($res) > 0):
-                                while($r = mysqli_fetch_assoc($res)): 
+                            if(mysqli_num_rows($classes_res) > 0):
+                                while($class = mysqli_fetch_assoc($classes_res)): 
+                                    $class_id = $class['id'];
                             ?>
-                                <tr>
+                                <!-- Class Header Row -->
+                                <tr class="class-row" onclick="toggleStudents(<?php echo $class_id; ?>)">
                                     <td>
-                                        <div class="student-info-cell">
-                                            <div class="student-name">
-                                                <?php echo htmlspecialchars($r['full_name']); ?>
-                                            </div>
+                                        <div class="class-header">
+                                            <i class="fa-solid fa-chevron-right toggle-icon" id="icon-<?php echo $class_id; ?>"></i>
+                                            <span class="class-name"><?php echo htmlspecialchars($class['name']); ?></span>
                                         </div>
                                     </td>
-                                    <td>
-                                        <span class="student-code">
-                                            <?php echo htmlspecialchars($r['student_code']); ?>
+                                    <td class="text-center">
+                                        <span class="student-count">
+                                            <?php echo $class['student_count']; ?> học sinh
                                         </span>
                                     </td>
-                                    <td>
-                                        <div class="class-wish">
-                                            <?php echo htmlspecialchars($r['name']); ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="date-cell">
-                                            <i class="fa-regular fa-calendar"></i>
-                                            <?php echo date('d/m/Y', strtotime($r['applied_at'])); ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="action-cell">
-                                            <a href="?ok=<?php echo $r['id']; ?>" 
-                                               class="btn-approve" 
-                                               title="Chấp nhận">
-                                                <i class="fa-solid fa-check"></i> Duyệt
-                                            </a>
-                                            <a href="?reject=<?php echo $r['id']; ?>" 
-                                               class="btn-reject" 
-                                               onclick="return confirm('Từ chối đơn này?')"
-                                               title="Từ chối">
-                                                <i class="fa-solid fa-xmark"></i> Từ chối
-                                            </a>
+                                </tr>
+                                
+                                <!-- Students Dropdown Row -->
+                                <tr class="students-dropdown" id="students-<?php echo $class_id; ?>">
+                                    <td colspan="2">
+                                        <div class="students-list">
+                                            <?php 
+                                            // Get students for this class
+                                            $students_query = "SELECT a.id as app_id, a.applied_at, 
+                                                                     u.full_name, s.student_code
+                                                              FROM applications a 
+                                                              JOIN students s ON a.student_id=s.id 
+                                                              JOIN users u ON s.user_id=u.id 
+                                                              WHERE a.status='pending' AND a.class_id=$class_id
+                                                              ORDER BY a.applied_at DESC";
+                                            $students_res = mysqli_query($link, $students_query);
+                                            
+                                            while($student = mysqli_fetch_assoc($students_res)):
+                                                $initial = strtoupper(substr($student['full_name'], 0, 1));
+                                            ?>
+                                                <div class="student-item">
+                                                    <div class="student-code">
+                                                        <?php echo htmlspecialchars($student['student_code']); ?>
+                                                    </div>
+                                                    
+                                                    <div class="student-info">
+                                                        <div class="student-avatar"><?php echo $initial; ?></div>
+                                                        <div class="student-name">
+                                                            <?php echo htmlspecialchars($student['full_name']); ?>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="date-cell">
+                                                        <i class="fa-regular fa-calendar"></i>
+                                                        <?php echo date('d/m/Y', strtotime($student['applied_at'])); ?>
+                                                    </div>
+                                                    
+                                                    <div class="action-buttons">
+                                                        <a href="?ok=<?php echo $student['app_id']; ?>" 
+                                                           class="btn-approve" 
+                                                           title="Duyệt">
+                                                            <i class="fa-solid fa-check"></i> Duyệt
+                                                        </a>
+                                                        <a href="?reject=<?php echo $student['app_id']; ?>" 
+                                                           class="btn-reject" 
+                                                           onclick="return confirm('Từ chối đơn này?')"
+                                                           title="Từ chối">
+                                                            <i class="fa-solid fa-xmark"></i> Từ chối
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            <?php endwhile; ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -246,7 +365,7 @@ if(isset($_GET['reject'])){
                             else: 
                             ?>
                                 <tr>
-                                    <td colspan="5" class="empty-state">
+                                    <td colspan="2" class="empty-state">
                                         <i class="fa-solid fa-inbox"></i>
                                         <p>Không có đơn nào đang chờ duyệt</p>
                                     </td>
@@ -347,6 +466,16 @@ if(isset($_GET['reject'])){
             
             // Add active class to clicked button
             event.target.closest('.tab-button').classList.add('active');
+        }
+        
+        function toggleStudents(classId) {
+            const dropdown = document.getElementById('students-' + classId);
+            const icon = document.getElementById('icon-' + classId);
+            const row = dropdown.previousElementSibling;
+            
+            // Toggle dropdown
+            dropdown.classList.toggle('show');
+            row.classList.toggle('expanded');
         }
     </script>
 </body>
