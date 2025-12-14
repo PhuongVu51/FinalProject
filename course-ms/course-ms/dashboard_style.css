@@ -96,10 +96,80 @@ body {
 /* --- MAIN CONTENT --- */
 .main-wrapper { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; }
 
+/* --- TOPBAR (FIXED) --- */
 .topbar {
-    height: 80px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); /* Kính mờ */
-    display: flex; align-items: center; justify-content: space-between; 
-    padding: 0 30px; border-bottom: 1px solid #F1F5F9; z-index: 90;
+    height: 80px; 
+    background: rgba(255,255,255,0.8); 
+    backdrop-filter: blur(10px);
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 30px; 
+    border-bottom: 1px solid #F1F5F9; 
+    z-index: 90;
+}
+
+/* Topbar Left: Logo + Title */
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-logo {
+    font-size: 24px;
+    color: var(--primary-500);
+    filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
+}
+
+.topbar-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark-900);
+    letter-spacing: -0.3px;
+}
+
+/* Topbar Right: User Info */
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark-900);
+    line-height: 1.3;
+}
+
+.user-role {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--primary-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-400) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+    border: 3px solid white;
 }
 
 .content-scroll { flex: 1; overflow-y: auto; padding: 30px; }
@@ -137,7 +207,7 @@ body {
 h3, .card-title { font-size: 18px; font-weight: 700; color: var(--dark-900); margin: 0; }
 
 /* --- FORMS & INPUTS --- */
-input[type="text"], input[type="password"], input[type="email"], select, textarea {
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], select, textarea {
     width: 100%; padding: 12px 16px;
     border: 1px solid #E2E8F0; border-radius: var(--radius-md);
     background: #FFFFFF; font-family: var(--font-main);
@@ -164,6 +234,8 @@ input:focus, select:focus, textarea:focus {
     background: var(--gray-50); color: var(--dark-500);
     border: 1px solid #E2E8F0; border-radius: 8px;
     text-decoration: none; transition: 0.2s;
+    padding: 10px 20px; display: inline-block;
+    font-weight: 600; font-size: 14px;
 }
 .btn-secondary:hover { background: #E2E8F0; color: var(--dark-900); }
 
