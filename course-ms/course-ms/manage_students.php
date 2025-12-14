@@ -31,6 +31,14 @@ if(isset($_GET['del'])){
     header("Location: manage_students.php");
     exit;
 }
+
+// Handle Search
+$search = "";
+$sql_search = "";
+if(isset($_GET['q']) && !empty($_GET['q'])){
+    $search = mysqli_real_escape_string($link, $_GET['q']);
+    $sql_search = " WHERE u.full_name LIKE '%$search%' OR s.student_code LIKE '%$search%' OR c.name LIKE '%$search%' ";
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -170,6 +178,81 @@ if(isset($_GET['del'])){
             align-items: center;
             gap: 8px;
         }
+        
+        /* Search Box Styles */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .search-input:focus {
+            border-color: #F59E0B;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        
+        .search-btn {
+            background: #F59E0B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-btn:hover {
+            background: #D97706;
+        }
+        
+        .clear-search-btn {
+            background: #F1F5F9;
+            color: #64748B;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .clear-search-btn:hover {
+            background: #E2E8F0;
+        }
+        
+        .search-result-info {
+            background: #F0F9FF;
+            color: #0369A1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
     </style>
 </head>
 <body>
@@ -244,6 +327,30 @@ if(isset($_GET['del'])){
                         <h3 class="card-title">Danh Sách Học Sinh</h3>
                     </div>
                     
+                    <!-- Search Box -->
+                    <form method="GET" class="search-box">
+                        <input type="text" name="q" class="search-input" 
+                               placeholder="Tìm kiếm theo tên, mã sinh viên, hoặc lớp..." 
+                               value="<?php echo htmlspecialchars($search); ?>">
+                        <button type="submit" class="search-btn">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Tìm kiếm
+                        </button>
+                        <?php if(!empty($search)): ?>
+                            <a href="manage_students.php" class="clear-search-btn">
+                                <i class="fa-solid fa-xmark"></i>
+                                Xóa
+                            </a>
+                        <?php endif; ?>
+                    </form>
+                    
+                    <?php if(!empty($search)): ?>
+                        <div class="search-result-info">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Kết quả tìm kiếm cho: "<strong><?php echo htmlspecialchars($search); ?></strong>"
+                        </div>
+                    <?php endif; ?>
+                    
                     <table class="modern-table">
                         <thead>
                             <tr>
@@ -259,6 +366,7 @@ if(isset($_GET['del'])){
                                   FROM students s 
                                   JOIN users u ON s.user_id=u.id 
                                   LEFT JOIN classes c ON s.class_id=c.id 
+                                  $sql_search
                                   ORDER BY s.id DESC";
                             $rs = mysqli_query($link, $q);
                             
@@ -301,7 +409,7 @@ if(isset($_GET['del'])){
                                 <tr>
                                     <td colspan="4" class="empty-state">
                                         <i class="fa-solid fa-user-slash"></i>
-                                        <p>Chưa có học sinh nào</p>
+                                        <p><?php echo !empty($search) ? 'Không tìm thấy học sinh nào' : 'Chưa có học sinh nào'; ?></p>
                                     </td>
                                 </tr>
                             <?php endif; ?>
