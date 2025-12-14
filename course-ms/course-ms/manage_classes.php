@@ -159,7 +159,6 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             <div style="width: 100%; max-width: 1400px; margin: 0 auto;">
             
                 <div class="page-header">
-                    <h2>Quản lý lớp học</h2>
                     
                     <a href="add_class.php" class="btn-create">
                         <i class="fa-solid fa-plus"></i> Tạo Lớp Mới
