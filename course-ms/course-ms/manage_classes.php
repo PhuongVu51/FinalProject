@@ -26,7 +26,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
     <title>Quản lý lớp học | Teacher Bee</title>
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="dashboard_style.css">
+    <link rel="stylesheet" href="class.css">
     <style>
         body { background-color: #FFFDF7; font-family: 'Be Vietnam Pro', sans-serif; }
         

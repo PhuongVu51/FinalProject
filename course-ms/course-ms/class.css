@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    /* Bảng màu Honey Premium */
+    --primary: #F59E0B;
+    --primary-dark: #D97706;
+    --primary-light: #FFFBEB;
+    --accent: #3B82F6; /* Màu xanh điểm nhấn */
+    
+    /* Màu nền & Chữ */
+    --bg-body: #F3F4F6; /* Xám xanh nhạt sang trọng */
+    --text-main: #1E293B;
+    --text-light: #64748B;
+    --white: #FFFFFF;
+    
+    /* Hiệu ứng */
+    --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 20px 40px -5px rgba(245, 158, 11, 0.25); /* Bóng vàng khi hover */
+    --radius: 20px;
+    --transition: all 0.3s ease;
+}
+
+* { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* --- SIDEBAR HIỆN ĐẠI --- */
+.sidebar {
+    width: 270px;
+    background: var(--white);
+    display: flex; flex-direction: column;
+    height: 100%;
+    border-right: 1px solid rgba(0,0,0,0.03); /* Viền siêu mờ */
+    box-shadow: 5px 0 25px rgba(0,0,0,0.02);
+    z-index: 20;
+    padding: 20px 15px;
+}
+
+.brand {
+    padding: 10px 15px 30px;
+    font-size: 24px; font-weight: 800; color: var(--text-main);
+    display: flex; align-items: center; gap: 12px;
+}
+.brand i { 
+    color: var(--primary); font-size: 32px; 
+    filter: drop-shadow(0 4px 6px rgba(245, 158, 11, 0.4)); /* Logo phát sáng */
+}
+
+.menu-list { list-style: none; overflow-y: auto; flex: 1; }
+.menu-item { margin-bottom: 5px; }
+
+/* Tiêu đề nhóm menu (Overview, System...) */
+.menu-item[style*="text-transform"] {
+    font-size: 11px !important; color: #94A3B8 !important;
+    font-weight: 800 !important; letter-spacing: 1px;
+    margin: 20px 0 10px 15px;
+}
+
+.menu-link {
+    display: flex; align-items: center; padding: 14px 20px;
+    color: var(--text-light); text-decoration: none; border-radius: 16px;
+    font-weight: 600; font-size: 14px; transition: var(--transition);
+}
+.menu-link i { width: 25px; font-size: 18px; margin-right: 10px; transition: var(--transition); }
+
+.menu-link:hover {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transform: translateX(5px);
+}
+
+.menu-link.active {
+    background: linear-gradient(135deg, #FFFBEB 0%, #FFF 100%);
+    color: var(--primary-dark);
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+}
+.menu-link.active i { color: var(--primary); transform: scale(1.2); }
+
+.sidebar-footer { padding-top: 20px; border-top: 1px dashed #E2E8F0; }
+
+/* --- MAIN CONTENT --- */
+.main-wrapper { flex: 1; display: flex; flex-direction: column; position: relative; }
+
+.topbar {
+    height: 80px; padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255, 255, 255, 0.8); /* Kính mờ */
+    backdrop-filter: blur(10px);
+    z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.5);
+}
+
+.content-scroll { flex: 1; overflow-y: auto; padding: 30px 40px; }
+
+/* --- BUTTONS "NỔI" 3D --- */
+.btn-create, button[type="submit"] {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: white; border: none; padding: 12px 25px;
+    border-radius: 12px; font-weight: 700; font-size: 14px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 20px -4px rgba(245, 158, 11, 0.4); /* Bóng cam rực rỡ */
+    transition: var(--transition); cursor: pointer;
+}
+
+.btn-create:hover, button[type="submit"]:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 25px -4px rgba(245, 158, 11, 0.6);
+}
+
+/* --- CARDS & FORMS (Giao diện thẻ bài) --- */
+.white-card, .card {
+    background: var(--white); border-radius: 24px;
+    padding: 35px; margin-bottom: 30px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid #FFF; /* Viền trắng tạo độ nổi */
+}
+
+/* Input Styles - Trông xịn như iPhone */
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    width: 100%; padding: 14px 20px;
+    border: 2px solid transparent; /* Ẩn viền mặc định */
+    border-radius: 14px;
+    background: #F8FAFC; /* Nền xám nhạt */
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--text-main);
+    transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+    background: #FFF;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); /* Vòng sáng khi gõ */
+}
+
+/* --- TABLE (Bảng danh sách lơ lửng) --- */
+.custom-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; /* Tách dòng ra */ }
+
+.custom-table th {
+    text-align: left; padding: 15px 20px;
+    color: var(--text-light); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.custom-table tbody tr {
+    background: #FFF;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02); /* Đổ bóng nhẹ từng dòng */
+    transition: var(--transition);
+}
+.custom-table tbody tr:hover {
+    transform: scale(1.01); /* Phóng to nhẹ khi di chuột */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    z-index: 10; position: relative;
+}
+
+.custom-table td {
+    padding: 20px;
+    border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;
+    color: var(--text-main); font-weight: 600; font-size: 14px;
+}
+.custom-table td:first-child { border-left: 1px solid #F1F5F9; border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
+.custom-table td:last-child { border-right: 1px solid #F1F5F9; border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
+
+/* --- BADGES & ICONS --- */
+.limit-badge {
+    background: #FFFBEB; color: #D97706; 
+    padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 13px;
+    border: 1px solid #FEF3C7;
+}
+
+.teacher-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #EFF6FF; color: #2563EB;
+    padding: 6px 15px; border-radius: 30px; font-weight: 600; font-size: 13px;
+}
+
+.action-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: var(--transition); margin-right: 5px;
+}
+.edit-icon:hover { background: #DBEAFE; color: #1D4ED8; }
+.delete-icon:hover { background: #FEE2E2; color: #DC2626; }
+
+/* Stats Grid (Cho Dashboard) */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 30px; }
+.stat-item {
+    background: white; padding: 25px; border-radius: 20px;
+    box-shadow: var(--shadow-card); display: flex; align-items: center; justify-content: space-between;
+    transition: var(--transition); cursor: default;
+}
+.stat-item:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+.stat-info h3 { font-size: 32px; font-weight: 800; color: var(--text-main); margin: 5px 0 0 0; }
+.stat-icon { width: 55px; height: 55px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+
+/* --- USER BOX (Góc trên bên phải) --- */
+.user-box {
+    display: flex; 
+    align-items: center; 
+    gap: 12px; /* Khoảng cách giữa chữ và avatar */
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex; 
+    flex-direction: column; /* Xếp tên và role dọc */
+    align-items: flex-end; /* Căn lề phải để sát avatar */
+    text-align: right;
+}
+
+.user-name {
+    font-weight: 700; 
+    font-size: 14px; 
+    color: var(--text-main);
+    line-height: 1.2;
+}
+
+.user-role {
+    font-size: 12px; 
+    font-weight: 500; 
+    color: #64748B; /* Màu xám nhạt cho role */
+    margin-top: 2px;
+}
+
+.user-avatar {
+    width: 42px; 
+    height: 42px;
+    background: linear-gradient(135deg, #F59E0B, #D97706); /* Màu cam Honey */
+    color: white; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 18px; 
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); /* Bóng đổ avatar */
+    border: 2px solid #FFF; /* Viền trắng quanh avatar */
+}
