@@ -39,7 +39,6 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             
             <div class="page-header">
                 <div>
-                    <h2 class="page-title">Quản lý lớp học</h2>
                     <p class="page-subtitle">
                         <a href="home.php" style="color: #94A3B8; text-decoration: none;">
                             &lt; Quay lại trang chủ

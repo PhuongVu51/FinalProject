@@ -173,7 +173,7 @@ if(isset($_GET['del'])){
         <div class="content-scroll">
             <div class="page-header">
                 <div>
-                    <h2 class="page-title">Quản Lý Giáo Viên</h2>
+
                     <p class="page-subtitle">
                         <a href="home.php" style="color: #94A3B8; text-decoration: none;">
                             &lt; Quay lại trang chủ

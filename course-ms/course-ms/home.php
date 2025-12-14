@@ -204,7 +204,6 @@ if($role === 'admin'){
         
         <div class="content-scroll">
             <div class="dashboard-header">
-                <h1>Hệ Thống Quản Lý</h1>
             </div>
 
             <div class="stats-grid">
