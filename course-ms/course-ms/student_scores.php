@@ -98,13 +98,19 @@ $sid = $_SESSION['student_id'];
             margin-bottom: 24px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            align-items: center;
+        }
+        .search-filter .search-icon {
+            color: #999;
+            font-size: 20px;
+            flex-shrink: 0;
         }
         .search-filter input, .search-filter select {
             flex: 1;
             padding: 12px 20px;
             border: 2px solid #E0E0E0;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 15px;
         }
     </style>
@@ -112,15 +118,8 @@ $sid = $_SESSION['student_id'];
 <body>
     <?php include "includes/sidebar.php"; ?>
     <div class="main-wrapper">
-        <?php include "includes/topbar.php"; ?>
+        <?php include "includes/student_topbar.php"; ?>
         <div class="content-scroll">
-            
-            <div class="hero-box">
-                <i class="fa-solid fa-trophy hero-bg-icon"></i>
-                <h1>Kết Quả Học Tập</h1>
-                <p>Theo dõi và nâng cao thành tích học tập của bạn</p>
-            </div>
-
             <?php
             // Calculate statistics
             $stats_query = "SELECT 
@@ -159,9 +158,10 @@ $sid = $_SESSION['student_id'];
 
             <!-- Search and Filter -->
             <div class="search-filter">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm bài thi..." onkeyup="filterScores()">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm bài thi..." onkeyup="filterScores()">
                 <select id="subjectFilter" onchange="filterScores()">
-                    <option value="">Tất cả môn học</option>
+                    <option value="">Tất cả lớp học</option>
                     <?php
                     $subjects = mysqli_query($link, "SELECT DISTINCT e.subject FROM scores sc JOIN exams e ON sc.exam_id=e.id WHERE sc.student_id=$sid");
                     while($subj = mysqli_fetch_assoc($subjects)):
@@ -176,7 +176,7 @@ $sid = $_SESSION['student_id'];
                 <table class="scores-table">
                     <thead>
                         <tr>
-                            <th>Môn Học</th>
+                            <th>Lớp Học</th>
                             <th>Bài Kiểm Tra</th>
                             <th>Thời Gian Thi</th>
                             <th style="text-align:center;">Điểm Số</th>

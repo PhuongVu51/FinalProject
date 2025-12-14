@@ -12,296 +12,335 @@ $sid = $_SESSION['student_id'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
-        .search-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #E0E0E0;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-        .search-bar input:focus {
-            outline: none;
-            border-color: #FFC107;
-        }
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 24px;
-        }
-        .stat-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 28px;
-        }
-        .stat-icon.news { background: #E3F2FD; color: #1976D2; }
-        .stat-icon.classes { background: #FFF3E0; color: #F57C00; }
-        .stat-icon.scores { background: #E8F5E9; color: #388E3C; }
-        .stat-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .stat-label {
-            color: #666;
-            font-size: 14px;
-        }
-        .news-list-item {
-            background: white;
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 3px solid #FFC107;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .news-list-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transform: translateX(4px);
-            border-left-color: #F57C00;
-        }
-        .news-list-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-        }
-        .news-list-icon {
-            width: 40px;
-            height: 40px;
-            background: #FFF3E0;
-            color: #F57C00;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .news-list-content {
-            flex: 1;
-        }
-        .news-list-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
-            font-size: 15px;
-        }
-        .news-list-date {
-            color: #64748B;
-            font-size: 12px;
-        }
-        .news-list-arrow {
-            color: #FFC107;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .view-all-btn {
-            display: block;
-            text-align: center;
-            padding: 14px;
-            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+        .hero-banner-large {
+            background: linear-gradient(135deg, #FFA000 0%, #FF8F00 100%);
+            padding: 24px 32px;
+            border-radius: 16px;
+            margin-bottom: 40px;
             color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-top: 16px;
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
-        }
-        .view-all-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
-        }
-        .card-header-with-link {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(255, 160, 0, 0.3);
         }
-        .card-title {
-            font-size: 18px;
+        .hero-content h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+        }
+        .hero-content p {
+            font-size: 16px;
+            margin: 0;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 22px;
             font-weight: 700;
             color: #333;
-            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .header-link {
-            color: #F57C00;
+        .section-title i {
+            color: #FFA000;
+        }
+        .see-all-link {
+            color: #FFA000;
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 5px;
-            transition: color 0.3s;
         }
-        .header-link:hover {
-            color: #E65100;
+        .see-all-link:hover {
+            color: #FF8F00;
         }
-        .empty-news {
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+        .class-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            position: relative;
+        }
+        .class-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .class-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .class-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .class-teacher {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .class-action-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
             text-align: center;
-            padding: 40px 20px;
-            color: #999;
+            text-decoration: none;
+            display: block;
         }
-        .empty-news i {
+        .btn-register {
+            background: #FFF3E0;
+            color: #F57C00;
+            border: 2px solid #FFE0B2;
+        }
+        .btn-register:hover {
+            background: #FFE0B2;
+        }
+        .discover-section {
+            margin-top: 50px;
+        }
+        .discover-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .discover-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+        .discover-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .discover-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
+        }
+        .discover-content {
+            padding: 20px;
+        }
+        .discover-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .discover-desc {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .slot-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
     <?php include "includes/sidebar.php"; ?>
     <div class="main-wrapper">
-        <?php include "includes/topbar.php"; ?>
+        <?php include "includes/student_topbar.php"; ?>
         <div class="content-scroll">
             
-
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm nhanh..." onkeyup="searchContent()">
-            </div>
-            
-            <div class="hero-banner">
-                <h1>Chào mừng, <?php echo $_SESSION['full_name']; ?>! 👋</h1>
-                <p>Chúc bạn một ngày học tập thật hiệu quả và tràn đầy năng lượng.</p>
+            <!-- Hero Banner -->
+            <div class="hero-banner-large">
+                <div class="hero-content">
+                    <h1>Chào mừng, <?php echo $_SESSION['full_name']; ?>! 👋</h1>
+                    <p>Chúc bạn một ngày học tập thật hiệu quả và tràn đầy năng lượng.</p>
+                </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <a href="student_news.php" class="stat-card">
-                    <div class="stat-icon news"><i class="fa-solid fa-newspaper"></i></div>
-                    <div class="stat-number"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM news")); ?></div>
-                    <div class="stat-label">Tin Tức</div>
-                </a>
-                <a href="student_classes.php" class="stat-card">
-                    <div class="stat-icon classes"><i class="fa-solid fa-chalkboard"></i></div>
-                    <div class="stat-number"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM classes")); ?></div>
-                    <div class="stat-label">Lớp Học</div>
-                </a>
-                <a href="student_scores.php" class="stat-card">
-                    <div class="stat-icon scores"><i class="fa-solid fa-chart-line"></i></div>
-                    <div class="stat-number"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM scores WHERE student_id=$sid")); ?></div>
-                    <div class="stat-label">Kết Quả</div>
-                </a>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
-                <!-- News Section -->
-                <div class="card">
-                    <div class="card-header-with-link">
-                        <h3 class="card-title">📢 Tin Tức Nhà Trường</h3>
-                        <a href="student_news.php" class="header-link">
-                            Xem tất cả <i class="fa-solid fa-arrow-right"></i>
-                        </a>
+            <!-- Quick Stats Grid -->
+            <div class="classes-grid" style="margin-bottom: 40px;">
+                <a href="student_news.php" class="class-card" style="text-decoration: none; cursor: pointer;">
+                    <div class="class-icon" style="background: #E3F2FD; color: #1976D2;">
+                        <i class="fa-solid fa-newspaper"></i>
                     </div>
-                    
-                    <?php 
-                    $res = mysqli_query($link, "SELECT * FROM news ORDER BY created_at DESC LIMIT 5");
-                    if(mysqli_num_rows($res) > 0):
-                        while($r = mysqli_fetch_assoc($res)): ?>
-                        <div class="news-list-item news-item" onclick="window.location.href='student_news.php'">
-                            <div class="news-list-left">
-                                <div class="news-list-icon">
-                                    <i class="fa-solid fa-bullhorn"></i>
-                                </div>
-                                <div class="news-list-content">
-                                    <div class="news-list-title">
-                                        <?php echo $r['title']; ?>
-                                    </div>
-                                    <div class="news-list-date">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <?php echo date('d/m/Y H:i', strtotime($r['created_at'])); ?>
-                                    </div>
-                                </div>
+                    <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM news")); ?></div>
+                    <div class="class-teacher">Tin Tức</div>
+                </a>
+
+                <a href="student_classes.php" class="class-card" style="text-decoration: none; cursor: pointer;">
+                    <div class="class-icon" style="background: #FFF3E0; color: #F57C00;">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM student_classes WHERE student_id=$sid")); ?></div>
+                    <div class="class-teacher">Lớp Học Của Tôi</div>
+                </a>
+
+                <a href="student_scores.php" class="class-card" style="text-decoration: none; cursor: pointer;">
+                    <div class="class-icon" style="background: #FFF9C4; color: #F9A825;">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div class="class-name"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM scores WHERE student_id=$sid")); ?></div>
+                    <div class="class-teacher">Kết Quả</div>
+                </a>
+            </div>
+
+            <!-- News Section -->
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    Tin Tức Nhà Trường
+                </div>
+                <a href="student_news.php" class="see-all-link">
+                    Xem tất cả <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card" style="margin-bottom: 50px;">
+                <?php 
+                $news_query = "SELECT * FROM news ORDER BY created_at DESC LIMIT 5";
+                $news_rs = mysqli_query($link, $news_query);
+                
+                if(mysqli_num_rows($news_rs) > 0):
+                    while($news = mysqli_fetch_assoc($news_rs)):
+                ?>
+                    <div class="news-list-item" onclick="window.location.href='student_news.php'" 
+                         style="background: white; border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; 
+                                box-shadow: 0 2px 6px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.3s; 
+                                border-left: 3px solid #FFC107; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                            <div style="width: 40px; height: 40px; background: #FFF3E0; color: #F57C00; border-radius: 50%; 
+                                        display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                <i class="fa-solid fa-bullhorn"></i>
                             </div>
-                            <div class="news-list-arrow">
-                                <i class="fa-solid fa-chevron-right"></i>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #333; margin-bottom: 4px; font-size: 15px;">
+                                    <?php echo $news['title']; ?>
+                                </div>
+                                <div style="color: #64748B; font-size: 12px;">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <?php echo date('d/m/Y H:i', strtotime($news['created_at'])); ?>
+                                </div>
                             </div>
                         </div>
-                    <?php endwhile; ?>
-                    
-                    <a href="student_news.php" class="view-all-btn">
-                        <i class="fa-solid fa-newspaper"></i> Xem Tất Cả Tin Tức
+                        <div style="color: #FFC107; font-size: 18px; flex-shrink: 0;">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+                <?php 
+                    endwhile;
+                else:
+                ?>
+                    <div style="text-align: center; padding: 40px 20px; color: #999;">
+                        <i class="fa-regular fa-newspaper" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>Chưa có tin tức nào</p>
+                    </div>
+                <?php endif; ?>
+
+                <a href="student_news.php" class="class-action-btn btn-register" 
+                   style="margin-top: 16px; background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%); 
+                          color: white; border: none;">
+                    <i class="fa-solid fa-newspaper"></i> Xem Tất Cả Tin Tức
+                </a>
+            </div>
+
+            <!-- Discover New Classes -->
+            <div class="discover-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fa-solid fa-compass"></i>
+                        Khám phá lớp mới
+                    </div>
+                    <a href="student_classes.php" class="see-all-link">
+                        Xem tất cả <i class="fa-solid fa-arrow-right"></i>
                     </a>
-                    
-                    <?php else: ?>
-                        <div class="empty-news">
-                            <i class="fa-regular fa-newspaper"></i>
-                            <p>Chưa có tin tức nào</p>
-                        </div>
-                    <?php endif; ?>
                 </div>
 
-                <!-- Quick Links -->
-                <div>
-                    <div class="card" style="text-align:center; margin-bottom:20px;">
-                        <div style="width:60px; height:60px; background:#FFF3E0; color:#F57C00; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; font-size:24px;">
-                            <i class="fa-solid fa-chalkboard-user"></i>
+                <div class="discover-grid">
+                    <?php 
+                    // FIXED: Get available classes (exclude enrolled via student_classes)
+                    $available_query = "SELECT c.*, u.full_name as teacher_name,
+                        (SELECT COUNT(*) FROM student_classes WHERE class_id=c.id) as student_count
+                        FROM classes c 
+                        LEFT JOIN teachers t ON c.teacher_id=t.id 
+                        LEFT JOIN users u ON t.user_id=u.id
+                        WHERE c.id NOT IN (SELECT class_id FROM student_classes WHERE student_id=$sid)
+                        AND c.id NOT IN (SELECT class_id FROM applications WHERE student_id=$sid AND status='pending')
+                        LIMIT 3";
+                    $available_rs = mysqli_query($link, $available_query);
+                    
+                    $icons = ['fa-code', 'fa-user-graduate', 'fa-calculator'];
+                    $gradients = [
+                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                    ];
+                    $index = 0;
+                    
+                    while($class = mysqli_fetch_assoc($available_rs)):
+                    ?>
+                        <div class="discover-card">
+                            <div class="discover-image" style="background: <?php echo $gradients[$index % 3]; ?>; position: relative;">
+                                <i class="fa-solid <?php echo $icons[$index % 3]; ?>"></i>
+                            </div>
+                            <div class="discover-content">
+                                <div class="discover-title"><?php echo $class['name']; ?></div>
+                                <div class="discover-desc">
+                                    <?php echo $class['teacher_name'] ? 'Giảng viên: ' . $class['teacher_name'] : 'Đang cập nhật giảng viên'; ?>
+                                </div>
+                                <a href="student_classes.php?reg=<?php echo $class['id']; ?>" 
+                                   class="class-action-btn btn-register"
+                                   onclick="return confirm('Bạn có chắc muốn đăng ký lớp này?');">
+                                    Đăng ký <i class="fa-solid fa-plus"></i>
+                                </a>
+                            </div>
                         </div>
-                        <h3 style="margin:0 0 10px 0; font-size:16px;">Lớp Học</h3>
-                        <p style="color:#64748B; font-size:13px; margin-bottom:15px;">Xem và đăng ký các lớp học.</p>
-                        <a href="student_classes.php" class="btn-primary" style="width:100%; display:inline-block; text-decoration:none;">Xem Lớp Học</a>
-                    </div>
-
-                    <div class="card" style="text-align:center;">
-                        <div style="width:60px; height:60px; background:#ECFDF5; color:#10B981; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; font-size:24px;">
-                            <i class="fa-solid fa-chart-pie"></i>
-                        </div>
-                        <h3 style="margin:0 0 10px 0; font-size:16px;">Kết Quả Học Tập</h3>
-                        <p style="color:#64748B; font-size:13px; margin-bottom:15px;">Xem điểm số các bài kiểm tra.</p>
-                        <a href="student_scores.php" class="btn-primary" style="width:100%; display:inline-block; text-decoration:none;">Xem Điểm</a>
-                    </div>
+                    <?php 
+                        $index++;
+                    endwhile; 
+                    ?>
                 </div>
             </div>
 
             <?php include "includes/footer.php"; ?>
         </div>
     </div>
-
-    <script>
-        function searchContent() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const newsItems = document.querySelectorAll('.news-item');
-            
-            newsItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(input) ? '' : 'none';
-            });
-        }
-    </script>
 </body>
 </html>
