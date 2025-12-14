@@ -95,6 +95,20 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             background: #FFFBEB; color: #D97706; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px;
         }
 
+        /* Student Count Badge */
+        .student-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #DBEAFE;
+            color: #1E40AF;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            border: 1px solid #93C5FD;
+        }
+
         .action-icon { 
             font-size: 16px; 
             margin-right: 8px; 
@@ -145,6 +159,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
             <div style="width: 100%; max-width: 1400px; margin: 0 auto;">
             
                 <div class="page-header">
+                    <h2>Quản lý lớp học</h2>
                     
                     <a href="add_class.php" class="btn-create">
                         <i class="fa-solid fa-plus"></i> Tạo Lớp Mới
@@ -168,7 +183,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                             <tr>
                                 <th>Mã lớp</th>
                                 <th>Tên lớp</th>
-                                <th>Mô tả</th>
+                                <th>Số học sinh</th>
                                 <th>Giới hạn</th>
                                 <th>Giáo viên</th>
                                 <th>Chỉnh sửa</th>
@@ -176,8 +191,9 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                         </thead>
                         <tbody>
                         <?php 
-                        // Query data
-                        $sql = "SELECT c.*, u.full_name 
+                        // Query data with student count
+                        $sql = "SELECT c.*, u.full_name,
+                                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) as student_count
                                 FROM classes c 
                                 LEFT JOIN teachers t ON c.teacher_id=t.id 
                                 LEFT JOIN users u ON t.user_id=u.id
@@ -203,12 +219,12 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                         </a>
                                     </td>
                                     
-                                    <!-- Cột Mô tả -->
-                                    <td style="font-weight:400; color:#64748B; font-size:13px;">
-                                        <?php 
-                                            $desc = isset($row['description']) ? $row['description'] : '';
-                                            echo (strlen($desc) > 30) ? substr($desc,0,30)."..." : $desc; 
-                                        ?>
+                                    <!-- Cột Số học sinh -->
+                                    <td>
+                                        <span class="student-count-badge">
+                                            <i class="fa-solid fa-users"></i>
+                                            <?php echo $row['student_count']; ?>
+                                        </span>
                                     </td>
 
                                     <!-- Cột Giới hạn -->
