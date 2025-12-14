@@ -16,7 +16,7 @@ $search = "";
 $sql_search = "";
 if(isset($_GET['q']) && !empty($_GET['q'])){
     $search = mysqli_real_escape_string($link, $_GET['q']);
-    $sql_search = " WHERE c.name LIKE '%$search%' ";
+    $sql_search = " WHERE c.name LIKE '%$search%' OR c.class_code LIKE '%$search%' ";
 }
 ?>
 <!DOCTYPE html>
@@ -26,7 +26,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
     <title>Quản lý lớp học | Teacher Bee</title>
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="class.css">
+    <link rel="stylesheet" href="dashboard_style.css">
     <style>
         body { background-color: #FFFDF7; font-family: 'Be Vietnam Pro', sans-serif; }
         
@@ -69,6 +69,19 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
         .custom-table td { padding: 15px 10px; color: #1E293B; font-size: 14px; font-weight: 600; border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
         .custom-table tr:last-child td { border-bottom: none; }
 
+        /* Code Badge - Mã lớp */
+        .code-badge {
+            display: inline-block;
+            background: #F0F9FF; 
+            color: #0369A1; 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #BAE6FD;
+        }
+
         .teacher-badge {
             display: inline-flex; align-items: center; gap: 8px;
             background: #F8FAFC; padding: 5px 10px; border-radius: 20px; font-size: 13px; color: #475569; border: 1px solid #E2E8F0;
@@ -87,6 +100,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
 
         .btn-create {
             background-color: #F59E0B; color: white; text-decoration: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2); transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
         }
         .btn-create:hover { background-color: #D97706; transform: translateY(-1px); }
     </style>
@@ -114,7 +128,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                     <h3>Danh sách lớp</h3>
                     
                     <form method="GET" class="search-box">
-                        <input type="text" name="q" class="search-input" placeholder="Tìm kiếm lớp học..." value="<?php echo htmlspecialchars($search); ?>">
+                        <input type="text" name="q" class="search-input" placeholder="Tìm kiếm lớp học hoặc mã lớp..." value="<?php echo htmlspecialchars($search); ?>">
                         <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
@@ -122,6 +136,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                 <table class="custom-table">
                     <thead>
                         <tr>
+                            <th>Mã lớp</th>
                             <th>Tên lớp</th>
                             <th>Mô tả</th>
                             <th>Giới hạn</th>
@@ -143,8 +158,17 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                     if(mysqli_num_rows($res) > 0):
                         while($row = mysqli_fetch_assoc($res)): ?>
                             <tr>
+                                <!-- Cột Mã lớp -->
+                                <td>
+                                    <span class="code-badge">
+                                        <?php echo $row['class_code'] ? htmlspecialchars($row['class_code']) : 'N/A'; ?>
+                                    </span>
+                                </td>
+                                
+                                <!-- Cột Tên lớp -->
                                 <td><?php echo htmlspecialchars($row['name']); ?></td>
                                 
+                                <!-- Cột Mô tả -->
                                 <td style="font-weight:400; color:#64748B; font-size:13px;">
                                     <?php 
                                         $desc = isset($row['description']) ? $row['description'] : '';
@@ -152,12 +176,14 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                     ?>
                                 </td>
 
+                                <!-- Cột Giới hạn -->
                                 <td>
                                     <span class="limit-badge">
                                         <?php echo isset($row['student_limit']) ? $row['student_limit'] : '40'; ?>
                                     </span>
                                 </td>
                                 
+                                <!-- Cột Giáo viên -->
                                 <td>
                                     <?php if($row['full_name']): ?>
                                         <div class="teacher-badge">
@@ -169,6 +195,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                                     <?php endif; ?>
                                 </td>
                                 
+                                <!-- Cột Chỉnh sửa -->
                                 <td>
                                     <a href="edit_class.php?id=<?php echo $row['id']; ?>" class="action-icon edit-icon" title="Chỉnh sửa">
                                         <i class="fa-solid fa-pen"></i>
@@ -181,7 +208,7 @@ if(isset($_GET['q']) && !empty($_GET['q'])){
                             </tr>
                         <?php endwhile; 
                     else: ?>
-                        <tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
+                        <tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 30px;">Không tìm thấy lớp.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>

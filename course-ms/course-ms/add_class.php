@@ -25,15 +25,21 @@ if(isset($_POST['create_class'])){
     if($name == ''){
         $error = "Class Name is required!";
     } else {
-        // Chú ý: Bạn cần đảm bảo DB bảng `classes` đã có cột description và student_limit
-        // Nếu chưa có, chạy lệnh SQL: 
-        // ALTER TABLE classes ADD COLUMN description TEXT, ADD COLUMN student_limit INT DEFAULT 40;
+        // === TỰ ĐỘNG TẠO MÃ LỚP ===
+        // Lấy ID lớn nhất hiện tại
+        $result = mysqli_query($link, "SELECT MAX(id) as max_id FROM classes");
+        $row = mysqli_fetch_assoc($result);
+        $next_id = ($row['max_id'] ? $row['max_id'] : 0) + 1;
         
-        $sql = "INSERT INTO classes (name, description, student_limit, teacher_id) 
-                VALUES ('$name', '$desc', $limit, $teacher_sql)";
+        // Tạo mã lớp: CLS0001, CLS0002, CLS0003...
+        $class_code = 'CLS' . str_pad($next_id, 4, '0', STR_PAD_LEFT);
+        
+        // Insert với mã lớp tự động
+        $sql = "INSERT INTO classes (class_code, name, description, student_limit, teacher_id) 
+                VALUES ('$class_code', '$name', '$desc', $limit, $teacher_sql)";
         
         if(mysqli_query($link, $sql)){
-            header('Location: manage_classes.php'); 
+            echo "<script>alert('Tạo lớp thành công! Mã lớp: $class_code'); window.location='manage_classes.php';</script>";
             exit;
         } else {
             $error = "Database Error: " . mysqli_error($link);
@@ -56,6 +62,29 @@ if(isset($_POST['create_class'])){
         .form-control:focus { border-color: #F59E0B; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1); }
         .btn-submit { background-color: #F59E0B; color: white; padding: 12px 25px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; }
         .btn-cancel { background-color: #F1F5F9; color: #64748B; padding: 12px 25px; border-radius: 10px; font-weight: 600; text-decoration: none; margin-right: 10px; }
+        
+        /* Info Box - Hiển thị mã lớp sẽ được tạo */
+        .info-box {
+            background: #F0F9FF; 
+            border: 1px solid #BAE6FD; 
+            border-radius: 10px; 
+            padding: 15px; 
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-box i { color: #0369A1; font-size: 18px; }
+        .info-box-text { color: #0C4A6E; font-size: 14px; font-weight: 600; }
+        .code-preview {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #0369A1;
+            border: 1px solid #BAE6FD;
+        }
     </style>
 </head>
 <body>
@@ -68,6 +97,23 @@ if(isset($_POST['create_class'])){
                 <h3 style="margin-top:0; color: #F59E0B; margin-bottom: 20px; font-size: 22px;">
                     <i class="fa-solid fa-circle-plus"></i> Tạo lớp mới
                 </h3>
+                
+                <!-- Thông báo mã lớp tự động -->
+                <div class="info-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <div class="info-box-text">
+                        Mã lớp sẽ được tạo tự động: 
+                        <span class="code-preview">
+                            <?php 
+                                // Preview mã lớp sẽ được tạo
+                                $result = mysqli_query($link, "SELECT MAX(id) as max_id FROM classes");
+                                $row = mysqli_fetch_assoc($result);
+                                $next_id = ($row['max_id'] ? $row['max_id'] : 0) + 1;
+                                echo 'CLS' . str_pad($next_id, 4, '0', STR_PAD_LEFT);
+                            ?>
+                        </span>
+                    </div>
+                </div>
                 
                 <?php if($error): ?>
                     <div style="background:#FEF2F2; color:#DC2626; padding:10px; border-radius:8px; margin-bottom:15px; font-size:14px;">
@@ -108,7 +154,7 @@ if(isset($_POST['create_class'])){
                     <div style="margin-top: 30px; text-align: right;">
                         <a href="manage_classes.php" class="btn-cancel">Hủy</a>
                         <button type="submit" name="create_class" class="btn-submit">
-                            Lưu lớp học
+                            <i class="fa-solid fa-check"></i> Lưu lớp học
                         </button>
                     </div>
                 </form>
