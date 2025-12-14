@@ -46,6 +46,9 @@ if(isset($_GET['remove_student'])){
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
         body { background-color: #FFFDF7; font-family: 'Be Vietnam Pro', sans-serif; }
+        /* Match brand and topbar font/size used in manage_applications.php */
+        .brand { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; }
+        .topbar .page-breadcrumb { font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 800; color: #0F172A; margin: 0; }
         
         .content-container {
             max-width: 1400px;
