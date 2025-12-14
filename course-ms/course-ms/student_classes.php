@@ -18,7 +18,6 @@ if(isset($_GET['reg'])){
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
     <link rel="stylesheet" href="dashboard_style.css">
     <style>
-        /* Thêm style cho thanh tìm kiếm */
         .search-bar {
             background: white;
             padding: 20px;
@@ -72,7 +71,6 @@ if(isset($_GET['reg'])){
                     </h3>
                 </div>
                 <?php 
-                // FIXED: Use student_classes junction table
                 $enrolled = mysqli_query($link, "SELECT c.*, u.full_name as teacher_name
                     FROM classes c 
                     LEFT JOIN teachers t ON c.teacher_id=t.id 

@@ -280,65 +280,7 @@ $sid = $_SESSION['student_id'];
                     <i class="fa-solid fa-newspaper"></i> Xem Tất Cả Tin Tức
                 </a>
             </div>
-
-            <!-- Discover New Classes -->
-            <div class="discover-section">
-                <div class="section-header">
-                    <div class="section-title">
-                        <i class="fa-solid fa-compass"></i>
-                        Khám phá lớp mới
-                    </div>
-                    <a href="student_classes.php" class="see-all-link">
-                        Xem tất cả <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <div class="discover-grid">
-                    <?php 
-                    // FIXED: Get available classes (exclude enrolled via student_classes)
-                    $available_query = "SELECT c.*, u.full_name as teacher_name,
-                        (SELECT COUNT(*) FROM student_classes WHERE class_id=c.id) as student_count
-                        FROM classes c 
-                        LEFT JOIN teachers t ON c.teacher_id=t.id 
-                        LEFT JOIN users u ON t.user_id=u.id
-                        WHERE c.id NOT IN (SELECT class_id FROM student_classes WHERE student_id=$sid)
-                        AND c.id NOT IN (SELECT class_id FROM applications WHERE student_id=$sid AND status='pending')
-                        LIMIT 3";
-                    $available_rs = mysqli_query($link, $available_query);
-                    
-                    $icons = ['fa-code', 'fa-user-graduate', 'fa-calculator'];
-                    $gradients = [
-                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-                    ];
-                    $index = 0;
-                    
-                    while($class = mysqli_fetch_assoc($available_rs)):
-                    ?>
-                        <div class="discover-card">
-                            <div class="discover-image" style="background: <?php echo $gradients[$index % 3]; ?>; position: relative;">
-                                <i class="fa-solid <?php echo $icons[$index % 3]; ?>"></i>
-                            </div>
-                            <div class="discover-content">
-                                <div class="discover-title"><?php echo $class['name']; ?></div>
-                                <div class="discover-desc">
-                                    <?php echo $class['teacher_name'] ? 'Giảng viên: ' . $class['teacher_name'] : 'Đang cập nhật giảng viên'; ?>
-                                </div>
-                                <a href="student_classes.php?reg=<?php echo $class['id']; ?>" 
-                                   class="class-action-btn btn-register"
-                                   onclick="return confirm('Bạn có chắc muốn đăng ký lớp này?');">
-                                    Đăng ký <i class="fa-solid fa-plus"></i>
-                                </a>
-                            </div>
-                        </div>
-                    <?php 
-                        $index++;
-                    endwhile; 
-                    ?>
-                </div>
-            </div>
-
+            
             <?php include "includes/footer.php"; ?>
         </div>
     </div>
