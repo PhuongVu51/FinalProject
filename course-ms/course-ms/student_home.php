@@ -226,7 +226,7 @@ $sid = $_SESSION['student_id'];
             <div class="section-header">
                 <div class="section-title">
                     <i class="fa-solid fa-bullhorn"></i>
-                    Tin Tức Nhà Trường
+                    Tin Tức
                 </div>
                 <a href="student_news.php" class="see-all-link">
                     Xem tất cả <i class="fa-solid fa-arrow-right"></i>
@@ -280,7 +280,7 @@ $sid = $_SESSION['student_id'];
                     <i class="fa-solid fa-newspaper"></i> Xem Tất Cả Tin Tức
                 </a>
             </div>
-            
+
             <?php include "includes/footer.php"; ?>
         </div>
     </div>
