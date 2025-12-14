@@ -1,5 +1,5 @@
 <header class="topbar">
-    <h2 class="page-breadcrumb"><b>Hệ Thống Quản Lý</b></h2>
+    <h2 class="page-breadcrumb">Hệ Thống Quản Lý</h2>
     <div class="user-box">
         <div class="user-info" style="display:flex; flex-direction:column; align-items:flex-end;">
             <span class="user-name" style="font-weight:800; color:#0F172A;"><?php echo $_SESSION['full_name']; ?></span>
