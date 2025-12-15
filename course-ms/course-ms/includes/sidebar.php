@@ -12,7 +12,6 @@ $role = $_SESSION['role'] ?? '';
             <li class="menu-label">Học Tập</li>
             <li><a href="student_home.php" class="menu-link <?php echo ($cp=='student_home.php')?'active':''; ?>"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
             <li><a href="student_classes.php" class="menu-link <?php echo ($cp=='student_classes.php')?'active':''; ?>"><i class="fa-solid fa-chalkboard-user"></i> Lớp Học</a></li>
-            <li><a href="student_exams.php" class="menu-link <?php echo ($cp=='student_exams.php')?'active':''; ?>"><i class="fa-solid fa-book"></i> Bài Kiểm Tra</a></li>
             <li><a href="student_scores.php" class="menu-link <?php echo ($cp=='student_scores.php')?'active':''; ?>"><i class="fa-solid fa-star"></i> Kết Quả Học Tập</a></li>
             <li class="menu-label">Thông tin</li>
             <li><a href="student_news.php" class="menu-link <?php echo ($cp=='student_news.php')?'active':''; ?>"><i class="fa-solid fa-newspaper"></i> Tin Tức</a></li>
