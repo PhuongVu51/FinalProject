@@ -1,43 +1,41 @@
 <?php
-// THÊM 3 DÒNG NÀY ĐỂ BÁO LỖI (Cần thiết trong quá trình phát triển)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
+include "connection.php";
+include "auth.php";
 
-// Sử dụng kết nối cục bộ (Laragon)
-include 'connection.php'; // tạo biến $link
-$con = $link; // dùng chung biến kết nối cho rõ ràng
+if (!isset($_POST['login'])) { header("Location: login.php"); exit(); }
 
-/* Lấy dữ liệu */
-$email = $_POST['email'];
-$pass = md5($_POST['password']);
+$username = trim($_POST['username']);
+$password = $_POST['password'];
 
-/* Kiểm tra 'email' và 'password' trong bảng 'teachers' */
-$s = "select * from teachers where email='$email' AND password='$pass'";
-
-$result = mysqli_query($con, $s);
-
-// Kiểm tra lỗi truy vấn SQL (Ví dụ: tên bảng sai)
-if (!$result) {
-    die("LỖI TRUY VẤN SQL: " . mysqli_error($con));
+if (empty($username) || empty($password)) {
+    header("Location: login.php?error=empty"); exit();
 }
 
-$num = mysqli_num_rows($result);
+$clean_user = mysqli_real_escape_string($link, $username);
+$hash_pass = md5($password);
 
-if($num == 1){
-    $user_data = mysqli_fetch_assoc($result);
+$sql = "SELECT * FROM users WHERE username='$clean_user' AND password='$hash_pass'";
+$res = mysqli_query($link, $sql);
 
-    /* Lưu thông tin vào session */
-    $_SESSION['username'] = $user_data['full_name'];
-    $_SESSION['email'] = $user_data['email'];
-    $_SESSION['teacher_id'] = $user_data['id'];
+if (mysqli_num_rows($res) === 1) {
+    $user = mysqli_fetch_assoc($res);
+    
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['role'] = $user['role'];
+    $_SESSION['full_name'] = $user['full_name'];
+    loadSubId($link, $user);
 
-    // Chuyển hướng đến trang Home
-    header('location:home.php');
+    if (isset($_POST['remember'])) {
+        $token = bin2hex(random_bytes(16));
+        mysqli_query($link, "UPDATE users SET remember_token='$token' WHERE id=".$user['id']);
+        setcookie('remember_token', $token, time() + (86400 * 30), "/");
+    }
+
+    if ($user['role'] == 'student') header("Location: student_home.php");
+    else header("Location: home.php");
+    exit();
 } else {
-    // Sai thông tin, quay lại trang login
-    header('location:login.php?error=1');
+    header("Location: login.php?error=fail"); exit();
 }
 ?>

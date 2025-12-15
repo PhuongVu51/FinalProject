@@ -1,126 +1,128 @@
-/* Import font (tùy chọn) */
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
-body {
-    font-family: 'Be Vietnam Pro', sans-serif;
-    margin: 0;
-    padding: 0;
-    /* Sử dụng ảnh background-bee.jpg */
-    background-image: url('background-bee.png');
-    background-color: rgba(255, 255, 255, 0.5); /* Độ trong suốt 50% */
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Căn lề trên cùng */
-    min-height: 100vh;
-    background-color: #FFF8E1; /* Màu nền dự phòng */
+:root {
+    --primary: #F59E0B;
+    --primary-hover: #D97706;
+    --dark: #0F172A;
+    --gray: #64748B;
+    --light: #F8FAFC;
+    --white: #FFFFFF;
 }
 
-.login-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Manrope', sans-serif; }
+
+body { height: 100vh; width: 100%; overflow: hidden; background: var(--light); }
+
+/* --- LOGIN SPLIT LAYOUT --- */
+.split-screen {
+    display: flex; height: 100vh; width: 100%;
 }
 
-.login-form-box {
-    max-width: 450px;
-    width: 100%;
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    margin-top: 100px; /* Khoảng cách từ trên cùng */
-    margin-bottom: 100px;
+/* Cột Trái (Ảnh & Branding) */
+.left-pane {
+    flex: 1.2;
+    background: url('background-bee.jpg') no-repeat center center/cover; /* Ảnh nền */
     position: relative;
-    border: 1px solid #F9E79F;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 60px; color: white;
+}
+/* Lớp phủ màu vàng/đen mờ để chữ nổi bật */
+.left-pane::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 0.9));
+    z-index: 1;
+}
+.pane-content { position: relative; z-index: 2; max-width: 500px; }
+.pane-content h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: #FFF; }
+.pane-content p { font-size: 18px; opacity: 0.9; line-height: 1.6; }
+
+/* Cột Phải (Form) */
+.right-pane {
+    flex: 1;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px;
+    position: relative;
 }
 
-.login-logo {
-    text-align: center;
-    margin-bottom: 20px;
+.auth-box { width: 100%; max-width: 420px; }
+
+/* Logo Mobile (Chỉ hiện khi màn hình nhỏ) */
+.mobile-logo { display: none; margin-bottom: 30px; text-align: center; }
+.mobile-logo i { font-size: 40px; color: var(--primary); }
+
+/* Typography */
+.auth-title { font-size: 32px; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+.auth-subtitle { color: var(--gray); margin-bottom: 40px; font-size: 15px; }
+
+/* Input Styles (Floating Label) */
+.input-group { position: relative; margin-bottom: 24px; }
+.input-field {
+    width: 100%; padding: 16px;
+    border: 2px solid #E2E8F0; border-radius: 12px;
+    background: transparent; font-size: 15px; font-weight: 600;
+    transition: 0.2s; outline: none; color: var(--dark);
 }
-.login-logo h3 {
-    color: #E65100;
-    font-weight: 700;
-    font-size: 24px;
+.input-label {
+    position: absolute; left: 16px; top: 16px;
+    color: var(--gray); font-size: 15px; pointer-events: none;
+    transition: 0.2s; background: var(--white); padding: 0 4px;
 }
 
-h2 {
-    text-align: center;
-    color: #333;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 25px;
+/* Hiệu ứng khi focus hoặc có dữ liệu */
+.input-field:focus, .input-field:not(:placeholder-shown) {
+    border-color: var(--primary);
+}
+.input-field:focus ~ .input-label,
+.input-field:not(:placeholder-shown) ~ .input-label {
+    top: -10px; left: 12px; font-size: 12px; color: var(--primary); font-weight: 700;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
+/* Checkbox */
+.options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.check-group { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--gray); font-size: 14px; }
+.check-group input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #555;
-    font-size: 15px; /* <-- ĐÃ TĂNG KÍCH THƯỚC */
-}
-
-.form-control {
-    width: 100%;
-    padding: 14px 18px; /* <-- ĐÃ TĂNG PADDING */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box; 
-    background-color: #f9f9f9;
-    font-size: 16px; /* <-- ĐÃ TĂNG KÍCH THƯỚC */
-}
-
-/* Căn chỉnh chiều cao cho dropdown 'Gender' */
-select.form-control {
-    height: 50px; /* <-- ĐẶT CHIỀU CAO CỐ ĐỊNH */
-}
-
-/* Nút chính (Tiếp tục / Đăng ký) */
+/* Button */
 .btn-submit {
-    width: 100%;
-    padding: 16px; /* <-- ĐÃ TĂNG PADDING */
-    background-color: #FFC107; /* Màu vàng ong */
-    border: none;
-    border-radius: 8px;
-    color: #333;
-    font-size: 18px; /* <-- ĐÃ TĂNG KÍCH THƯỚC */
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 100%; padding: 16px;
+    background: var(--primary); color: white;
+    border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: 0.3s; box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
 }
-.btn-submit:hover {
-    background-color: #FFA000; /* Vàng đậm hơn khi hover */
+.btn-submit:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+/* Link */
+.auth-footer { margin-top: 30px; text-align: center; font-size: 14px; color: var(--gray); }
+.auth-footer a { color: var(--primary); font-weight: 700; text-decoration: none; }
+.auth-footer a:hover { text-decoration: underline; }
+
+/* ERROR MESSAGE */
+.alert-error {
+    background: #FEF2F2; color: #DC2626; padding: 12px;
+    border-radius: 8px; margin-bottom: 25px; font-size: 14px;
+    display: flex; align-items: center; gap: 10px; border: 1px solid #FECACA;
 }
 
-.forgot-password {
-    text-align: right;
-    margin-top: 15px;
-}
-.forgot-password a {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 14px;
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .left-pane { display: none; }
+    .mobile-logo { display: block; }
 }
 
-.register-link {
-    text-align: center;
-    margin-top: 25px;
-    font-size: 15px;
-    color: #555;
+/* --- REGISTER SPECIFIC (Centered Layout) --- */
+.register-body {
+    background: url('background-bee.jpg') no-repeat center center/cover;
+    display: flex; align-items: center; justify-content: center;
 }
-.register-link a {
-    color: #E65100; /* Màu cam đậm */
-    font-weight: 700;
-    text-decoration: none;
+.register-body::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);
 }
-
-/* CSS cho trang quản trị (sẽ ghi đè nếu cần) */
-/* Chúng ta sẽ chuyển cái này sang tệp riêng */
+.register-card {
+    position: relative; z-index: 2;
+    background: white; width: 100%; max-width: 500px;
+    padding: 50px; border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+}
