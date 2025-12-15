@@ -21,8 +21,8 @@ if(isset($_GET['approve'])){
     if($app){
         // Cập nhật lớp cho học sinh
         runQuery($link, "UPDATE students SET class_id={$app['class_id']} WHERE id={$app['student_id']}");
-        // Cập nhật trạng thái đơn
-        runQuery($link, "UPDATE applications SET status='approved', processed_at=NOW() WHERE id=$id");
+        // Cập nhật trạng thái đơn (bảng hiện không có cột processed_at)
+        runQuery($link, "UPDATE applications SET status='approved' WHERE id=$id");
         
         echo "<script>alert('Đã duyệt đơn thành công! Học sinh đã được xếp vào lớp.'); window.location='manage_applications.php';</script>";
     }
@@ -31,7 +31,8 @@ if(isset($_GET['approve'])){
 // 3. XỬ LÝ TỪ CHỐI ĐƠN (REJECT)
 if(isset($_GET['reject'])){
     $id = intval($_GET['reject']);
-    runQuery($link, "UPDATE applications SET status='rejected', processed_at=NOW() WHERE id=$id");
+    // Bảng applications không có cột processed_at nên chỉ cập nhật trạng thái
+    runQuery($link, "UPDATE applications SET status='rejected' WHERE id=$id");
     echo "<script>alert('Đã từ chối đơn này!'); window.location='manage_applications.php';</script>";
 }
 

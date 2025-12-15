@@ -20,6 +20,15 @@ $stats = [
     'unassigned' => mysqli_fetch_assoc(runQuery($link, "SELECT COUNT(*) as c FROM students WHERE class_id IS NULL"))['c'],
 ];
 
+// 3. SEARCH
+$search = '';
+$where = '';
+if(isset($_GET['q']) && trim($_GET['q']) !== ''){
+    $search = mysqli_real_escape_string($link, trim($_GET['q']));
+    $like = "%$search%";
+    $where = "WHERE (u.full_name LIKE '$like' OR u.username LIKE '$like' OR s.student_code LIKE '$like' OR c.name LIKE '$like')";
+}
+
 // 3. XỬ LÝ THÊM HỌC SINH
 if(isset($_POST['add'])) {
     $name = mysqli_real_escape_string($link, $_POST['name']); 
@@ -175,15 +184,15 @@ while($c = mysqli_fetch_assoc($cRes)) $classes_list[] = $c;
                     <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/50">
                         <h3 class="font-bold text-gray-800 whitespace-nowrap">Danh sách Học sinh</h3>
                         
-                        <div class="flex gap-2 w-full sm:w-auto">
+                        <form method="get" class="flex gap-2 w-full sm:w-auto">
                             <div class="relative flex-1 sm:w-64">
                                 <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm tên/Mã SV..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-honey-500 outline-none">
+                                <input type="text" name="q" value="<?php echo htmlspecialchars($search); ?>" placeholder="Tìm tên/Mã SV..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-honey-500 outline-none">
                             </div>
-                            <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <button type="submit" class="px-3 py-2 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-100">
                                 <i class="ph-bold ph-faders"></i>
                             </button>
-                        </div>
+                        </form>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -200,10 +209,11 @@ while($c = mysqli_fetch_assoc($cRes)) $classes_list[] = $c;
                             <tbody class="divide-y divide-gray-100">
                                 <?php 
                                 $sql = "SELECT s.id, s.student_code, u.full_name, u.username as email, c.name as class_name
-                                        FROM students s 
-                                        JOIN users u ON s.user_id=u.id 
-                                        LEFT JOIN classes c ON s.class_id=c.id 
-                                        ORDER BY u.full_name ASC";
+                                    FROM students s 
+                                    JOIN users u ON s.user_id=u.id 
+                                    LEFT JOIN classes c ON s.class_id=c.id 
+                                    $where
+                                    ORDER BY u.full_name ASC";
                                 $res = runQuery($link, $sql);
                                 
                                 if(mysqli_num_rows($res) == 0):

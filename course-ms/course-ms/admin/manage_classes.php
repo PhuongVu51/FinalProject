@@ -18,6 +18,15 @@ $stats = [
     'no_teacher' => mysqli_fetch_assoc(runQuery($link, "SELECT COUNT(*) as c FROM classes WHERE teacher_id IS NULL"))['c']
 ];
 
+// SEARCH
+$search = '';
+$where = '';
+if(isset($_GET['q']) && trim($_GET['q']) !== ''){
+    $search = mysqli_real_escape_string($link, trim($_GET['q']));
+    $like = "%$search%";
+    $where = "WHERE (c.name LIKE '$like' OR u.full_name LIKE '$like')";
+}
+
 // 2. Lấy danh sách GV
 $teachers = [];
 $tRes = runQuery($link, "SELECT t.id, u.full_name FROM teachers t JOIN users u ON t.user_id=u.id ORDER BY u.full_name");
@@ -151,15 +160,15 @@ if(isset($_GET['del'])){
                     <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <h3 class="font-bold text-gray-800 whitespace-nowrap">Danh sách lớp học</h3>
                         
-                        <div class="flex gap-2 w-full sm:w-auto">
+                        <form method="get" class="flex gap-2 w-full sm:w-auto">
                             <div class="relative flex-1 sm:w-64">
                                 <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" placeholder="Tìm tên lớp..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-honey-500 outline-none">
+                                <input type="text" name="q" value="<?php echo htmlspecialchars($search); ?>" placeholder="Tìm tên lớp..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:border-honey-500 outline-none">
                             </div>
-                            <button class="px-3 py-2 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50">
+                            <button type="submit" class="px-3 py-2 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50">
                                 <i class="ph-bold ph-faders"></i>
                             </button>
-                        </div>
+                        </form>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -175,11 +184,12 @@ if(isset($_GET['del'])){
                             <tbody class="divide-y divide-gray-100">
                                 <?php 
                                 $sql = "SELECT c.*, u.full_name, 
-                                        (SELECT COUNT(*) FROM students WHERE class_id=c.id) as std_count 
-                                        FROM classes c 
-                                        LEFT JOIN teachers t ON c.teacher_id=t.id 
-                                        LEFT JOIN users u ON t.user_id=u.id 
-                                        ORDER BY c.id DESC";
+                                    (SELECT COUNT(*) FROM students WHERE class_id=c.id) as std_count 
+                                    FROM classes c 
+                                    LEFT JOIN teachers t ON c.teacher_id=t.id 
+                                    LEFT JOIN users u ON t.user_id=u.id 
+                                    $where
+                                    ORDER BY c.id DESC";
                                 $res = runQuery($link, $sql);
                                 
                                 // State: Empty List

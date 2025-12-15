@@ -95,7 +95,7 @@ if(isset($_POST['publish'])) {
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
             
             <div id="step-content-1" class="p-8 space-y-6">
-                <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Tên bài kiểm tra *</label><input type="text" name="exam_title" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-honey-500 outline-none" required placeholder="VD: Kiểm tra 1 tiết"></div>
+                <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Tên bài kiểm tra *</label><input type="text" name="exam_title" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-honey-500 outline-none" data-required="true" placeholder="VD: Kiểm tra 1 tiết"></div>
                 <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Lớp áp dụng *</label>
                     <select name="class_id" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-honey-500 outline-none">
                         <?php foreach($classes as $c): ?><option value="<?php echo $c['id']; ?>"><?php echo $c['name']; ?></option><?php endforeach; ?>
@@ -106,8 +106,8 @@ if(isset($_POST['publish'])) {
 
             <div id="step-content-2" class="p-8 space-y-6 hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Bắt đầu *</label><input type="datetime-local" name="start_time" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none" required></div>
-                    <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Kết thúc *</label><input type="datetime-local" name="end_time" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none" required></div>
+                    <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Bắt đầu *</label><input type="datetime-local" name="start_time" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none" data-required="true"></div>
+                    <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Kết thúc *</label><input type="datetime-local" name="end_time" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none" data-required="true"></div>
                 </div>
                 <div class="space-y-2"><label class="block text-sm font-bold text-dark-900">Thời gian (Phút)</label><input type="number" name="duration" value="45" class="w-32 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-bold outline-none"></div>
                 
@@ -139,13 +139,44 @@ if(isset($_POST['publish'])) {
         let qCount = 0;
         let globalType = 'quiz'; // Mặc định trắc nghiệm
 
+        function toLocalInput(dt) {
+            const local = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000);
+            return local.toISOString().slice(0, 16);
+        }
+
+        function setDefaultTimes() {
+            const startEl = document.querySelector('input[name="start_time"]');
+            const endEl = document.querySelector('input[name="end_time"]');
+            if (!startEl || !endEl) return;
+            const now = new Date();
+            const start = new Date(now.getTime() + 10 * 60000); // sau 10 phút
+            const end = new Date(start.getTime() + 60 * 60000); // +60 phút
+            if (!startEl.value) startEl.value = toLocalInput(start);
+            if (!endEl.value) endEl.value = toLocalInput(end);
+        }
+
         function setExamType(type) { globalType = type; }
+
+        function toggleRequired() {
+            [1,2,3].forEach(i => {
+                const visible = i === currentStep;
+                document.querySelectorAll(`#step-content-${i} [data-required]`).forEach(el => {
+                    if (visible) {
+                        el.setAttribute('required', 'required');
+                    } else {
+                        el.removeAttribute('required');
+                    }
+                });
+            });
+        }
 
         function updateUI() {
             [1, 2, 3].forEach(i => {
                 const content = document.getElementById(`step-content-${i}`);
                 if (content) content.classList.toggle('hidden', i !== currentStep);
             });
+
+            toggleRequired();
 
             for (let i = 1; i <= 3; i++) {
                 const circle = document.getElementById(`ind-${i}`);
@@ -171,8 +202,14 @@ if(isset($_POST['publish'])) {
 
         function nextStep() {
             if (currentStep === 1) {
-                const title = document.querySelector('input[name="exam_title"]').value;
-                if (!title) { alert("Vui lòng nhập tên bài kiểm tra!"); return; }
+                const title = document.querySelector('input[name="exam_title"]');
+                if (!title.value.trim()) { alert("Vui lòng nhập tên bài kiểm tra!"); title.focus(); return; }
+            }
+            if (currentStep === 2) {
+                const start = document.querySelector('input[name="start_time"]');
+                const end = document.querySelector('input[name="end_time"]');
+                if (!start.value || !end.value) { alert("Vui lòng nhập thời gian bắt đầu và kết thúc!"); return; }
+                if (new Date(start.value) >= new Date(end.value)) { alert("Thời gian kết thúc phải sau thời gian bắt đầu"); return; }
             }
             if (currentStep < 3) {
                 currentStep++;
@@ -233,6 +270,7 @@ if(isset($_POST['publish'])) {
             else { optsDiv.classList.remove('hidden'); essayDiv.classList.add('hidden'); }
         }
 
+        setDefaultTimes();
         updateUI();
     </script>
 </body>

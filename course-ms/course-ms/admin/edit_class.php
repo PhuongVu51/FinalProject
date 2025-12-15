@@ -1,5 +1,9 @@
 <?php
-include "connection.php"; include "auth.php"; requireRole(['admin']);
+// Resolve root path so includes work when inside /admin
+$rootPath = realpath(__DIR__ . '/..');
+include $rootPath . "/connection.php";
+include $rootPath . "/auth.php";
+requireRole(['admin']);
 
 $id = intval($_GET['id']);
 $class = mysqli_fetch_assoc(mysqli_query($link, "SELECT * FROM classes WHERE id=$id"));

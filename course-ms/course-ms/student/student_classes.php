@@ -133,7 +133,6 @@ $active_tab = isset($_GET['tab']) && $_GET['tab'] == 'market' ? 'market' : 'my';
                         <tr>
                             <th class="px-6 py-4">Tên lớp</th>
                             <th class="px-6 py-4">Giáo viên</th>
-                            <th class="px-6 py-4">Ngày tạo</th>
                             <th class="px-6 py-4 text-right">Hành động</th>
                         </tr>
                     </thead>
@@ -144,7 +143,6 @@ $active_tab = isset($_GET['tab']) && $_GET['tab'] == 'market' ? 'market' : 'my';
                         <tr class="hover:bg-honey-50/20 transition">
                             <td class="px-6 py-4 font-bold text-gray-800 text-base"><?php echo $r['name']; ?></td>
                             <td class="px-6 py-4 text-gray-600"><?php echo $r['teacher_name']; ?></td>
-                            <td class="px-6 py-4 text-gray-500 text-xs"><?php echo date('d/m/Y', strtotime($r['created_at'])); ?></td>
                             <td class="px-6 py-4 text-right">
                                 <?php if($r['app_status'] == 'pending'): ?>
                                     <span class="inline-flex items-center gap-1 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-bold cursor-default">
