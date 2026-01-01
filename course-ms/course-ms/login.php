@@ -190,7 +190,7 @@ if(isset($_POST['login'])) {
                         <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-honey-600 focus:ring-honey-500">
                         <span class="text-sm text-dark-500 select-none">Ghi nhớ đăng nhập</span>
                     </label>
-                    <a href="#" class="text-sm font-semibold text-honey-600 hover:text-honey-700 hover:underline">Quên mật khẩu?</a>
+                    <a href="forgot_password.php" class="text-sm font-semibold text-honey-600 hover:text-honey-700 hover:underline">Quên mật khẩu?</a>
                 </div>
 
                 <button type="submit" name="login" class="w-full py-3.5 px-4 bg-honey-500 hover:bg-honey-600 text-white font-bold rounded-xl shadow-honey-glow transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-honey-500/30">
