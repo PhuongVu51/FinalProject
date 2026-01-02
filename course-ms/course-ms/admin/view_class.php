@@ -1,55 +1,62 @@
 <?php
-include "../connection.php"; 
-include "../auth.php"; 
+// 1. KẾT NỐI & AUTH
+$rootPath = dirname(__DIR__); 
+include $rootPath . "/connection.php"; 
+include $rootPath . "/auth.php"; 
 requireRole(['admin']);
 
-// Hàm helper (copy lại để dùng)
+// Helper
 function runQuery($link, $sql) {
     $res = mysqli_query($link, $sql);
     if(!$res) die("Lỗi SQL: " . mysqli_error($link));
     return $res;
 }
 
-// Lấy ID lớp từ URL
+// Lấy ID lớp
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-if($id == 0) {
-    header("Location: manage_classes.php"); exit;
-}
+if($id == 0) { header("Location: manage_classes.php"); exit; }
 
-// XỬ LÝ: Xóa học sinh khỏi lớp (Set class_id về NULL)
+// XỬ LÝ: Xóa học sinh khỏi lớp
 if(isset($_GET['remove_std'])){
     $sid = intval($_GET['remove_std']);
     runQuery($link, "UPDATE students SET class_id = NULL WHERE id = $sid AND class_id = $id");
-    // Refresh lại trang
     header("Location: view_class.php?id=$id"); exit;
 }
 
-// 1. Lấy thông tin LỚP + Tên GVCN
-$sqlClass = "SELECT c.*, u.full_name as teacher_name 
+// 1. Lấy thông tin LỚP + GVCN
+// SỬA LỖI: Dùng u.username thay vì u.email
+$sqlClass = "SELECT c.*, u.full_name as teacher_name, u.username as teacher_email
              FROM classes c 
              LEFT JOIN teachers t ON c.teacher_id = t.id 
              LEFT JOIN users u ON t.user_id = u.id 
              WHERE c.id = $id";
 $class = mysqli_fetch_assoc(runQuery($link, $sqlClass));
-
 if(!$class) die("Không tìm thấy lớp học!");
 
-// 2. Lấy danh sách HỌC SINH trong lớp
-// Giả định bảng students có các cột: full_name, email, dob, gender, status...
-// Bỏ order by first_name đi vì có thể không có cột này
-$sqlStudents = "SELECT * FROM students WHERE class_id = $id ORDER BY id DESC";
+// 2. Lấy danh sách HỌC SINH
+// SỬA LỖI 500: 
+// - Dùng u.username thay vì u.email
+// - Chỉ lấy các cột chắc chắn có. Nếu db bạn chưa có dob/gender thì code bên dưới sẽ tự xử lý để không lỗi.
+// 2. Lấy danh sách HỌC SINH
+// SỬA: Thêm u.created_at vào sau u.username
+$sqlStudents = "SELECT s.id, s.student_code, u.full_name, u.username as email, u.created_at 
+                FROM students s 
+                JOIN users u ON s.user_id = u.id 
+                WHERE s.class_id = $id 
+                ORDER BY s.id DESC";
+
 $resStudents = runQuery($link, $sqlStudents);
 $studentCount = mysqli_num_rows($resStudents);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <title>Lớp <?php echo $class['name']; ?> | Admin</title>
-    <?php include "../includes/header_config.php"; ?>
+    <title>Lớp <?php echo htmlspecialchars($class['name']); ?> | Admin</title>
+    <?php include $rootPath . "/includes/header_config.php"; ?>
 </head>
 <body class="bg-gray-50 flex font-sans text-gray-900">
     
-    <?php include "../includes/sidebar.php"; ?>
+    <?php include $rootPath . "/includes/sidebar.php"; ?>
     
     <div class="flex-1 p-8 ml-[260px]">
         
@@ -71,10 +78,10 @@ $studentCount = mysqli_num_rows($resStudents);
                             <span class="w-10 h-10 rounded-lg bg-honey-500 text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-honey-500/30">
                                 <?php echo substr($class['name'], 0, 1); ?>
                             </span>
-                            <h1 class="text-3xl font-bold text-gray-800"><?php echo $class['name']; ?></h1>
+                            <h1 class="text-3xl font-bold text-gray-800"><?php echo htmlspecialchars($class['name']); ?></h1>
                         </div>
                         <p class="text-gray-500 flex items-center gap-2 pl-1">
-                            <i class="ph-bold ph-hash"></i> Mã lớp: <span class="font-mono font-bold text-gray-700">CLASS-<?php echo str_pad($class['id'], 3, '0', STR_PAD_LEFT); ?></span>
+                            <i class="ph-bold ph-hash"></i> Mã lớp: <span class="font-mono font-bold text-gray-700"><?php echo htmlspecialchars($class['class_code'] ?? 'CLASS-'.$class['id']); ?></span>
                         </p>
                     </div>
                     
@@ -82,9 +89,6 @@ $studentCount = mysqli_num_rows($resStudents);
                         <a href="edit_class.php?id=<?php echo $class['id']; ?>" class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-50 hover:border-gray-300 transition flex items-center gap-2 shadow-sm">
                             <i class="ph-bold ph-pencil-simple"></i> Sửa lớp
                         </a>
-                        <button class="px-5 py-2.5 bg-honey-500 text-white rounded-xl font-bold hover:bg-honey-600 transition shadow-lg shadow-honey-500/20 flex items-center gap-2">
-                            <i class="ph-bold ph-check-square"></i> Điểm danh
-                        </button>
                     </div>
                 </div>
 
@@ -97,6 +101,7 @@ $studentCount = mysqli_num_rows($resStudents);
                             <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Giáo viên chủ nhiệm</p>
                             <?php if($class['teacher_name']): ?>
                                 <p class="text-lg font-bold text-gray-800"><?php echo $class['teacher_name']; ?></p>
+                                <p class="text-xs text-gray-400"><?php echo $class['teacher_email']; ?></p>
                             <?php else: ?>
                                 <p class="text-lg font-bold text-red-500 italic flex items-center gap-1">
                                     <i class="ph-fill ph-warning-circle"></i> Chưa phân công
@@ -112,8 +117,11 @@ $studentCount = mysqli_num_rows($resStudents);
                              <i class="ph-fill ph-student"></i>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Tổng số học sinh</p>
-                            <p class="text-lg font-bold text-gray-800"><?php echo $studentCount; ?> / 40 <span class="text-xs text-gray-400 font-normal">(Tiêu chuẩn)</span></p>
+                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Sĩ số hiện tại</p>
+                            <p class="text-lg font-bold text-gray-800">
+                                <?php echo $studentCount; ?> / <?php echo $class['student_limit'] ?? 40; ?> 
+                                <span class="text-xs text-gray-400 font-normal">(Học sinh)</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -125,20 +133,15 @@ $studentCount = mysqli_num_rows($resStudents);
                 <h3 class="font-bold text-gray-800 flex items-center gap-2">
                     <i class="ph-fill ph-users-three text-honey-500"></i> Danh sách thành viên
                 </h3>
-                
-                <div class="relative">
-                    <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                    <input type="text" placeholder="Tìm học sinh..." class="pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:border-honey-500 outline-none bg-white">
-                </div>
             </div>
             
             <table class="w-full text-left text-sm">
-                <thead class="bg-white border-b border-gray-100 text-gray-400 uppercase font-bold text-xs">
+                <thead class="bg-white border-b border-gray-100 text-gray-500 uppercase font-bold text-xs">
                     <tr>
                         <th class="px-6 py-4 w-10">#</th>
                         <th class="px-6 py-4">Họ và tên</th>
-                        <th class="px-6 py-4">Ngày sinh</th>
-                        <th class="px-6 py-4">Giới tính</th>
+                        <th class="px-6 py-4">Mã SV</th>
+                        <th class="px-6 py-4">Ngày tham gia</th>
                         <th class="px-6 py-4 text-right">Tác vụ</th>
                     </tr>
                 </thead>
@@ -146,13 +149,8 @@ $studentCount = mysqli_num_rows($resStudents);
                     <?php if($studentCount == 0): ?>
                         <tr>
                             <td colspan="5" class="px-6 py-16 text-center">
-                                <div class="flex flex-col items-center gap-3">
-                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-300 text-3xl">
-                                        <i class="ph-duotone ph-student"></i>
-                                    </div>
-                                    <p class="text-gray-500 font-medium">Lớp này chưa có học sinh nào.</p>
-                                    <button class="text-honey-500 font-bold hover:underline text-sm">Thêm học sinh ngay</button>
-                                </div>
+                                <p class="text-gray-500 font-medium">Lớp này chưa có học sinh nào.</p>
+                                <a href="manage_students.php?filter=unassigned" class="text-honey-500 font-bold hover:underline text-sm">Thêm học sinh vào lớp</a>
                             </td>
                         </tr>
                     <?php else: 
@@ -167,25 +165,21 @@ $studentCount = mysqli_num_rows($resStudents);
                                 <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($s['full_name']); ?>&background=random&color=fff&size=40" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
                                 <div>
                                     <p class="font-bold text-gray-800 text-base"><?php echo $s['full_name']; ?></p>
-                                    <p class="text-xs text-gray-400"><?php echo $s['email'] ?? 'Chưa cập nhật email'; ?></p>
+                                    <p class="text-xs text-gray-400 flex items-center gap-1">
+                                        <i class="ph-bold ph-envelope-simple"></i> <?php echo $s['email']; ?>
+                                    </p>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-gray-600 font-medium">
-                            <?php echo ($s['dob']) ? date('d/m/Y', strtotime($s['dob'])) : '--/--/----'; ?>
+                        <td class="px-6 py-4 font-mono font-bold text-honey-600">
+                            <?php echo $s['student_code']; ?>
                         </td>
-                        <td class="px-6 py-4">
-                            <?php if($s['gender'] == 'Male' || $s['gender'] == 'Nam'): ?>
-                                <span class="text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md text-xs font-bold border border-blue-100">Nam</span>
-                            <?php elseif($s['gender'] == 'Female' || $s['gender'] == 'Nữ'): ?>
-                                <span class="text-pink-600 bg-pink-50 px-2.5 py-1 rounded-md text-xs font-bold border border-pink-100">Nữ</span>
-                            <?php else: ?>
-                                <span class="text-gray-500 text-xs">--</span>
-                            <?php endif; ?>
+                        <td class="px-6 py-4 text-gray-500">
+                             <?php echo isset($s['created_at']) ? date('d/m/Y', strtotime($s['created_at'])) : '---'; ?>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <a href="?id=<?php echo $id; ?>&remove_std=<?php echo $s['id']; ?>" 
-                               onclick="return confirm('Bạn có chắc muốn xóa học sinh <?php echo $s['full_name']; ?> khỏi lớp này không?')" 
+                               onclick="return confirm('Bạn có chắc muốn đưa học sinh <?php echo $s['full_name']; ?> ra khỏi lớp này không?')" 
                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition" 
                                title="Xóa khỏi lớp">
                                 <i class="ph-bold ph-minus-circle text-lg"></i>
