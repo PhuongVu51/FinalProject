@@ -92,11 +92,6 @@ Dữ liệu mẫu đã được nạp sẵn để bạn kiểm tra (Mật khẩu
 
 ---
 
-## 📂 Cấu Trúc Thư Mục
-course-ms/ ├── includes/ # Các phần giao diện chung │ ├── sidebar.php # Menu trái (tự động đổi theo role) │ ├── topbar.php # Thanh tiêu đề trên cùng │ └── footer.php # Chân trang ├── css/ │ ├── dashboard_style.css # Style chính cho trang quản trị │ └── style.css # Style cho trang Login/Register ├── connection.php # Kết nối Database ├── auth.php # Hàm kiểm tra quyền & Cookie ├── login.php # Trang đăng nhập ├── register.php # Trang đăng ký GV ├── home.php # Dashboard Admin/GV ├── student_home.php # Dashboard Học sinh ├── manage_*.php # Các file quản lý (Lớp, GV, HS, Tin tức...) └── ...
-
----
-
 ## 📝 Ghi Chú
 * Để hiển thị icon, máy tính cần có kết nối Internet để tải thư viện **FontAwesome CDN**.
 * Mật khẩu trong database được mã hóa bằng `MD5`.
